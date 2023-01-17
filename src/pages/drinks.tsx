@@ -1,8 +1,11 @@
 import { type NextPage } from "next";
 import Head from "next/head";
+import { api } from "../utils/api";
 import Link from "next/link";
 
-const Home: NextPage = () => {
+const Drinks: NextPage = () => {
+  const drinks = api.drinks.getDrinks.useQuery();
+
   return (
     <>
       <Head>
@@ -11,11 +14,18 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#2e026d] to-[#15162c]">
-        <Link href="/submit-drink">Submit Drink</Link>
-        <Link href="/drinks">Drinks</Link>
+        <Link href="/">Home</Link>
+        <h1>All Drinks</h1>
+        {drinks.data?.map((drink) => (
+          <div className="" key={drink.id}>
+            <p>{drink.title}</p>
+            <p>{drink.price}</p>
+            <p>{drink.id}</p>
+          </div>
+        ))}
       </main>
     </>
   );
 };
 
-export default Home;
+export default Drinks;
