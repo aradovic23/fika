@@ -1,0 +1,4 @@
+- being able to add volume
+- being able to add tags (new, discounted, ect)
+- being able to add types (green tea, black)
+- being able to add category

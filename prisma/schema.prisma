@@ -66,7 +66,12 @@ model VerificationToken {
 }
 
 model Drink {
-    id    String @id @default(cuid())
-    title String
-    price String
+    id          String   @id @default(cuid())
+    title       String
+    price       String
+    volume      String?
+    type        String?
+    tag         String?
+    category    String?
+    createdDate DateTime @default(now())
 }

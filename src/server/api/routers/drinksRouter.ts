@@ -4,7 +4,16 @@ import { createTRPCRouter, publicProcedure } from "../trpc";
 
 export const drinksRouter = createTRPCRouter({
   createDrink: publicProcedure
-    .input(z.object({ title: z.string(), price: z.string() }))
+    .input(
+      z.object({
+        title: z.string(),
+        price: z.string(),
+        tag: z.string().nullish(),
+        category: z.string().nullish(),
+        volume: z.string().nullish(),
+        type: z.string().nullish(),
+      })
+    )
     .mutation(async ({ input, ctx }) => {
       const drink = await ctx.prisma.drink.create({
         data: {
