@@ -4,14 +4,22 @@ import { api } from "../utils/api";
 import { DrinkList } from "../components/DrinkList";
 import { categoryOptions } from "./submit-drink";
 import { useState } from "react";
+import { TextInput } from "../components/TextInput";
 
 const Drinks: NextPage = () => {
   const drinks = api.drinks.getDrinks.useQuery();
-  const [selectedCategory, setSelectedCategory] = useState(categoryOptions[0]);
+  const [selectedCategory, setSelectedCategory] = useState("all");
+  const [search, setSearch] = useState("");
 
-  const filteredDrinks = (drinks.data ?? []).filter(
-    (drink) => drink.category === selectedCategory
-  );
+  const filteredDrinks = (drinks.data ?? [])
+    .filter((drink) =>
+      selectedCategory === "all" ? true : drink.category === selectedCategory
+    )
+    .filter((drink) =>
+      search != ""
+        ? drink.title.toLowerCase().includes(search.toLowerCase())
+        : true
+    );
 
   return (
     <>
@@ -23,33 +31,40 @@ const Drinks: NextPage = () => {
       <main className="flex min-h-screen">
         <section className="container mx-auto py-10">
           <h1 className="text-2xl font-bold">All Drinks</h1>
-          <div className="grid grid-cols-3 gap-3">
-            <div className="col-span-1 h-screen py-3 ">
-              <h3 className="divide-y divide-solid divide-slate-200 text-sm font-bold uppercase">
-                Filter by:
-              </h3>
-              {categoryOptions.map((category, idx) => (
-                <div key={idx} className="form-control">
-                  <label className="label cursor-pointer">
-                    <span className="label-text">{category}</span>
-                    <input
-                      type="radio"
-                      name="radio-10"
-                      value={selectedCategory}
-                      className="radio checked:bg-primary"
-                      onChange={() => setSelectedCategory(category)}
-                      checked={category === selectedCategory}
-                    />
-                  </label>
+          <form>
+            <div className="grid grid-cols-3 gap-3">
+              <div className="col-span-1 flex h-screen flex-col gap-5 py-3">
+                <TextInput
+                  label="Search by Name"
+                  onChange={(e) => setSearch(e.target.value)}
+                  value={search}
+                  required={false}
+                />
+                <div>
+                  {["all", ...categoryOptions].map((category, idx) => (
+                    <div key={idx} className="form-control">
+                      <label className="label cursor-pointer">
+                        <span className="label-text">{category}</span>
+                        <input
+                          type="radio"
+                          name="radio-10"
+                          value={selectedCategory}
+                          className="radio checked:bg-primary"
+                          onChange={() => setSelectedCategory(category)}
+                          checked={category === selectedCategory}
+                        />
+                      </label>
+                    </div>
+                  ))}
                 </div>
-              ))}
+              </div>
+              <div className="col-span-2 grid auto-rows-max grid-cols-2 gap-4">
+                {filteredDrinks.map((drink) => (
+                  <DrinkList key={drink.id} {...drink} />
+                ))}
+              </div>
             </div>
-            <div className="col-span-2 grid auto-rows-max grid-cols-2 gap-4">
-              {filteredDrinks.map((drink) => (
-                <DrinkList key={drink.id} {...drink} />
-              ))}
-            </div>
-          </div>
+          </form>
         </section>
       </main>
     </>

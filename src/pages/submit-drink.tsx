@@ -3,6 +3,8 @@ import Head from "next/head";
 import { useState } from "react";
 import { api } from "../utils/api";
 import { useRouter } from "next/router";
+import { TextInput } from "../components/TextInput";
+import { SelectInput } from "../components/SelectInput";
 
 export const volumeOptions: string[] = [
   "none",
@@ -65,92 +67,56 @@ const SubmitDrink: NextPage = () => {
         <div className="w-1/3">
           <form className="flex flex-col gap-5" onSubmit={handleSubmitDrink}>
             <div className="flex flex-col gap-1">
-              <div className="form-control w-full max-w-xs">
-                <label className="label">
-                  <span className="label-text">Title</span>
-                </label>
-                <input
-                  type="text"
-                  placeholder="Type here"
-                  className="input-bordered input w-full max-w-xs"
-                  value={productTitle}
-                  onChange={(e) => setProductTitle(e.target.value)}
-                  required
-                />
-              </div>
-              <div className="form-control w-full max-w-xs">
-                <label className="label">
-                  <span className="label-text">Price</span>
-                </label>
-                <input
-                  type="text"
-                  placeholder="Type here"
-                  className="input-bordered input w-full max-w-xs"
-                  value={productPrice}
-                  onChange={(e) => setProductPrice(e.target.value)}
-                  required
-                />
-              </div>
-            </div>
-            <div className="form-control w-full max-w-xs">
-              <label className="label">
-                <span className="label-text">Volume</span>
-              </label>
-              <select
-                onChange={(e) => setProductVolume(e.target.value)}
-                className="select-bordered select w-full max-w-xs"
-              >
-                {volumeOptions.map((volume) => (
-                  <option value={volume} key={volume}>
-                    {volume}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div className="form-control w-full max-w-xs">
-              <label className="label">
-                <span className="label-text">Type</span>
-              </label>
-              <select
-                onChange={(e) => setProductType(e.target.value)}
-                className="select-bordered select w-full max-w-xs"
-              >
-                {typeOptions.map((type) => (
-                  <option value={type} key={type}>
-                    {type}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <div className="form-control w-full max-w-xs">
-              <label className="label">
-                <span className="label-text">Tag</span>
-              </label>
-              <input
-                type="text"
-                placeholder="Type here"
-                className="input-bordered input w-full max-w-xs"
+              <TextInput
+                value={productTitle}
+                onChange={(e) => setProductTitle(e.target.value)}
+                label="Product Name"
+                required={true}
+              />
+              <TextInput
+                value={productPrice}
+                onChange={(e) => setProductPrice(e.target.value)}
+                label="Price"
+                required={true}
+              />
+              <TextInput
                 value={productTag}
                 onChange={(e) => setProductTag(e.target.value)}
+                label="Tag"
+                required={false}
               />
             </div>
 
-            <div className="form-control w-full max-w-xs">
-              <label className="label">
-                <span className="label-text">Category</span>
-              </label>
-              <select
-                onChange={(e) => setProductCategory(e.target.value)}
-                className="select-bordered select w-full max-w-xs"
-              >
-                {categoryOptions.map((category) => (
-                  <option value={category} key={category}>
-                    {category}
-                  </option>
-                ))}
-              </select>
-            </div>
+            <SelectInput
+              label="Volume"
+              onChange={(e) => setProductVolume(e.target.value)}
+            >
+              {volumeOptions.map((volume) => (
+                <option value={volume} key={volume}>
+                  {volume}
+                </option>
+              ))}
+            </SelectInput>
+            <SelectInput
+              label="Type"
+              onChange={(e) => setProductType(e.target.value)}
+            >
+              {typeOptions.map((type) => (
+                <option value={type} key={type}>
+                  {type}
+                </option>
+              ))}
+            </SelectInput>
+            <SelectInput
+              label="Category"
+              onChange={(e) => setProductCategory(e.target.value)}
+            >
+              {categoryOptions.map((category) => (
+                <option value={category} key={category}>
+                  {category}
+                </option>
+              ))}
+            </SelectInput>
 
             <button className="btn-primary btn max-w-xs">Submit</button>
           </form>

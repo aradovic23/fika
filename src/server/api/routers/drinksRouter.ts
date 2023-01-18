@@ -29,11 +29,11 @@ export const drinksRouter = createTRPCRouter({
   getDrinkById: publicProcedure
     .input(z.object({ id: z.string() }))
     .query(async ({ ctx, input }) => {
-      const SingleDrink = await ctx.prisma.drink.findUnique({
+      const singleDrink = await ctx.prisma.drink.findUnique({
         where: {
           id: input.id,
         },
       });
-      return SingleDrink;
+      return singleDrink;
     }),
 });

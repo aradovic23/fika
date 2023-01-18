@@ -1,4 +1,3 @@
-- being able to add volume
-- being able to add tags (new, discounted, ect)
-- being able to add types (green tea, black)
-- being able to add category
+- admin should be able to delete a product
+- admin should be able to updat a product
+- producst should be sorted by name - a-z
