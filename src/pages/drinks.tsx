@@ -15,10 +15,33 @@ const Drinks: NextPage = () => {
       </Head>
       <main className="flex min-h-screen">
         <section className="container mx-auto py-10">
-          <h1>All Drinks</h1>
-          <div className="flex gap-4">
-            <div className="h-screen w-1/3 bg-red-500">test</div>
-            <div className="grid w-2/3 grid-cols-3 gap-5">
+          <h1 className="text-2xl font-bold">All Drinks</h1>
+          <div className="grid grid-cols-3 gap-3">
+            <div className="col-span-1 h-screen py-3 ">
+              <div className="form-control">
+                <label className="label cursor-pointer">
+                  <span className="label-text">Red pill</span>
+                  <input
+                    type="radio"
+                    name="radio-10"
+                    className="radio checked:bg-red-500"
+                    checked
+                  />
+                </label>
+              </div>
+              <div className="form-control">
+                <label className="label cursor-pointer">
+                  <span className="label-text">Blue pill</span>
+                  <input
+                    type="radio"
+                    name="radio-10"
+                    className="radio checked:bg-blue-500"
+                    checked
+                  />
+                </label>
+              </div>
+            </div>
+            <div className="col-span-2 grid auto-rows-max grid-cols-2 gap-4">
               {drinks.data?.map((drink) => (
                 <DrinkList key={drink.id} {...drink} />
               ))}

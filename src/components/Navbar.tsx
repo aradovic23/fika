@@ -5,7 +5,7 @@ export const Navbar: React.FC = () => {
     <div className="navbar bg-primary text-white shadow">
       <div className="flex-1">
         <Link href="/" className="btn-ghost btn text-xl normal-case">
-          Drinks
+          Drinks App
         </Link>
       </div>
       <div className="flex-none">
