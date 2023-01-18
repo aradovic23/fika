@@ -2,9 +2,16 @@ import { type NextPage } from "next";
 import Head from "next/head";
 import { api } from "../utils/api";
 import { DrinkList } from "../components/DrinkList";
+import { categoryOptions } from "./submit-drink";
+import { useState } from "react";
 
 const Drinks: NextPage = () => {
   const drinks = api.drinks.getDrinks.useQuery();
+  const [selectedCategory, setSelectedCategory] = useState(categoryOptions[0]);
+
+  const filteredDrinks = (drinks.data ?? []).filter(
+    (drink) => drink.category === selectedCategory
+  );
 
   return (
     <>
@@ -18,31 +25,27 @@ const Drinks: NextPage = () => {
           <h1 className="text-2xl font-bold">All Drinks</h1>
           <div className="grid grid-cols-3 gap-3">
             <div className="col-span-1 h-screen py-3 ">
-              <div className="form-control">
-                <label className="label cursor-pointer">
-                  <span className="label-text">Red pill</span>
-                  <input
-                    type="radio"
-                    name="radio-10"
-                    className="radio checked:bg-red-500"
-                    checked
-                  />
-                </label>
-              </div>
-              <div className="form-control">
-                <label className="label cursor-pointer">
-                  <span className="label-text">Blue pill</span>
-                  <input
-                    type="radio"
-                    name="radio-10"
-                    className="radio checked:bg-blue-500"
-                    checked
-                  />
-                </label>
-              </div>
+              <h3 className="divide-y divide-solid divide-slate-200 text-sm font-bold uppercase">
+                Filter by:
+              </h3>
+              {categoryOptions.map((category, idx) => (
+                <div key={idx} className="form-control">
+                  <label className="label cursor-pointer">
+                    <span className="label-text">{category}</span>
+                    <input
+                      type="radio"
+                      name="radio-10"
+                      value={selectedCategory}
+                      className="radio checked:bg-primary"
+                      onChange={() => setSelectedCategory(category)}
+                      checked={category === selectedCategory}
+                    />
+                  </label>
+                </div>
+              ))}
             </div>
             <div className="col-span-2 grid auto-rows-max grid-cols-2 gap-4">
-              {drinks.data?.map((drink) => (
+              {filteredDrinks.map((drink) => (
                 <DrinkList key={drink.id} {...drink} />
               ))}
             </div>

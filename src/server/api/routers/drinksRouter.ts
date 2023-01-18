@@ -26,4 +26,14 @@ export const drinksRouter = createTRPCRouter({
     const drinks = await ctx.prisma.drink.findMany();
     return drinks;
   }),
+  getDrinkById: publicProcedure
+    .input(z.object({ id: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const SingleDrink = await ctx.prisma.drink.findUnique({
+        where: {
+          id: input.id,
+        },
+      });
+      return SingleDrink;
+    }),
 });

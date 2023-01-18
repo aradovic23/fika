@@ -1,6 +1,7 @@
 import Image from "next/image";
 import type { FC } from "react";
 import classnames from "classnames";
+import Link from "next/link";
 
 type Drink = {
   title: string;
@@ -39,6 +40,10 @@ export const DrinkList: FC<Drink> = ({
           alt="image"
           fill
           className="object-cover"
+          sizes="(max-width: 768px) 100vw,
+          (max-width: 1200px) 50vw,
+          33vw"
+          priority
         />
         {tag && (
           <div className="absolute top-2 right-2 rounded-md bg-yellow-300 px-1 py-0.5 text-sm text-black">
@@ -63,12 +68,17 @@ export const DrinkList: FC<Drink> = ({
           </div>
           <div className="text-sm font-bold">{price} RSD</div>
         </div>
-        <div className="card-actions justify-start pt-2">
+        <div className="card-actions flex justify-between pt-2">
           <div className="flex gap-2">
             {category && <div className="text-sm uppercase">{category}</div>}
             {volume && volume != "none" && (
               <div className="text-sm font-bold">{volume}</div>
             )}
+          </div>
+          <div>
+            <button className="btn-primary btn-error btn-xs btn">
+              <Link href={`/drink/${id}`}>Edit</Link>
+            </button>
           </div>
         </div>
       </div>

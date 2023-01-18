@@ -4,13 +4,40 @@ import { useState } from "react";
 import { api } from "../utils/api";
 import { useRouter } from "next/router";
 
+export const volumeOptions: string[] = [
+  "none",
+  "0.1",
+  "0.187",
+  "0.2",
+  "0.25",
+  "0.3",
+  "0.33",
+  "0.35",
+  "0.4",
+  "0.5",
+];
+
+const typeOptions: string[] = ["none", "Green", "Black", "Fruit", "Herb"];
+
+export const categoryOptions: string[] = [
+  "coffee",
+  "alchoholic",
+  "non-alcoholic",
+  "beer",
+  "wine",
+  "tea",
+  "juices",
+  "brandy",
+  "shakes",
+];
+
 const SubmitDrink: NextPage = () => {
   const [productTitle, setProductTitle] = useState("");
   const [productPrice, setProductPrice] = useState("");
-  const [productVolume, setProductVolume] = useState("none");
-  const [productType, setProductType] = useState("none");
+  const [productVolume, setProductVolume] = useState(volumeOptions[0]);
+  const [productType, setProductType] = useState(typeOptions[0]);
   const [productTag, setProductTag] = useState("");
-  const [productCategory, setProductCategory] = useState("");
+  const [productCategory, setProductCategory] = useState(categoryOptions[0]);
   const createDrinkMutation = api.drinks.createDrink.useMutation();
   const router = useRouter();
 
@@ -26,33 +53,6 @@ const SubmitDrink: NextPage = () => {
     });
     void router.push("/drinks");
   };
-
-  const volumeOptions: string[] = [
-    "none",
-    "0.1",
-    "0.187",
-    "0.2",
-    "0.25",
-    "0.3",
-    "0.33",
-    "0.35",
-    "0.4",
-    "0.5",
-  ];
-
-  const typeOptions: string[] = ["none", "Green", "Black", "Fruit", "Herb"];
-
-  const categoryOptions: string[] = [
-    "coffee",
-    "alchoholic",
-    "non-alcoholic",
-    "beer",
-    "wine",
-    "tea",
-    "juices",
-    "brandy",
-    "shakes",
-  ];
 
   return (
     <>
