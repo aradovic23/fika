@@ -1,5 +1,6 @@
 import Image from "next/image";
 import type { FC } from "react";
+import { useState } from "react";
 import classnames from "classnames";
 import Link from "next/link";
 import { api } from "../utils/api";
@@ -7,8 +8,10 @@ import { useQueryClient } from "@tanstack/react-query";
 import { EditIcon } from "./EditIcon";
 import { DeleteIcon } from "./DeleteIcon";
 import { useCategoryImage } from "../hooks/useCategoryImage";
+import { InfoIcon } from "./InfoIcon";
+import { Modal } from "./Modal";
 
-type Drink = {
+export type Drink = {
   title: string;
   id: string;
   price: string;
@@ -16,6 +19,7 @@ type Drink = {
   tag?: string | null;
   category?: string | null;
   type?: string | null;
+  description?: string | null;
 };
 
 const typeBadgeBackgroundColor: { [index: string]: string } = {
@@ -37,8 +41,12 @@ export const DrinkList: FC<Drink> = ({
   type,
   category,
   tag,
+  description,
 }) => {
+  const [showModal, setShowModal] = useState(false);
+
   const queryClient = useQueryClient();
+
   const { mutate: deleteDrink } = api.drinks.deleteDrink.useMutation({
     onSuccess() {
       void queryClient.invalidateQueries({ queryKey: ["drink"] });
@@ -51,6 +59,10 @@ export const DrinkList: FC<Drink> = ({
     if (window.confirm("Are you sure")) {
       deleteDrink({ id });
     }
+  };
+
+  const handleShowModal = (state: boolean) => {
+    setShowModal(state);
   };
 
   const categoryIcon: string = useCategoryImage(category ?? "") ?? "coffee";
@@ -112,6 +124,16 @@ export const DrinkList: FC<Drink> = ({
                 onDeleteHandler(id);
               }}
             />
+            {category === "cocktails" && (
+              <InfoIcon onClick={() => setShowModal(!showModal)} />
+            )}
+            {showModal && (
+              <Modal
+                description={description ?? ""}
+                title={title}
+                handleShowModal={handleShowModal}
+              />
+            )}
           </div>
         </div>
       </div>

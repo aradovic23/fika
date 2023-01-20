@@ -5,11 +5,13 @@ export const TextInput = ({
   onChange,
   label,
   required,
+  inputMode,
 }: {
   value: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   label: string;
   required: boolean;
+  inputMode: React.HTMLAttributes<HTMLLIElement>["inputMode"];
 }) => {
   return (
     <div className="flex flex-col gap-1">
@@ -24,6 +26,7 @@ export const TextInput = ({
           value={value}
           onChange={onChange}
           required={required}
+          inputMode={inputMode}
         />
       </div>
     </div>

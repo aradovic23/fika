@@ -1,3 +1,1 @@
 - admin should be able to update a product
-- products should be sorted by name - a-z
-- allow admin to add an image to the product

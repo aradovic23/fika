@@ -21,9 +21,13 @@ export const volumeOptions: string[] = [
 
 const typeOptions: string[] = ["none", "Green", "Black", "Fruit", "Herb"];
 
+interface Props {
+  inputMode: React.HTMLAttributes<HTMLLIElement>["inputMode"];
+}
+
 export const categoryOptions: string[] = [
   "coffee",
-  "alchoholic",
+  "alcoholic",
   "non-alcoholic",
   "beer",
   "wine",
@@ -31,6 +35,7 @@ export const categoryOptions: string[] = [
   "juices",
   "brandy",
   "shakes",
+  "cocktails",
 ];
 
 const SubmitDrink: NextPage = () => {
@@ -40,6 +45,8 @@ const SubmitDrink: NextPage = () => {
   const [productType, setProductType] = useState(typeOptions[0]);
   const [productTag, setProductTag] = useState("");
   const [productCategory, setProductCategory] = useState(categoryOptions[0]);
+  const [productDescription, setProductDescription] = useState("");
+  const [isTagChecked, setIsTagChecked] = useState(false);
   const createDrinkMutation = api.drinks.createDrink.useMutation();
   const router = useRouter();
 
@@ -52,6 +59,7 @@ const SubmitDrink: NextPage = () => {
       volume: productVolume,
       category: productCategory,
       type: productType,
+      description: productDescription,
     });
     void router.push("/drinks");
   };
@@ -65,33 +73,44 @@ const SubmitDrink: NextPage = () => {
       </Head>
       <main className="container mx-auto flex h-screen flex-col items-center py-10">
         <form className="flex w-96 flex-col gap-5" onSubmit={handleSubmitDrink}>
-          <h1 className="text-center text-2xl uppercase">Upload a drink</h1>
+          <h1 className="text-center text-2xl font-bold uppercase">
+            Upload a drink
+          </h1>
           <div className="">
+            <h2 className="my-2 text-center text-sm font-semibold uppercase text-gray-500">
+              Main info
+            </h2>
             <SelectInput
               disabled={false}
               label="Category"
               onChange={(e) => setProductCategory(e.target.value)}
             >
-              {categoryOptions.map((category) => (
+              {categoryOptions.sort().map((category) => (
                 <option value={category} key={category}>
                   {category}
                 </option>
               ))}
             </SelectInput>
+
             <TextInput
               value={productTitle}
               onChange={(e) => setProductTitle(e.target.value)}
               label="Product Name"
               required={true}
+              inputMode="text"
             />
             <TextInput
               value={productPrice}
               onChange={(e) => setProductPrice(e.target.value)}
               label="Price"
               required={true}
+              inputMode="numeric"
             />
           </div>
           <div className="max-w-sm md:max-w-md">
+            <h2 className="my-2 text-center text-sm font-semibold uppercase text-gray-500">
+              More options
+            </h2>
             <SelectInput
               disabled={false}
               label="Volume"
@@ -103,23 +122,48 @@ const SubmitDrink: NextPage = () => {
                 </option>
               ))}
             </SelectInput>
-            <SelectInput
-              disabled={productCategory != "tea"}
-              label="Type"
-              onChange={(e) => setProductType(e.target.value)}
-            >
-              {typeOptions.map((type) => (
-                <option value={type} key={type}>
-                  {type}
-                </option>
-              ))}
-            </SelectInput>
-            <TextInput
-              value={productTag}
-              onChange={(e) => setProductTag(e.target.value)}
-              label="Tag"
-              required={false}
-            />
+            {productCategory === "tea" && (
+              <SelectInput
+                disabled={productCategory != "tea"}
+                label="Type"
+                onChange={(e) => setProductType(e.target.value)}
+              >
+                {typeOptions.map((type) => (
+                  <option value={type} key={type}>
+                    {type}
+                  </option>
+                ))}
+              </SelectInput>
+            )}
+
+            <div className="form-control mt-4">
+              <label className="label cursor-pointer">
+                <span className="label-text">Add a tag?</span>
+                <input
+                  type="checkbox"
+                  className="toggle-secondary toggle"
+                  onChange={() => setIsTagChecked(!isTagChecked)}
+                />
+              </label>
+            </div>
+            {isTagChecked && (
+              <TextInput
+                value={productTag}
+                onChange={(e) => setProductTag(e.target.value)}
+                label="Tag"
+                required={false}
+                inputMode="text"
+              />
+            )}
+
+            {productCategory === "cocktails" && (
+              <textarea
+                className="textarea-bordered textarea my-5 w-full py-5"
+                placeholder="Cocktail description"
+                value={productDescription}
+                onChange={(e) => setProductDescription(e.target.value)}
+              ></textarea>
+            )}
           </div>
 
           <button className="btn-primary btn ">Submit</button>

@@ -5,7 +5,7 @@ export const useCategoryImage = (categoryName: string) => {
       url: "https://images.unsplash.com/photo-1610492273280-c60d0be4f0d6?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80",
     },
     {
-      name: "alchoholic",
+      name: "alcoholic",
       url: "https://images.unsplash.com/photo-1615887023544-3a566f29d822?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80",
     },
     {
@@ -35,6 +35,10 @@ export const useCategoryImage = (categoryName: string) => {
     {
       name: "shakes",
       url: "https://images.unsplash.com/photo-1596108005029-8b6b02720dfd?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80",
+    },
+    {
+      name: "cocktails",
+      url: "https://images.unsplash.com/photo-1563223771-c2142d276459?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80",
     },
   ];
 

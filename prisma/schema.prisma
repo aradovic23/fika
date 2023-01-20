@@ -74,4 +74,5 @@ model Drink {
     tag         String?
     category    String?
     createdDate DateTime @default(now())
+    description String?
 }
