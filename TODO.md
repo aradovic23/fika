@@ -1,3 +1,3 @@
-- admin should be able to delete a product
-- admin should be able to updat a product
-- producst should be sorted by name - a-z
+- admin should be able to update a product
+- products should be sorted by name - a-z
+- allow admin to add an image to the product

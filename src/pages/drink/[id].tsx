@@ -20,9 +20,6 @@ const EditDrinkPage: NextPage = () => {
       <main className="flex min-h-screen">
         <section className="container mx-auto py-10">
           <h1 className="text-4xl">{singleDrink.data?.title}</h1>
-          <pre>
-            <code>{singleDrink.data?.price}</code>
-          </pre>
         </section>
       </main>
     </>

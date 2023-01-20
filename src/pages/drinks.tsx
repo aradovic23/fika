@@ -30,26 +30,30 @@ const Drinks: NextPage = () => {
       </Head>
       <main className="flex min-h-screen">
         <section className="container mx-auto py-10">
-          <h1 className="text-2xl font-bold">All Drinks</h1>
+          <h1 className="text-center text-2xl font-bold md:text-left">
+            All Drinks
+          </h1>
           <form>
-            <div className="grid grid-cols-3 gap-3">
-              <div className="col-span-1 flex h-screen flex-col gap-5 py-3">
+            <div className="flex flex-col gap-3 px-2 md:grid md:grid-cols-3">
+              <div className="col-span-1 flex flex-col gap-5 py-3">
                 <TextInput
                   label="Search by Name"
                   onChange={(e) => setSearch(e.target.value)}
                   value={search}
                   required={false}
                 />
-                <div>
+                <div className="flex snap-x flex-row gap-2 overflow-x-auto md:flex-col md:gap-1 md:overflow-auto">
                   {["all", ...categoryOptions].map((category, idx) => (
-                    <div key={idx} className="form-control">
-                      <label className="label cursor-pointer">
-                        <span className="label-text">{category}</span>
+                    <div key={idx} className="form-control snap-start">
+                      <label className="label cursor-pointer gap-1 rounded-md bg-slate-800 px-2 md:bg-transparent">
+                        <span className="label-text truncate font-semibold uppercase md:font-normal">
+                          {category}
+                        </span>
                         <input
                           type="radio"
                           name="radio-10"
                           value={selectedCategory}
-                          className="radio checked:bg-primary"
+                          className="radio checked:bg-accent"
                           onChange={() => setSelectedCategory(category)}
                           checked={category === selectedCategory}
                         />
@@ -58,10 +62,11 @@ const Drinks: NextPage = () => {
                   ))}
                 </div>
               </div>
-              <div className="col-span-2 grid auto-rows-max grid-cols-2 gap-4">
+              <div className="col-span-1 grid auto-rows-max gap-4 md:col-span-2 md:grid-cols-2">
                 {filteredDrinks.map((drink) => (
                   <DrinkList key={drink.id} {...drink} />
                 ))}
+                {filteredDrinks.length === 0 && <p>no drinks</p>}
               </div>
             </div>
           </form>

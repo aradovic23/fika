@@ -13,14 +13,14 @@ export const TextInput = ({
 }) => {
   return (
     <div className="flex flex-col gap-1">
-      <div className="form-control w-full max-w-xs">
+      <div className="w-full">
         <label className="label">
           <span className="label-text">{label}</span>
         </label>
         <input
           type="text"
           placeholder="Type here"
-          className="input-bordered input w-full max-w-xs"
+          className="input-bordered input w-full"
           value={value}
           onChange={onChange}
           required={required}

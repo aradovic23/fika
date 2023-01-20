@@ -36,4 +36,18 @@ export const drinksRouter = createTRPCRouter({
       });
       return singleDrink;
     }),
+  deleteDrink: publicProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const { id } = input;
+      try {
+        return await ctx.prisma.drink.delete({
+          where: {
+            id,
+          },
+        });
+      } catch (err) {
+        console.warn(err);
+      }
+    }),
 });
