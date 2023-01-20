@@ -21,10 +21,6 @@ export const volumeOptions: string[] = [
 
 const typeOptions: string[] = ["none", "Green", "Black", "Fruit", "Herb"];
 
-interface Props {
-  inputMode: React.HTMLAttributes<HTMLLIElement>["inputMode"];
-}
-
 export const categoryOptions: string[] = [
   "coffee",
   "alcoholic",
