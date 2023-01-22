@@ -2,7 +2,6 @@ import { type NextPage } from "next";
 import Head from "next/head";
 import { api } from "../utils/api";
 import { DrinkList } from "../components/DrinkList";
-import { categoryOptions } from "./submit-drink";
 import { useState } from "react";
 import { TextInput } from "../components/TextInput";
 
@@ -10,10 +9,13 @@ const Drinks: NextPage = () => {
   const drinks = api.drinks.getDrinks.useQuery();
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [search, setSearch] = useState("");
+  const { data } = api.drinks.getCategories.useQuery();
 
   const filteredDrinks = (drinks.data ?? [])
     .filter((drink) =>
-      selectedCategory === "all" ? true : drink.category === selectedCategory
+      selectedCategory.toLowerCase() === "all"
+        ? true
+        : drink.category?.toLowerCase() === selectedCategory.toLowerCase()
     )
     .filter((drink) =>
       search != ""
@@ -41,21 +43,27 @@ const Drinks: NextPage = () => {
                   onChange={(e) => setSearch(e.target.value)}
                   value={search}
                   required={false}
+                  inputMode="text"
                 />
                 <div className="flex snap-x flex-row gap-2 overflow-x-auto md:flex-col md:gap-1 md:overflow-auto">
-                  {["all", ...categoryOptions].map((category, idx) => (
-                    <div key={idx} className="form-control snap-start">
+                  {(data || []).map((category) => (
+                    <div key={category.id} className="form-control snap-start">
                       <label className="label cursor-pointer gap-1 rounded-md bg-slate-800 px-2 md:bg-transparent">
                         <span className="label-text truncate font-semibold uppercase md:font-normal">
-                          {category}
+                          {category.categoryName}
                         </span>
                         <input
                           type="radio"
                           name="radio-10"
                           value={selectedCategory}
                           className="radio checked:bg-accent"
-                          onChange={() => setSelectedCategory(category)}
-                          checked={category === selectedCategory}
+                          onChange={() =>
+                            setSelectedCategory(category.categoryName)
+                          }
+                          checked={
+                            category.categoryName.toLowerCase() ===
+                            selectedCategory.toLowerCase()
+                          }
                         />
                       </label>
                     </div>

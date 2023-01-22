@@ -1,4 +1,7 @@
+// import { api } from "./../utils/api";
 export const useCategoryImage = (categoryName: string) => {
+  // const categories = api.drinks.getCategories.useQuery();
+  //  TODO: PUT IMG URLS WHEN CREATING CATEGORIES
   const imageMap = [
     {
       name: "coffee",
@@ -42,7 +45,9 @@ export const useCategoryImage = (categoryName: string) => {
     },
   ];
 
-  const categoryImage = imageMap.find((image) => categoryName === image.name);
+  const categoryImage = imageMap.find(
+    (image) => categoryName.toLowerCase() === image.name.toLowerCase()
+  );
 
   return categoryImage?.url;
 };

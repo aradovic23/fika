@@ -5,6 +5,8 @@ import { api } from "../utils/api";
 import { useRouter } from "next/router";
 import { TextInput } from "../components/TextInput";
 import { SelectInput } from "../components/SelectInput";
+import { Checkbox } from "../components/Checkbox";
+import { Toast } from "../components/Toast";
 
 export const volumeOptions: string[] = [
   "none",
@@ -21,29 +23,25 @@ export const volumeOptions: string[] = [
 
 const typeOptions: string[] = ["none", "Green", "Black", "Fruit", "Herb"];
 
-export const categoryOptions: string[] = [
-  "coffee",
-  "alcoholic",
-  "non-alcoholic",
-  "beer",
-  "wine",
-  "tea",
-  "juices",
-  "brandy",
-  "shakes",
-  "cocktails",
-];
-
 const SubmitDrink: NextPage = () => {
+  const createDrinkMutation = api.drinks.createDrink.useMutation();
+  const createCategoryMutation = api.drinks.createCategory.useMutation();
+  const categories = api.drinks.getCategories.useQuery();
+
   const [productTitle, setProductTitle] = useState("");
   const [productPrice, setProductPrice] = useState("");
   const [productVolume, setProductVolume] = useState(volumeOptions[0]);
   const [productType, setProductType] = useState(typeOptions[0]);
   const [productTag, setProductTag] = useState("");
-  const [productCategory, setProductCategory] = useState(categoryOptions[0]);
+  const [productCategory, setProductCategory] = useState("Alcoholic");
   const [productDescription, setProductDescription] = useState("");
   const [isTagChecked, setIsTagChecked] = useState(false);
-  const createDrinkMutation = api.drinks.createDrink.useMutation();
+  const [newCategory, setNewCategory] = useState("");
+  const [isCreateNewCategoryChecked, setIsCreateNewCategoryChecked] =
+    useState(false);
+  const [isToastVisible, setIsToastVisible] = useState(false);
+  const [modalText, setModalText] = useState("");
+
   const router = useRouter();
 
   const handleSubmitDrink = async (e: React.FormEvent) => {
@@ -60,6 +58,24 @@ const SubmitDrink: NextPage = () => {
     void router.push("/drinks");
   };
 
+  const handleCreateNewCategory = async (e: React.FormEvent) => {
+    e.preventDefault();
+    await createCategoryMutation.mutateAsync({
+      categoryName: newCategory,
+    });
+
+    await categories.refetch();
+
+    setNewCategory("");
+    setIsToastVisible(true);
+    setModalText(`${newCategory} added`);
+    setIsCreateNewCategoryChecked(!isCreateNewCategoryChecked);
+    setTimeout(() => {
+      setIsToastVisible(false);
+      setModalText("");
+    }, 3000);
+  };
+
   return (
     <>
       <Head>
@@ -68,10 +84,11 @@ const SubmitDrink: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className="container mx-auto flex h-screen flex-col items-center py-10">
+        <h1 className="text-center text-2xl font-bold uppercase">
+          Upload a drink
+        </h1>
+
         <form className="flex w-96 flex-col gap-5" onSubmit={handleSubmitDrink}>
-          <h1 className="text-center text-2xl font-bold uppercase">
-            Upload a drink
-          </h1>
           <div className="">
             <h2 className="my-2 text-center text-sm font-semibold uppercase text-gray-500">
               Main info
@@ -81,12 +98,41 @@ const SubmitDrink: NextPage = () => {
               label="Category"
               onChange={(e) => setProductCategory(e.target.value)}
             >
-              {categoryOptions.sort().map((category) => (
-                <option value={category} key={category}>
-                  {category}
-                </option>
-              ))}
+              {(categories.data || []).map(
+                (category) =>
+                  category.categoryName.toLowerCase() != "all" && (
+                    <option value={category.categoryName} key={category.id}>
+                      {category.categoryName}
+                    </option>
+                  )
+              )}
             </SelectInput>
+            <div className="flex w-96 flex-col gap-5">
+              <Checkbox
+                label="Create new category?"
+                onChange={() =>
+                  setIsCreateNewCategoryChecked(!isCreateNewCategoryChecked)
+                }
+              />
+            </div>
+            {isCreateNewCategoryChecked && (
+              <div className=" flex items-stretch justify-between gap-2 rounded-lg bg-base-300 p-5">
+                <TextInput
+                  label="New Category"
+                  value={newCategory}
+                  required={false}
+                  inputMode="text"
+                  onChange={(e) => setNewCategory(e.target.value)}
+                />
+
+                <button
+                  onClick={handleCreateNewCategory}
+                  className="btn-outline btn-secondary btn w-1/3 self-end"
+                >
+                  Add
+                </button>
+              </div>
+            )}
 
             <TextInput
               value={productTitle}
@@ -131,17 +177,10 @@ const SubmitDrink: NextPage = () => {
                 ))}
               </SelectInput>
             )}
-
-            <div className="form-control mt-4">
-              <label className="label cursor-pointer">
-                <span className="label-text">Add a tag?</span>
-                <input
-                  type="checkbox"
-                  className="toggle-secondary toggle"
-                  onChange={() => setIsTagChecked(!isTagChecked)}
-                />
-              </label>
-            </div>
+            <Checkbox
+              label="Add a tag?"
+              onChange={() => setIsTagChecked(!isTagChecked)}
+            />
             {isTagChecked && (
               <TextInput
                 value={productTag}
@@ -164,6 +203,7 @@ const SubmitDrink: NextPage = () => {
 
           <button className="btn-primary btn ">Submit</button>
         </form>
+        {isToastVisible && <Toast label={modalText} />}
       </main>
     </>
   );

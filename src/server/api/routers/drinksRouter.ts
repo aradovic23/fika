@@ -23,6 +23,16 @@ export const drinksRouter = createTRPCRouter({
       });
       return drink;
     }),
+  createCategory: publicProcedure
+    .input(z.object({ categoryName: z.string() }))
+    .mutation(async ({ input, ctx }) => {
+      const newCategory = await ctx.prisma.category.create({
+        data: {
+          categoryName: input.categoryName,
+        },
+      });
+      return newCategory;
+    }),
   getDrinks: publicProcedure.query(async ({ ctx }) => {
     const drinks = await ctx.prisma.drink.findMany({
       orderBy: {
@@ -30,6 +40,12 @@ export const drinksRouter = createTRPCRouter({
       },
     });
     return drinks;
+  }),
+  getCategories: publicProcedure.query(async ({ ctx }) => {
+    const category = await ctx.prisma.category.findMany({
+      orderBy: [{ role: "asc" }, { categoryName: "asc" }],
+    });
+    return category;
   }),
   getDrinkById: publicProcedure
     .input(z.object({ id: z.string() }))

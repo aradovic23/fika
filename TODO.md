@@ -1,1 +1,3 @@
+- add ability to add url when creating a category and change images for existing categories in DB
+- modify useCategoryImage to use the new approach with data from DB
 - admin should be able to update a product
