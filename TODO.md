@@ -6,6 +6,7 @@
 - add translation to the app rs and eng 
 - shorten the image url
 - add ability for admin to edit the product 
+- abstract more repeating html into components to clean up code 
 
 ## bugs 
 
