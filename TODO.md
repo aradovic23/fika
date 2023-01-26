@@ -7,6 +7,7 @@
 - shorten the image url
 - add ability for admin to edit the product 
 - abstract more repeating html into components to clean up code 
+- animate on edit enter/edit/exit 
 
 ## bugs 
 
