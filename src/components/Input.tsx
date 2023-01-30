@@ -1,17 +1,19 @@
 import React from "react";
 
-export const TextInput = ({
+export const Input = ({
   value,
   onChange,
   label,
   required,
   inputMode,
+  placeholder,
 }: {
   value: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   label: string;
   required: boolean;
   inputMode: React.HTMLAttributes<HTMLLIElement>["inputMode"];
+  placeholder: string;
 }) => {
   return (
     <div className="flex flex-col gap-1">
@@ -21,8 +23,8 @@ export const TextInput = ({
         </label>
         <input
           type="text"
-          placeholder="Type here"
-          className="input-bordered input w-full"
+          placeholder={placeholder}
+          className="input-bordered input w-full placeholder:text-sm placeholder:opacity-30"
           value={value}
           onChange={onChange}
           required={required}

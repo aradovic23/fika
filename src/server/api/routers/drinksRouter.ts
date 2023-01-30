@@ -24,11 +24,12 @@ export const drinksRouter = createTRPCRouter({
       return drink;
     }),
   createCategory: publicProcedure
-    .input(z.object({ categoryName: z.string() }))
+    .input(z.object({ categoryName: z.string(), url: z.string().optional() }))
     .mutation(async ({ input, ctx }) => {
       const newCategory = await ctx.prisma.category.create({
         data: {
           categoryName: input.categoryName,
+          url: input.url,
         },
       });
       return newCategory;
@@ -76,7 +77,20 @@ export const drinksRouter = createTRPCRouter({
     return drinks;
   }),
   updateDrink: publicProcedure
-    .input(z.object({ id: z.string(), data: z.object({ title: z.string() }) }))
+    .input(
+      z.object({
+        id: z.string(),
+        data: z.object({
+          title: z.string().optional(),
+          price: z.string().optional(),
+          tag: z.string().optional(),
+          category: z.string().optional(),
+          volume: z.string().optional(),
+          type: z.string().optional(),
+          description: z.string().optional(),
+        }),
+      })
+    )
     .mutation(async ({ ctx, input }) => {
       const { id, data } = input;
       const drink = await ctx.prisma.drink.update({

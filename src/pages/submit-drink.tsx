@@ -3,13 +3,16 @@ import Head from "next/head";
 import { useState } from "react";
 import { api } from "../utils/api";
 import { useRouter } from "next/router";
-import { TextInput } from "../components/TextInput";
-import { SelectInput } from "../components/SelectInput";
+import { Input } from "../components/Input";
+import { Select } from "../components/Select";
 import { Checkbox } from "../components/Checkbox";
 import { Toast } from "../components/Toast";
+import useToaster from "../hooks/useToaster";
 
 export const volumeOptions: string[] = [
   "none",
+  "0.03",
+  "0.05",
   "0.1",
   "0.187",
   "0.2",
@@ -35,14 +38,12 @@ const SubmitDrink: NextPage = () => {
   const [productTag, setProductTag] = useState("");
   const [productCategory, setProductCategory] = useState("Alcoholic");
   const [productDescription, setProductDescription] = useState("");
+  const [categoryUrl, setCategoryUrl] = useState("");
   const [isTagChecked, setIsTagChecked] = useState(false);
   const [newCategory, setNewCategory] = useState("");
   const [isCreateNewCategoryChecked, setIsCreateNewCategoryChecked] =
     useState(false);
-  const [isToastVisible, setIsToastVisible] = useState(false);
-  const [modalText, setModalText] = useState("");
-
-  const router = useRouter();
+  const [isVisible, message, showToaster] = useToaster();
 
   const handleSubmitDrink = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -50,30 +51,27 @@ const SubmitDrink: NextPage = () => {
       title: productTitle,
       price: productPrice,
       tag: productTag,
-      volume: productVolume,
+      volume: productVolume?.toLowerCase() === "none" ? null : productVolume,
       category: productCategory,
-      type: productType,
+      type: productCategory.toLowerCase() === "tea" ? productType : null,
       description: productDescription,
     });
-    void router.push("/drinks");
+
+    showToaster(`${productTitle} added`, { type: "toPage", path: "/drinks" });
   };
 
   const handleCreateNewCategory = async (e: React.FormEvent) => {
     e.preventDefault();
     await createCategoryMutation.mutateAsync({
       categoryName: newCategory,
+      url: categoryUrl != "" ? categoryUrl : undefined,
     });
-
+    setIsCreateNewCategoryChecked(false);
     await categories.refetch();
 
     setNewCategory("");
-    setIsToastVisible(true);
-    setModalText(`${newCategory} added`);
+    showToaster(`${productCategory} added`);
     setIsCreateNewCategoryChecked(!isCreateNewCategoryChecked);
-    setTimeout(() => {
-      setIsToastVisible(false);
-      setModalText("");
-    }, 3000);
   };
 
   return (
@@ -85,7 +83,7 @@ const SubmitDrink: NextPage = () => {
       </Head>
       <main className="container mx-auto flex h-screen flex-col items-center py-10">
         <h1 className="text-center text-2xl font-bold uppercase">
-          Upload a drink
+          Create a drink
         </h1>
 
         <form className="flex w-96 flex-col gap-5" onSubmit={handleSubmitDrink}>
@@ -93,7 +91,7 @@ const SubmitDrink: NextPage = () => {
             <h2 className="my-2 text-center text-sm font-semibold uppercase text-gray-500">
               Main info
             </h2>
-            <SelectInput
+            <Select
               disabled={false}
               label="Category"
               onChange={(e) => setProductCategory(e.target.value)}
@@ -106,7 +104,7 @@ const SubmitDrink: NextPage = () => {
                     </option>
                   )
               )}
-            </SelectInput>
+            </Select>
             <div className="flex w-96 flex-col gap-5">
               <Checkbox
                 label="Create new category?"
@@ -116,44 +114,55 @@ const SubmitDrink: NextPage = () => {
               />
             </div>
             {isCreateNewCategoryChecked && (
-              <div className=" flex items-stretch justify-between gap-2 rounded-lg bg-base-300 p-5">
-                <TextInput
-                  label="New Category"
+              <div className=" flex flex-col gap-2 rounded-lg bg-base-300/70 p-5">
+                <Input
+                  label="Category name"
                   value={newCategory}
                   required={false}
                   inputMode="text"
                   onChange={(e) => setNewCategory(e.target.value)}
+                  placeholder="Enter category name"
+                />
+                <Input
+                  label="Image Url (Optional)"
+                  value={categoryUrl}
+                  required={false}
+                  inputMode="text"
+                  onChange={(e) => setCategoryUrl(e.target.value)}
+                  placeholder="Paste image url"
                 />
 
                 <button
                   onClick={handleCreateNewCategory}
-                  className="btn-outline btn-secondary btn w-1/3 self-end"
+                  className="btn-outline btn-secondary btn mt-2"
                 >
-                  Add
+                  Create new category
                 </button>
               </div>
             )}
 
-            <TextInput
+            <Input
               value={productTitle}
               onChange={(e) => setProductTitle(e.target.value)}
               label="Product Name"
               required={true}
               inputMode="text"
+              placeholder="Enter product name"
             />
-            <TextInput
+            <Input
               value={productPrice}
               onChange={(e) => setProductPrice(e.target.value)}
               label="Price"
               required={true}
               inputMode="numeric"
+              placeholder="Enter product price"
             />
           </div>
           <div className="max-w-sm md:max-w-md">
             <h2 className="my-2 text-center text-sm font-semibold uppercase text-gray-500">
               More options
             </h2>
-            <SelectInput
+            <Select
               disabled={false}
               label="Volume"
               onChange={(e) => setProductVolume(e.target.value)}
@@ -163,10 +172,10 @@ const SubmitDrink: NextPage = () => {
                   {volume}
                 </option>
               ))}
-            </SelectInput>
-            {productCategory === "tea" && (
-              <SelectInput
-                disabled={productCategory != "tea"}
+            </Select>
+            {productCategory.toLowerCase() === "tea" && (
+              <Select
+                disabled={productCategory.toLowerCase() != "tea"}
                 label="Type"
                 onChange={(e) => setProductType(e.target.value)}
               >
@@ -175,23 +184,24 @@ const SubmitDrink: NextPage = () => {
                     {type}
                   </option>
                 ))}
-              </SelectInput>
+              </Select>
             )}
             <Checkbox
-              label="Add a tag?"
+              label="Add a special tag?"
               onChange={() => setIsTagChecked(!isTagChecked)}
             />
             {isTagChecked && (
-              <TextInput
+              <Input
                 value={productTag}
                 onChange={(e) => setProductTag(e.target.value)}
                 label="Tag"
                 required={false}
                 inputMode="text"
+                placeholder="Enter tag name"
               />
             )}
 
-            {productCategory === "cocktails" && (
+            {productCategory.toLowerCase() === "cocktails" && (
               <textarea
                 className="textarea-bordered textarea my-5 w-full py-5"
                 placeholder="Cocktail description"
@@ -203,7 +213,7 @@ const SubmitDrink: NextPage = () => {
 
           <button className="btn-primary btn ">Submit</button>
         </form>
-        {isToastVisible && <Toast label={modalText} />}
+        {isVisible && <Toast label={message} />}
       </main>
     </>
   );

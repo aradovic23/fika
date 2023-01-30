@@ -1,6 +1,6 @@
 import React from "react";
 
-export const SelectInput = ({
+export const Select = ({
   label,
   onChange,
   children,

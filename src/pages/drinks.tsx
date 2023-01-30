@@ -3,7 +3,8 @@ import Head from "next/head";
 import { api } from "../utils/api";
 import { DrinkList } from "../components/DrinkList";
 import { useState } from "react";
-import { TextInput } from "../components/TextInput";
+import { Input } from "../components/Input";
+import { Radio } from "../components/Radio";
 
 const Drinks: NextPage = () => {
   const drinks = api.drinks.getDrinks.useQuery();
@@ -38,35 +39,28 @@ const Drinks: NextPage = () => {
           <form>
             <div className="flex flex-col gap-3 px-2 md:grid md:grid-cols-3">
               <div className="col-span-1 flex flex-col gap-5 py-3">
-                <TextInput
+                <Input
                   label="Search by Name"
                   onChange={(e) => setSearch(e.target.value)}
                   value={search}
                   required={false}
                   inputMode="text"
+                  placeholder="Enter product name"
                 />
                 <div className="flex snap-x flex-row gap-2 overflow-x-auto md:flex-col md:gap-1 md:overflow-auto">
                   {(data || []).map((category) => (
-                    <div key={category.id} className="form-control snap-start">
-                      <label className="label cursor-pointer gap-1 rounded-md bg-slate-800 px-2 md:bg-transparent">
-                        <span className="label-text truncate font-semibold uppercase md:font-normal">
-                          {category.categoryName}
-                        </span>
-                        <input
-                          type="radio"
-                          name="radio-10"
-                          value={selectedCategory}
-                          className="radio checked:bg-accent"
-                          onChange={() =>
-                            setSelectedCategory(category.categoryName)
-                          }
-                          checked={
-                            category.categoryName.toLowerCase() ===
-                            selectedCategory.toLowerCase()
-                          }
-                        />
-                      </label>
-                    </div>
+                    <Radio
+                      key={category.id}
+                      label={category.categoryName}
+                      value={selectedCategory}
+                      onChange={() =>
+                        setSelectedCategory(category.categoryName)
+                      }
+                      checked={
+                        category.categoryName.toLowerCase() ===
+                        selectedCategory.toLowerCase()
+                      }
+                    />
                   ))}
                 </div>
               </div>
@@ -74,7 +68,7 @@ const Drinks: NextPage = () => {
                 {filteredDrinks.map((drink) => (
                   <DrinkList key={drink.id} {...drink} />
                 ))}
-                {filteredDrinks.length === 0 && <p>no drinks</p>}
+                {filteredDrinks.length === 0 && <p>no drink found</p>}
               </div>
             </div>
           </form>

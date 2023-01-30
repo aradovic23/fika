@@ -65,13 +65,13 @@ export const DrinkList: FC<Drink> = ({
     setShowModal(state);
   };
 
-  const categoryIcon: string = useCategoryImage(category ?? "") ?? "coffee";
+  const categoryName: string = useCategoryImage(category ?? "") || "coffee";
 
   return (
     <div className="flex max-h-52 flex-col gap-2 rounded-lg bg-base-300">
       <figure className="relative h-24 rounded-t-lg">
         <Image
-          src={categoryIcon}
+          src={categoryName}
           alt="image"
           fill
           className="object-cover"
