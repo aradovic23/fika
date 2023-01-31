@@ -4,14 +4,14 @@ interface SelectProps {
   label: string;
   onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
   children: React.ReactNode;
-  disabled: boolean;
+  disabled?: boolean;
 }
 
 export const Select: React.FC<SelectProps> = ({
   label,
   onChange,
   children,
-  disabled,
+  disabled = false,
 }) => {
   return (
     <div>

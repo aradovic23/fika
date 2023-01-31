@@ -4,18 +4,18 @@ interface InputProps {
   value: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   label: string;
-  required: boolean;
+  required?: boolean;
   inputMode: React.HTMLAttributes<HTMLLIElement>["inputMode"];
-  placeholder: string;
+  placeholder?: string;
 }
 
 export const Input: React.FC<InputProps> = ({
   value,
   onChange,
   label,
-  required,
+  required = false,
   inputMode,
-  placeholder,
+  placeholder = "Type here...",
 }) => {
   return (
     <div className="flex flex-col gap-1">

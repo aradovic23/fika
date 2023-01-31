@@ -8,6 +8,8 @@ import { Checkbox } from "../components/Checkbox";
 import { Toast } from "../components/Toast";
 import useToaster from "../hooks/useToaster";
 import Button from "../components/Button";
+import { Textarea } from "../components/Textarea";
+import { useGetCategory } from "../hooks/useGetCategory";
 
 export const volumeOptions: string[] = [
   "none",
@@ -36,14 +38,16 @@ const SubmitDrink: NextPage = () => {
   const [productVolume, setProductVolume] = useState(volumeOptions[0]);
   const [productType, setProductType] = useState(typeOptions[0]);
   const [productTag, setProductTag] = useState("");
-  const [productCategory, setProductCategory] = useState("Alcoholic");
   const [productDescription, setProductDescription] = useState("");
   const [categoryUrl, setCategoryUrl] = useState("");
+  const [productCategoryId, setProductCategoryId] = useState(17);
   const [isTagChecked, setIsTagChecked] = useState(false);
   const [newCategory, setNewCategory] = useState("");
   const [isCreateNewCategoryChecked, setIsCreateNewCategoryChecked] =
     useState(false);
   const [isVisible, message, showToaster, isDisabled] = useToaster();
+
+  const { category: currentCategory } = useGetCategory(productCategoryId);
 
   const handleSubmitDrink = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -52,9 +56,12 @@ const SubmitDrink: NextPage = () => {
       price: productPrice,
       tag: productTag,
       volume: productVolume?.toLowerCase() === "none" ? null : productVolume,
-      category: productCategory,
-      type: productCategory.toLowerCase() === "tea" ? productType : null,
+      type:
+        currentCategory?.categoryName.toLowerCase() === "tea"
+          ? productType
+          : null,
       description: productDescription,
+      categoryId: productCategoryId,
     });
 
     showToaster(`${productTitle} added`, { type: "toPage", path: "/drinks" });
@@ -70,7 +77,7 @@ const SubmitDrink: NextPage = () => {
     await categories.refetch();
 
     setNewCategory("");
-    showToaster(`${productCategory} added`);
+    showToaster(`${newCategory} added`);
     setIsCreateNewCategoryChecked(!isCreateNewCategoryChecked);
   };
 
@@ -92,14 +99,13 @@ const SubmitDrink: NextPage = () => {
               Main info
             </h2>
             <Select
-              disabled={false}
               label="Category"
-              onChange={(e) => setProductCategory(e.target.value)}
+              onChange={(e) => setProductCategoryId(parseInt(e.target.value))}
             >
               {(categories.data || []).map(
                 (category) =>
-                  category.categoryName.toLowerCase() != "all" && (
-                    <option value={category.categoryName} key={category.id}>
+                  category.categoryName.toLowerCase() !== "all" && (
+                    <option value={category.id} key={category.id}>
                       {category.categoryName}
                     </option>
                   )
@@ -118,7 +124,6 @@ const SubmitDrink: NextPage = () => {
                 <Input
                   label="Category name"
                   value={newCategory}
-                  required={false}
                   inputMode="text"
                   onChange={(e) => setNewCategory(e.target.value)}
                   placeholder="Enter category name"
@@ -126,7 +131,6 @@ const SubmitDrink: NextPage = () => {
                 <Input
                   label="Image Url (Optional)"
                   value={categoryUrl}
-                  required={false}
                   inputMode="text"
                   onChange={(e) => setCategoryUrl(e.target.value)}
                   placeholder="Paste image url"
@@ -145,7 +149,7 @@ const SubmitDrink: NextPage = () => {
               value={productTitle}
               onChange={(e) => setProductTitle(e.target.value)}
               label="Product Name"
-              required={true}
+              required
               inputMode="text"
               placeholder="Enter product name"
             />
@@ -153,7 +157,7 @@ const SubmitDrink: NextPage = () => {
               value={productPrice}
               onChange={(e) => setProductPrice(e.target.value)}
               label="Price"
-              required={true}
+              required
               inputMode="numeric"
               placeholder="Enter product price"
             />
@@ -163,7 +167,6 @@ const SubmitDrink: NextPage = () => {
               More options
             </h2>
             <Select
-              disabled={false}
               label="Volume"
               onChange={(e) => setProductVolume(e.target.value)}
             >
@@ -173,9 +176,9 @@ const SubmitDrink: NextPage = () => {
                 </option>
               ))}
             </Select>
-            {productCategory.toLowerCase() === "tea" && (
+            {currentCategory?.categoryName.toLowerCase() === "tea" && (
               <Select
-                disabled={productCategory.toLowerCase() != "tea"}
+                disabled={currentCategory.categoryName.toLowerCase() != "tea"}
                 label="Type"
                 onChange={(e) => setProductType(e.target.value)}
               >
@@ -195,19 +198,17 @@ const SubmitDrink: NextPage = () => {
                 value={productTag}
                 onChange={(e) => setProductTag(e.target.value)}
                 label="Tag"
-                required={false}
                 inputMode="text"
                 placeholder="Enter tag name"
               />
             )}
 
-            {productCategory.toLowerCase() === "cocktails" && (
-              <textarea
-                className="textarea-bordered textarea my-5 w-full py-5"
+            {currentCategory?.categoryName.toLowerCase() === "cocktails" && (
+              <Textarea
                 placeholder="Cocktail description"
                 value={productDescription}
                 onChange={(e) => setProductDescription(e.target.value)}
-              ></textarea>
+              ></Textarea>
             )}
           </div>
 

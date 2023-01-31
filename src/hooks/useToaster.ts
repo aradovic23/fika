@@ -29,7 +29,7 @@ const useToaster = (): [
       } else if (navigation && navigation.type === "toPage") {
         void router.push(navigation.path ?? "");
       }
-    }, 3000);
+    }, 1500);
   };
 
   return [isVisible, message, showToaster, isDisabled];

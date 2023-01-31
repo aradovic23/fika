@@ -5,18 +5,21 @@ import { DrinkList } from "../components/DrinkList";
 import { useState } from "react";
 import { Input } from "../components/Input";
 import { Radio } from "../components/Radio";
+import { useGetCategory } from "../hooks/useGetCategory";
 
 const Drinks: NextPage = () => {
   const drinks = api.drinks.getDrinks.useQuery();
-  const [selectedCategory, setSelectedCategory] = useState("all");
+  const [selectedCategory, setSelectedCategory] = useState(19);
   const [search, setSearch] = useState("");
   const { data } = api.drinks.getCategories.useQuery();
 
+  const { category: currentCategory } = useGetCategory(selectedCategory);
+
   const filteredDrinks = (drinks.data ?? [])
     .filter((drink) =>
-      selectedCategory.toLowerCase() === "all"
+      currentCategory?.categoryName.toLowerCase() === "all"
         ? true
-        : drink.category?.toLowerCase() === selectedCategory.toLowerCase()
+        : drink.categoryId === currentCategory?.id
     )
     .filter((drink) =>
       search != ""
@@ -52,13 +55,11 @@ const Drinks: NextPage = () => {
                     <Radio
                       key={category.id}
                       label={category.categoryName}
-                      value={selectedCategory}
-                      onChange={() =>
-                        setSelectedCategory(category.categoryName)
-                      }
+                      value={currentCategory?.categoryName ?? ""}
+                      onChange={() => setSelectedCategory(category.id)}
                       checked={
                         category.categoryName.toLowerCase() ===
-                        selectedCategory.toLowerCase()
+                        currentCategory?.categoryName.toLowerCase()
                       }
                     />
                   ))}
@@ -68,7 +69,7 @@ const Drinks: NextPage = () => {
                 {filteredDrinks.map((drink) => (
                   <DrinkList key={drink.id} {...drink} />
                 ))}
-                {filteredDrinks.length === 0 && <p>no drink found</p>}
+                {filteredDrinks.length === 0 && <p>no drinks found</p>}
               </div>
             </div>
           </form>

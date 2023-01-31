@@ -7,7 +7,7 @@ import { api } from "../utils/api";
 import { useQueryClient } from "@tanstack/react-query";
 import { EditIcon } from "./EditIcon";
 import { DeleteIcon } from "./DeleteIcon";
-import { useCategoryImage } from "../hooks/useCategoryImage";
+import { useGetCategory } from "../hooks/useGetCategory";
 import { InfoIcon } from "./InfoIcon";
 import { Modal } from "./Modal";
 
@@ -17,9 +17,9 @@ export type Drink = {
   price: string;
   volume?: string | null;
   tag?: string | null;
-  category?: string | null;
   type?: string | null;
   description?: string | null;
+  categoryId?: number | null;
 };
 
 const typeBadgeBackgroundColor: { [index: string]: string } = {
@@ -39,7 +39,7 @@ export const DrinkList: FC<Drink> = ({
   id,
   volume,
   type,
-  category,
+  categoryId,
   tag,
   description,
 }) => {
@@ -65,22 +65,27 @@ export const DrinkList: FC<Drink> = ({
     setShowModal(state);
   };
 
-  const categoryName: string = useCategoryImage(category ?? "") || "coffee";
+  const { category, isError } = useGetCategory(categoryId ?? 1) ?? "";
 
   return (
     <div className="flex max-h-52 flex-col gap-2 rounded-lg bg-base-300">
       <figure className="relative h-24 rounded-t-lg">
-        <Image
-          src={categoryName}
-          alt="image"
-          fill
-          className="object-cover"
-          sizes="(max-width: 768px) 100vw,
+        {isError ? (
+          <p>Error loading the image...</p>
+        ) : (
+          <Image
+            src={category?.url ?? ""}
+            alt="image"
+            fill
+            className="object-cover"
+            sizes="(max-width: 768px) 100vw,
           (max-width: 1200px) 50vw,
           33vw"
-          priority
-          placeholder="empty"
-        />
+            priority
+            placeholder="empty"
+          />
+        )}
+
         {tag && (
           <div className="absolute top-2 right-2 z-30 rounded-md bg-yellow-500 px-1 py-0.5 text-xs font-medium uppercase text-black">
             {tag}
@@ -110,7 +115,9 @@ export const DrinkList: FC<Drink> = ({
       <div className="flex flex-col gap-4 divide-y divide-solid divide-slate-400/10 rounded-lg p-5">
         <div className="card-actions flex justify-between pt-2">
           <div className="flex gap-2">
-            {category && <div className="text-sm uppercase">{category}</div>}
+            {category && (
+              <div className="text-sm uppercase">{category.categoryName}</div>
+            )}
             {volume && volume != "none" && (
               <div className="text-sm font-bold">{volume}</div>
             )}
@@ -124,7 +131,7 @@ export const DrinkList: FC<Drink> = ({
                 onDeleteHandler(id);
               }}
             />
-            {category === "cocktails" && (
+            {category?.categoryName.toLowerCase() === "cocktails" && (
               <InfoIcon onClick={() => setShowModal(!showModal)} />
             )}
             {showModal && (

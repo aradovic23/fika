@@ -9,7 +9,7 @@ export const drinksRouter = createTRPCRouter({
         title: z.string(),
         price: z.string(),
         tag: z.string().nullish(),
-        category: z.string().nullish(),
+        categoryId: z.number().nullable(),
         volume: z.string().nullish(),
         type: z.string().nullish(),
         description: z.string().nullish(),
@@ -18,7 +18,17 @@ export const drinksRouter = createTRPCRouter({
     .mutation(async ({ input, ctx }) => {
       const drink = await ctx.prisma.drink.create({
         data: {
-          ...input,
+          title: input.title,
+          price: input.price,
+          tag: input.tag,
+          volume: input.volume,
+          type: input.type,
+          description: input.description,
+          category: {
+            connect: {
+              id: input.categoryId ?? 1,
+            },
+          },
         },
       });
       return drink;
@@ -84,7 +94,6 @@ export const drinksRouter = createTRPCRouter({
           title: z.string().optional(),
           price: z.string().optional(),
           tag: z.string().optional(),
-          category: z.string().optional(),
           volume: z.string().optional(),
           type: z.string().optional(),
           description: z.string().optional(),
@@ -92,12 +101,18 @@ export const drinksRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx, input }) => {
-      const { id, data } = input;
       const drink = await ctx.prisma.drink.update({
         where: {
-          id,
+          id: input.id,
         },
-        data,
+        data: {
+          title: input.data.title,
+          price: input.data.price,
+          tag: input.data.tag,
+          volume: input.data.volume,
+          type: input.data.type,
+          description: input.data.description,
+        },
       });
       return drink;
     }),
