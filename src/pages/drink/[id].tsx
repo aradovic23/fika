@@ -14,8 +14,7 @@ const EditDrinkPage: NextPage = () => {
     volume: "",
     type: "",
   });
-  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
-  const [isVisible, message, showToaster] = useToaster();
+  const [isVisible, message, showToaster, isDisabled] = useToaster();
 
   const router = useRouter();
   const { id } = router.query as {
@@ -115,14 +114,11 @@ const EditDrinkPage: NextPage = () => {
               />
             )}
 
-            <button
-              disabled={isButtonDisabled}
-              className="btn-primary btn mt-2"
-            >
+            <button disabled={isDisabled} className="btn-primary btn mt-2">
               Update
             </button>
           </form>
-          {isVisible && <Toast label={message} />}
+          {isVisible && <Toast label={message} type="alert-success" />}
         </section>
       </main>
     </>

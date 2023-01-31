@@ -2,12 +2,12 @@ import { type NextPage } from "next";
 import Head from "next/head";
 import { useState } from "react";
 import { api } from "../utils/api";
-import { useRouter } from "next/router";
 import { Input } from "../components/Input";
 import { Select } from "../components/Select";
 import { Checkbox } from "../components/Checkbox";
 import { Toast } from "../components/Toast";
 import useToaster from "../hooks/useToaster";
+import Button from "../components/Button";
 
 export const volumeOptions: string[] = [
   "none",
@@ -43,7 +43,7 @@ const SubmitDrink: NextPage = () => {
   const [newCategory, setNewCategory] = useState("");
   const [isCreateNewCategoryChecked, setIsCreateNewCategoryChecked] =
     useState(false);
-  const [isVisible, message, showToaster] = useToaster();
+  const [isVisible, message, showToaster, isDisabled] = useToaster();
 
   const handleSubmitDrink = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -211,9 +211,11 @@ const SubmitDrink: NextPage = () => {
             )}
           </div>
 
-          <button className="btn-primary btn ">Submit</button>
+          <Button disabled={isDisabled} backgroundColor="bg-secondary">
+            Submit test
+          </Button>
         </form>
-        {isVisible && <Toast label={message} />}
+        {isVisible && <Toast label={message} type="alert-success" />}
       </main>
     </>
   );

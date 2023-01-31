@@ -1,19 +1,21 @@
 import React from "react";
 
-export const Input = ({
-  value,
-  onChange,
-  label,
-  required,
-  inputMode,
-  placeholder,
-}: {
+interface InputProps {
   value: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   label: string;
   required: boolean;
   inputMode: React.HTMLAttributes<HTMLLIElement>["inputMode"];
   placeholder: string;
+}
+
+export const Input: React.FC<InputProps> = ({
+  value,
+  onChange,
+  label,
+  required,
+  inputMode,
+  placeholder,
 }) => {
   return (
     <div className="flex flex-col gap-1">

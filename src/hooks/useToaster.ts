@@ -6,28 +6,33 @@ interface NavigationInfo {
   path?: string;
 }
 
-const useToaster = (): [boolean, string, (msg: string) => void] => {
+const useToaster = (): [
+  boolean,
+  string,
+  (msg: string, navigation?: NavigationInfo) => void,
+  boolean
+] => {
   const [isVisible, setIsVisible] = useState<boolean>(false);
   const [message, setMessage] = useState<string>("");
+  const [isDisabled, setIsDisabled] = useState<boolean>(false);
   const router = useRouter();
 
-  const showToaster = (
-    msg: string,
-    navigation?: NavigationInfo | (() => void)
-  ) => {
+  const showToaster = (msg: string, navigation?: NavigationInfo) => {
+    setIsDisabled(true);
     setMessage(msg);
     setIsVisible(true);
     setTimeout(() => {
       setIsVisible(false);
+      setIsDisabled(false);
       if (navigation && navigation.type === "back") {
         router.back();
       } else if (navigation && navigation.type === "toPage") {
-        router.push(navigation.path);
+        void router.push(navigation.path ?? "");
       }
     }, 3000);
   };
 
-  return [isVisible, message, showToaster];
+  return [isVisible, message, showToaster, isDisabled];
 };
 
 export default useToaster;

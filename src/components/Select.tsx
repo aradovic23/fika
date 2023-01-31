@@ -1,15 +1,17 @@
 import React from "react";
 
-export const Select = ({
-  label,
-  onChange,
-  children,
-  disabled,
-}: {
+interface SelectProps {
   label: string;
   onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
   children: React.ReactNode;
   disabled: boolean;
+}
+
+export const Select: React.FC<SelectProps> = ({
+  label,
+  onChange,
+  children,
+  disabled,
 }) => {
   return (
     <div>

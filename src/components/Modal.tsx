@@ -2,14 +2,16 @@ import React from "react";
 
 type ModalCallback = (state: boolean) => void;
 
-export const Modal = ({
-  handleShowModal,
-  description,
-  title,
-}: {
+interface ModalProps {
   handleShowModal: ModalCallback;
   description: string;
   title: string;
+}
+
+export const Modal: React.FC<ModalProps> = ({
+  handleShowModal,
+  description,
+  title,
 }) => {
   return (
     <>
