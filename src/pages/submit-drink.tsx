@@ -10,6 +10,7 @@ import useToaster from "../hooks/useToaster";
 import Button from "../components/Button";
 import { Textarea } from "../components/Textarea";
 import { useGetCategory } from "../hooks/useGetCategory";
+import { Form } from "../components/Form";
 
 export const volumeOptions: string[] = [
   "none",
@@ -93,7 +94,7 @@ const SubmitDrink: NextPage = () => {
           Create a drink
         </h1>
 
-        <form className="flex w-96 flex-col gap-5" onSubmit={handleSubmitDrink}>
+        <Form onSubmit={handleSubmitDrink}>
           <div className="">
             <h2 className="my-2 text-center text-sm font-semibold uppercase text-gray-500">
               Main info
@@ -120,7 +121,7 @@ const SubmitDrink: NextPage = () => {
               />
             </div>
             {isCreateNewCategoryChecked && (
-              <div className=" flex flex-col gap-2 rounded-lg bg-base-300/70 p-5">
+              <div className="flex flex-col gap-2 rounded-lg bg-base-300/70 p-5">
                 <Input
                   label="Category name"
                   value={newCategory}
@@ -151,7 +152,7 @@ const SubmitDrink: NextPage = () => {
               label="Product Name"
               required
               inputMode="text"
-              placeholder="Enter product name"
+              placeholder="Enter product name (e.g. Fanta)"
             />
             <Input
               value={productPrice}
@@ -159,7 +160,7 @@ const SubmitDrink: NextPage = () => {
               label="Price"
               required
               inputMode="numeric"
-              placeholder="Enter product price"
+              placeholder="Enter product price (e.g. 150)"
             />
           </div>
           <div className="max-w-sm md:max-w-md">
@@ -199,7 +200,7 @@ const SubmitDrink: NextPage = () => {
                 onChange={(e) => setProductTag(e.target.value)}
                 label="Tag"
                 inputMode="text"
-                placeholder="Enter tag name"
+                placeholder="Enter tag name (e.g. new)"
               />
             )}
 
@@ -213,9 +214,9 @@ const SubmitDrink: NextPage = () => {
           </div>
 
           <Button disabled={isDisabled} backgroundColor="bg-secondary">
-            Submit test
+            Add product
           </Button>
-        </form>
+        </Form>
         {isVisible && <Toast label={message} type="alert-success" />}
       </main>
     </>

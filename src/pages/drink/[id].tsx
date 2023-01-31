@@ -9,6 +9,7 @@ import useToaster from "../../hooks/useToaster";
 import { useGetCategory } from "../../hooks/useGetCategory";
 import Button from "../../components/Button";
 import { Textarea } from "../../components/Textarea";
+import { Form } from "../../components/Form";
 
 const EditDrinkPage: NextPage = () => {
   const [formData, setFormData] = useState({
@@ -80,20 +81,17 @@ const EditDrinkPage: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className="flex min-h-screen">
-        <section className="container mx-auto py-10">
-          <h1 className="my-2 text-center text-2xl font-bold">
-            Edit product - {formData.title}
-          </h1>
+        <section className="container mx-auto flex h-screen flex-col items-center py-10">
+          <h1 className="my-5 text-center text-2xl font-bold">Edit product</h1>
           {error && <p>error</p>}
           {isLoading && <p>Loading...</p>}
-          <form onSubmit={handleProductUpdate} className="flex flex-col gap-3">
+          <Form onSubmit={handleProductUpdate}>
             <Input
               label="Title"
               value={formData.title}
               onChange={(e) =>
                 setFormData({ ...formData, title: e.target.value })
               }
-              required={false}
               inputMode="text"
             />
             <Input
@@ -102,20 +100,17 @@ const EditDrinkPage: NextPage = () => {
               onChange={(e) =>
                 setFormData({ ...formData, price: e.target.value })
               }
-              required={false}
               inputMode="numeric"
             />
-            {data?.volume && (
-              <Input
-                inputMode="text"
-                value={formData.volume}
-                onChange={(e) =>
-                  setFormData({ ...formData, volume: e.target.value })
-                }
-                label="Volume"
-                required={false}
-              />
-            )}
+            <Input
+              placeholder="For example (0.3, 0.5)"
+              inputMode="text"
+              value={formData.volume}
+              onChange={(e) =>
+                setFormData({ ...formData, volume: e.target.value })
+              }
+              label="Volume"
+            />
 
             {productCategory?.categoryName.toLowerCase() === "tea" && (
               <Input
@@ -125,7 +120,6 @@ const EditDrinkPage: NextPage = () => {
                 onChange={(e) =>
                   setFormData({ ...formData, type: e.target.value })
                 }
-                required={false}
               />
             )}
             {productCategory?.categoryName.toLowerCase() === "cocktails" && (
@@ -141,7 +135,7 @@ const EditDrinkPage: NextPage = () => {
             <Button disabled={isDisabled} backgroundColor="bg-primary">
               Update product
             </Button>
-          </form>
+          </Form>
           {isVisible && <Toast label={message} type="alert-success" />}
         </section>
       </main>

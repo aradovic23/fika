@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export const Navbar: React.FC = () => {
   return (
-    <div className="navbar bg-secondary text-white shadow">
+    <div className="navbar bg-secondary text-white shadow ">
       <div className="flex-1">
         <Link href="/" className="btn-ghost btn gap-2 text-xl normal-case">
           <svg
