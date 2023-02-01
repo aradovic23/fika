@@ -13,14 +13,22 @@ export const Radio = ({
 }) => {
   return (
     <div className="form-control snap-start">
-      <label className="label cursor-pointer gap-1 rounded-md bg-slate-800 px-2 md:bg-transparent">
-        <span className="label-text truncate font-semibold uppercase md:font-normal">
+      <label
+        className={`label cursor-pointer gap-1 rounded-md bg-slate-800 p-2 md:bg-transparent ${
+          checked ? "bg-accent" : ""
+        }`}
+      >
+        <span
+          className={`label-text truncate font-semibold uppercase md:font-normal ${
+            checked ? "md:text text-black md:text-base-content" : ""
+          }`}
+        >
           {label}
         </span>
         <input
           type="radio"
           value={value}
-          className="radio checked:bg-accent"
+          className="radio hidden checked:bg-accent md:block"
           onChange={onChange}
           checked={checked}
         />

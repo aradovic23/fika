@@ -3,7 +3,7 @@ import React from "react";
 
 interface FormProps {
   children: React.ReactNode;
-  onSubmit: React.FormEventHandler;
+  onSubmit?: React.FormEventHandler;
 }
 
 export const Form: FC<FormProps> = ({ children, onSubmit }) => {

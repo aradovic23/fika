@@ -18,14 +18,17 @@ const EditDrinkPage: NextPage = () => {
     volume: "",
     type: "",
     description: "",
+    tag: "",
   });
+  const [error, setError] = useState("");
+
   const [isVisible, message, showToaster, isDisabled] = useToaster();
 
   const router = useRouter();
   const { id } = router.query as {
     id: string;
   };
-  const { data, isLoading, error } = api.drinks.getDrinkById.useQuery<{
+  const { data, isLoading } = api.drinks.getDrinkById.useQuery<{
     id: number;
     categoryId: number;
   }>(
@@ -38,7 +41,7 @@ const EditDrinkPage: NextPage = () => {
   let categoryId: number | undefined;
 
   if (data && data.categoryId) {
-    categoryId = data.categoryId as number;
+    categoryId = data.categoryId;
   }
 
   const { category: productCategory } = useGetCategory(categoryId as number);
@@ -47,18 +50,30 @@ const EditDrinkPage: NextPage = () => {
 
   const handleProductUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
-    await updateProduct.mutateAsync({
-      id,
-      data: {
-        title: formData.title,
-        price: formData.price,
-        volume: formData.volume,
-        type: formData.type,
-        description: formData.description,
-      },
-    });
-
-    showToaster(`${formData.title} updated`, { type: "back" });
+    try {
+      await updateProduct.mutateAsync({
+        id,
+        data: {
+          title: formData.title,
+          price: formData.price,
+          volume: formData.volume === "" ? null : formData.volume,
+          type: formData.type === "" ? null : formData.type,
+          description:
+            formData.description === "" ? null : formData.description,
+          tag: formData.tag === "" ? null : formData.tag,
+        },
+      });
+      setError("");
+      showToaster(`${formData.title} updated`, { type: "back" });
+    } catch (error) {
+      if (typeof error === "string") {
+        showToaster(error);
+        setError(error);
+      } else {
+        showToaster((error as Error).message);
+        setError((error as Error).message);
+      }
+    }
   };
 
   useEffect(() => {
@@ -69,6 +84,7 @@ const EditDrinkPage: NextPage = () => {
         volume: data.volume ?? "",
         type: data.type ?? "",
         description: data.description ?? "",
+        tag: data.tag ?? "",
       });
     }
   }, [data]);
@@ -111,6 +127,15 @@ const EditDrinkPage: NextPage = () => {
               }
               label="Volume"
             />
+            <Input
+              placeholder="For example (new, best)"
+              inputMode="text"
+              value={formData.tag}
+              onChange={(e) =>
+                setFormData({ ...formData, tag: e.target.value })
+              }
+              label="Tag"
+            />
 
             {productCategory?.categoryName.toLowerCase() === "tea" && (
               <Input
@@ -136,7 +161,12 @@ const EditDrinkPage: NextPage = () => {
               Update product
             </Button>
           </Form>
-          {isVisible && <Toast label={message} type="alert-success" />}
+          {isVisible && (
+            <Toast
+              label={message}
+              type={error ? "alert-error" : "alert-success"}
+            />
+          )}
         </section>
       </main>
     </>

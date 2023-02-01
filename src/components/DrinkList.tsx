@@ -47,9 +47,12 @@ export const DrinkList: FC<Drink> = ({
 
   const queryClient = useQueryClient();
 
+  const drinks = api.drinks.getDrinks.useQuery();
+
   const { mutate: deleteDrink } = api.drinks.deleteDrink.useMutation({
-    onSuccess() {
+    async onSuccess() {
       void queryClient.invalidateQueries({ queryKey: ["drink"] });
+      await drinks.refetch();
     },
     onError(error) {
       console.log(error);

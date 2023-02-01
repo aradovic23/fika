@@ -14,7 +14,7 @@ const Button: React.FC<ButtonProps> = ({
   return (
     <>
       <button
-        className={`btn ${backgroundColor} ${
+        className={`btn ${backgroundColor} text-base-300 ${
           disabled ? "hidden cursor-not-allowed opacity-50" : ""
         }`}
       >

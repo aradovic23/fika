@@ -46,40 +46,64 @@ const SubmitDrink: NextPage = () => {
   const [newCategory, setNewCategory] = useState("");
   const [isCreateNewCategoryChecked, setIsCreateNewCategoryChecked] =
     useState(false);
+  const [error, setError] = useState("");
   const [isVisible, message, showToaster, isDisabled] = useToaster();
 
   const { category: currentCategory } = useGetCategory(productCategoryId);
 
   const handleSubmitDrink = async (e: React.FormEvent) => {
     e.preventDefault();
-    await createDrinkMutation.mutateAsync({
-      title: productTitle,
-      price: productPrice,
-      tag: productTag,
-      volume: productVolume?.toLowerCase() === "none" ? null : productVolume,
-      type:
-        currentCategory?.categoryName.toLowerCase() === "tea"
-          ? productType
-          : null,
-      description: productDescription,
-      categoryId: productCategoryId,
-    });
 
-    showToaster(`${productTitle} added`, { type: "toPage", path: "/drinks" });
+    try {
+      await createDrinkMutation.mutateAsync({
+        title: productTitle,
+        price: productPrice,
+        tag: productTag != "" ? productTag : null,
+        volume: productVolume?.toLowerCase() === "none" ? null : productVolume,
+        type:
+          currentCategory?.categoryName.toLowerCase() === "tea"
+            ? productType
+            : null,
+        description:
+          currentCategory?.categoryName.toLowerCase() === "cocktails"
+            ? productDescription
+            : null,
+        categoryId: productCategoryId,
+      });
+      showToaster(`${productTitle} added`, { type: "toPage", path: "/drinks" });
+    } catch (error) {
+      if (typeof error === "string") {
+        showToaster(error);
+        setError(error);
+      } else {
+        showToaster((error as Error).message);
+        setError((error as Error).message);
+      }
+    }
   };
 
   const handleCreateNewCategory = async (e: React.FormEvent) => {
     e.preventDefault();
-    await createCategoryMutation.mutateAsync({
-      categoryName: newCategory,
-      url: categoryUrl != "" ? categoryUrl : undefined,
-    });
-    setIsCreateNewCategoryChecked(false);
-    await categories.refetch();
+    try {
+      await createCategoryMutation.mutateAsync({
+        categoryName: newCategory,
+        url: categoryUrl != "" ? categoryUrl : undefined,
+      });
+      setIsCreateNewCategoryChecked(false);
+      await categories.refetch();
 
-    setNewCategory("");
-    showToaster(`${newCategory} added`);
-    setIsCreateNewCategoryChecked(!isCreateNewCategoryChecked);
+      setNewCategory("");
+      showToaster(`${newCategory} added`);
+      setIsCreateNewCategoryChecked(!isCreateNewCategoryChecked);
+    } catch (error) {
+      if (typeof error === "string") {
+        showToaster(error);
+        setError(error);
+      } else {
+        showToaster((error as Error).message);
+        setError((error as Error).message);
+      }
+    }
   };
 
   return (
@@ -217,7 +241,12 @@ const SubmitDrink: NextPage = () => {
             Add product
           </Button>
         </Form>
-        {isVisible && <Toast label={message} type="alert-success" />}
+        {isVisible && (
+          <Toast
+            label={message}
+            type={error ? "alert-error" : "alert-success"}
+          />
+        )}
       </main>
     </>
   );

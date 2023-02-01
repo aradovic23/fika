@@ -6,6 +6,7 @@ import { useState } from "react";
 import { Input } from "../components/Input";
 import { Radio } from "../components/Radio";
 import { useGetCategory } from "../hooks/useGetCategory";
+import { NoResults } from "../components/NoResults";
 
 const Drinks: NextPage = () => {
   const drinks = api.drinks.getDrinks.useQuery();
@@ -36,12 +37,12 @@ const Drinks: NextPage = () => {
       </Head>
       <main className="flex min-h-screen">
         <section className="container mx-auto py-10">
-          <h1 className="text-center text-2xl font-bold md:text-left">
-            All Drinks
-          </h1>
           <form>
             <div className="flex flex-col gap-3 px-2 md:grid md:grid-cols-3">
               <div className="col-span-1 flex flex-col gap-5 py-3">
+                <h1 className="text-center text-xl font-bold uppercase md:text-left">
+                  category: {currentCategory?.categoryName}
+                </h1>
                 <Input
                   label="Search by Name"
                   onChange={(e) => setSearch(e.target.value)}
@@ -65,11 +66,11 @@ const Drinks: NextPage = () => {
                   ))}
                 </div>
               </div>
-              <div className="col-span-1 grid auto-rows-max gap-4 md:col-span-2 md:grid-cols-2">
+              <div className="col-span-1 grid auto-rows-max gap-4 md:col-span-2 md:grid-cols-2 md:py-10">
                 {filteredDrinks.map((drink) => (
                   <DrinkList key={drink.id} {...drink} />
                 ))}
-                {filteredDrinks.length === 0 && <p>no drinks found</p>}
+                {filteredDrinks.length === 0 && <NoResults />}
               </div>
             </div>
           </form>
