@@ -2,6 +2,7 @@ import { useSession, signOut } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
+import Button from "./Button";
 
 export const DesktopNavbar = () => {
   const { data: sessionData } = useSession();
@@ -28,6 +29,13 @@ export const DesktopNavbar = () => {
               All Drinks
             </Link>
           </li>
+          {sessionData?.user?.role === "admin" && (
+            <li>
+              <Link className="link-hover link" href="/submit-drink">
+                Submit Drink
+              </Link>
+            </li>
+          )}
         </ul>
         {sessionData?.user?.role === "admin" && (
           <div className="dropdown-end dropdown">
@@ -46,14 +54,7 @@ export const DesktopNavbar = () => {
               className="dropdown-content menu rounded-box menu-compact mt-3 w-52 bg-base-100 p-2 shadow"
             >
               <li>
-                <Link className="link-hover link" href="/submit-drink">
-                  Submit Drink
-                </Link>
-              </li>
-              <li>
-                <button onClick={() => signOut()} className="justify-between">
-                  Logout
-                </button>
+                <Button onClick={() => signOut()}>Logout</Button>
               </li>
             </ul>
           </div>

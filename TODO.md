@@ -1,9 +1,11 @@
 ## tasks
 
-- add translation to the app rs and eng
+- CONTINUE i18
 - animate on edit enter/edit/exit
+- continue auth flow
 - clean up volumes and types
 - expand edit product functionality
+- implement landing page base structure
 
 ## bugs
 

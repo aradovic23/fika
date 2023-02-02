@@ -16,6 +16,18 @@
     "incremental": true,
     "noUncheckedIndexedAccess": true
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "**/*.cjs", "**/*.mjs"],
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "**/*.cjs",
+    "**/*.mjs",
+    "next-i18next.config.js",
+    "next-i18next.config.js",
+    "next-i18next.config.js",
+    "next-i18next.config.js",
+    "i18next-parser.config.js",
+    "i18next-parser.config.js"
+  ],
   "exclude": ["node_modules"]
 }
