@@ -10,6 +10,7 @@ import { DeleteIcon } from "./DeleteIcon";
 import { useGetCategory } from "../hooks/useGetCategory";
 import { InfoIcon } from "./InfoIcon";
 import { Modal } from "./Modal";
+import { useSession } from "next-auth/react";
 
 export type Drink = {
   title: string;
@@ -69,6 +70,7 @@ export const DrinkList: FC<Drink> = ({
   };
 
   const { category, isError } = useGetCategory(categoryId ?? 1) ?? "";
+  const { data: sessionData } = useSession();
 
   return (
     <div className="flex max-h-52 flex-col gap-2 rounded-lg bg-base-300">
@@ -126,14 +128,18 @@ export const DrinkList: FC<Drink> = ({
             )}
           </div>
           <div className="flex gap-2">
-            <Link href={`/drink/${id}`}>
-              <EditIcon />
-            </Link>
-            <DeleteIcon
-              onClick={() => {
-                onDeleteHandler(id);
-              }}
-            />
+            {sessionData?.user?.role === "admin" && (
+              <>
+                <Link href={`/drink/${id}`}>
+                  <EditIcon />
+                </Link>
+                <DeleteIcon
+                  onClick={() => {
+                    onDeleteHandler(id);
+                  }}
+                />
+              </>
+            )}
             {category?.categoryName.toLowerCase() === "cocktails" && (
               <InfoIcon onClick={() => setShowModal(!showModal)} />
             )}
