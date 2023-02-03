@@ -1,6 +1,6 @@
 ## tasks
 
-- CONTINUE i18
+- add next-translate
 - animate on edit enter/edit/exit
 - continue auth flow
 - clean up volumes and types
