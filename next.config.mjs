@@ -11,7 +11,7 @@ const config = {
   swcMinify: true,
   i18n: {
     defaultLocale: "en",
-    locales: ["en", "sv"],
+    locales: ["en", "sr"],
     localeDetection: false,
   },
   images: {

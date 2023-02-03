@@ -11,7 +11,6 @@ import Button from "../components/Button";
 import { Textarea } from "../components/Textarea";
 import { useGetCategory } from "../hooks/useGetCategory";
 import { Form } from "../components/Form";
-import { useTranslation } from "next-i18next";
 
 export const volumeOptions: string[] = [
   "none",
@@ -49,7 +48,6 @@ const SubmitDrink: NextPage = () => {
     useState(false);
   const [error, setError] = useState("");
   const [isVisible, message, showToaster, isDisabled] = useToaster();
-  const { t } = useTranslation();
 
   const { category: currentCategory } = useGetCategory(productCategoryId);
 
@@ -119,7 +117,6 @@ const SubmitDrink: NextPage = () => {
         <h1 className="text-center text-2xl font-bold uppercase">
           Create a drink
         </h1>
-        <p>{t("welcome")}</p>
 
         <Form onSubmit={handleSubmitDrink}>
           <div className="">
