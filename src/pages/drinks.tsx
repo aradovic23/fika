@@ -7,12 +7,14 @@ import { Input } from "../components/Input";
 import { Radio } from "../components/Radio";
 import { useGetCategory } from "../hooks/useGetCategory";
 import { NoResults } from "../components/NoResults";
+import Spinner from "../components/Spinner";
+import { motion } from "framer-motion";
 
 const Drinks: NextPage = () => {
   const drinks = api.drinks.getDrinks.useQuery();
   const [selectedCategory, setSelectedCategory] = useState(19);
   const [search, setSearch] = useState("");
-  const { data } = api.drinks.getCategories.useQuery();
+  const { data, isLoading } = api.drinks.getCategories.useQuery();
 
   const { category: currentCategory } = useGetCategory(selectedCategory);
 
@@ -39,7 +41,12 @@ const Drinks: NextPage = () => {
         <section className="container mx-auto py-10">
           <form>
             <div className="flex flex-col gap-3 px-2 md:grid md:grid-cols-3">
-              <div className="col-span-1 flex flex-col gap-5 py-3">
+              <motion.div
+                className="col-span-1 flex flex-col gap-5 py-3"
+                initial={{ opacity: 0, scale: 0.7 }}
+                animate={{ opacity: 1, scale: 1, y: [0, 7, 0] }}
+                transition={{ ease: "easeOut", duration: 0.5 }}
+              >
                 <h1 className="text-center text-xl font-bold uppercase md:text-left">
                   category: {currentCategory?.categoryName}
                 </h1>
@@ -51,7 +58,7 @@ const Drinks: NextPage = () => {
                   inputMode="text"
                   placeholder="Enter product name"
                 />
-                <div className="flex snap-x flex-row gap-2 overflow-x-auto md:flex-col md:gap-1 md:overflow-auto">
+                <div className="no-scrollbar flex snap-x flex-row gap-2 overflow-x-auto md:flex-col md:gap-1 md:overflow-auto">
                   {(data || []).map((category) => (
                     <Radio
                       key={category.id}
@@ -65,12 +72,16 @@ const Drinks: NextPage = () => {
                     />
                   ))}
                 </div>
-              </div>
+              </motion.div>
               <div className="col-span-1 grid auto-rows-max gap-4 md:col-span-2 md:grid-cols-2 md:py-10">
                 {filteredDrinks.map((drink) => (
                   <DrinkList key={drink.id} {...drink} />
                 ))}
-                {filteredDrinks.length === 0 && <NoResults />}
+                {isLoading ? (
+                  <Spinner />
+                ) : (
+                  filteredDrinks.length === 0 && <NoResults />
+                )}
               </div>
             </div>
           </form>

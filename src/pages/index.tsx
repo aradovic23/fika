@@ -16,9 +16,9 @@ const Home: NextPage = () => {
       </Head>
       <main className="flex h-screen flex-col items-center justify-center gap-3">
         <h1 className="text-4xl font-bold">Drinks App</h1>
-        <Button>
-          <Link href="/drinks">See drinks</Link>
-        </Button>
+        <Link href="/drinks">
+          <Button>See Drinks</Button>
+        </Link>
         {sessionData && <p>Welcome back {sessionData.user?.name}!</p>}
       </main>
     </>

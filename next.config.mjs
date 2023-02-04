@@ -6,12 +6,13 @@
 !process.env.SKIP_ENV_VALIDATION && (await import("./src/env/server.mjs"));
 
 /** @type {import("next").NextConfig} */
+
 const config = {
   reactStrictMode: true,
   swcMinify: true,
   i18n: {
     defaultLocale: "en",
-    locales: ["en", "sr"],
+    locales: ["en", "sr-RS"],
     localeDetection: false,
   },
   images: {
@@ -22,4 +23,5 @@ const config = {
     ],
   },
 };
+
 export default config;

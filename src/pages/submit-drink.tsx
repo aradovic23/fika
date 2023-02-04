@@ -11,6 +11,8 @@ import Button from "../components/Button";
 import { Textarea } from "../components/Textarea";
 import { useGetCategory } from "../hooks/useGetCategory";
 import { Form } from "../components/Form";
+import { useSession } from "next-auth/react";
+import Link from "next/link";
 
 export const volumeOptions: string[] = [
   "none",
@@ -50,6 +52,18 @@ const SubmitDrink: NextPage = () => {
   const [isVisible, message, showToaster, isDisabled] = useToaster();
 
   const { category: currentCategory } = useGetCategory(productCategoryId);
+  const { data: sessionData } = useSession();
+
+  if (sessionData?.user?.role != "admin") {
+    return (
+      <div className="flex h-screen flex-col items-center justify-center gap-3">
+        <p className="uppercase">Access denied</p>
+        <Link href="/">
+          <Button>Go home</Button>
+        </Link>
+      </div>
+    );
+  }
 
   const handleSubmitDrink = async (e: React.FormEvent) => {
     e.preventDefault();

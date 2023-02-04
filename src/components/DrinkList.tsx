@@ -11,6 +11,7 @@ import { useGetCategory } from "../hooks/useGetCategory";
 import { InfoIcon } from "./InfoIcon";
 import { Modal } from "./Modal";
 import { useSession } from "next-auth/react";
+import { AnimatePresence, motion } from "framer-motion";
 
 export type Drink = {
   title: string;
@@ -45,9 +46,7 @@ export const DrinkList: FC<Drink> = ({
   description,
 }) => {
   const [showModal, setShowModal] = useState(false);
-
   const queryClient = useQueryClient();
-
   const drinks = api.drinks.getDrinks.useQuery();
 
   const { mutate: deleteDrink } = api.drinks.deleteDrink.useMutation({
@@ -59,6 +58,7 @@ export const DrinkList: FC<Drink> = ({
       console.log(error);
     },
   });
+
   const onDeleteHandler = (id: string) => {
     if (window.confirm("Are you sure")) {
       deleteDrink({ id });
@@ -73,7 +73,13 @@ export const DrinkList: FC<Drink> = ({
   const { data: sessionData } = useSession();
 
   return (
-    <div className="flex max-h-52 flex-col gap-2 rounded-lg bg-base-300">
+    <motion.div
+      initial={{ opacity: 0, scale: 0.7 }}
+      animate={{ opacity: 1, scale: 1, y: [0, 7, 0] }}
+      transition={{ ease: "easeOut", duration: 0.5 }}
+      exit={{ opacity: 0, scale: 0 }}
+      className="flex max-h-52 flex-col gap-2 overflow-hidden rounded-lg bg-base-300"
+    >
       <figure className="relative h-24 rounded-t-lg">
         {isError ? (
           <p>Error loading the image...</p>
@@ -143,16 +149,18 @@ export const DrinkList: FC<Drink> = ({
             {category?.categoryName.toLowerCase() === "cocktails" && (
               <InfoIcon onClick={() => setShowModal(!showModal)} />
             )}
-            {showModal && (
-              <Modal
-                description={description ?? ""}
-                title={title}
-                handleShowModal={handleShowModal}
-              />
-            )}
+            <AnimatePresence>
+              {showModal && (
+                <Modal
+                  description={description ?? ""}
+                  title={title}
+                  handleShowModal={handleShowModal}
+                />
+              )}
+            </AnimatePresence>
           </div>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };
