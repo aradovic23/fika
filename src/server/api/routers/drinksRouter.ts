@@ -116,4 +116,26 @@ export const drinksRouter = createTRPCRouter({
       });
       return drink;
     }),
+  updateCategory: publicProcedure
+    .input(
+      z.object({
+        id: z.number(),
+        data: z.object({
+          categoryName: z.string().optional(),
+          url: z.string().optional(),
+        }),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const category = await ctx.prisma.category.update({
+        where: {
+          id: input.id,
+        },
+        data: {
+          categoryName: input.data.categoryName,
+          url: input.data.url,
+        },
+      });
+      return category;
+    }),
 });
