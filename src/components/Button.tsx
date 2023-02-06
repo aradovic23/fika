@@ -1,10 +1,13 @@
-import React from "react";
+import classNames from "classnames";
+
+type ButtonSize = "btn-lg" | "btn-md" | "btn-sm" | "btn-xs";
 
 interface ButtonProps {
   backgroundColor?: string;
   disabled?: boolean;
   children: React.ReactNode;
   onClick?: React.MouseEventHandler;
+  size?: ButtonSize;
 }
 
 const Button: React.FC<ButtonProps> = ({
@@ -12,14 +15,18 @@ const Button: React.FC<ButtonProps> = ({
   disabled = false,
   children,
   onClick,
+  size,
 }) => {
   return (
     <>
       <button
         onClick={onClick}
-        className={`btn ${backgroundColor} text-base-300 ${
+        className={classNames(
+          "btn w-full text-base-300",
+          backgroundColor,
+          size,
           disabled ? "hidden cursor-not-allowed opacity-50" : ""
-        }`}
+        )}
       >
         {children}
       </button>

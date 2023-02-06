@@ -127,7 +127,9 @@ export const DrinkList: FC<Drink> = ({
         <div className="card-actions flex justify-between pt-2">
           <div className="flex gap-2">
             {category && (
-              <div className="text-sm uppercase">{category.categoryName}</div>
+              <div className="truncate text-sm uppercase">
+                {category.categoryName}
+              </div>
             )}
             {volume && volume != "none" && (
               <div className="text-sm font-bold">{volume}</div>

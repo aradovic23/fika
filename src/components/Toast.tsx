@@ -13,7 +13,7 @@ interface ToastProps {
 
 export const Toast: React.FC<ToastProps> = ({ label, type = "alert-info" }) => {
   return (
-    <div className="toast">
+    <div className="toast toast-top">
       <div className={`alert ${type}`}>
         <div>
           <span>{label}</span>
