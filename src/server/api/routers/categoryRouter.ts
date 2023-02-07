@@ -42,4 +42,18 @@ export const categoryRouter = createTRPCRouter({
       });
       return category;
     }),
+  deleteCategory: publicProcedure
+    .input(z.object({ id: z.number() }))
+    .mutation(async ({ ctx, input }) => {
+      const { id } = input;
+      try {
+        return await ctx.prisma.category.delete({
+          where: {
+            id,
+          },
+        });
+      } catch (err) {
+        console.warn(err);
+      }
+    }),
 });

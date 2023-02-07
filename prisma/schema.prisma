@@ -72,7 +72,7 @@ model Drink {
     categoryId  Int?
     createdDate DateTime  @default(now())
     description String?
-    category    Category? @relation(fields: [categoryId], references: [id])
+    category    Category? @relation(fields: [categoryId], references: [id], onDelete: Cascade)
 }
 
 model Category {

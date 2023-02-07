@@ -16,19 +16,19 @@ import AccessDenied from "../components/AccessDenied";
 const EditCategory: NextPage = () => {
   const { data: sessionData } = useSession();
   const { data: categories } = api.categories.getCategories.useQuery();
-  const [categoryId, setCategoryId] = useState(17);
+  const drinks = api.drinks.getDrinks.useQuery();
+  const [categoryId, setCategoryId] = useState(34);
   const [formData, setFormData] = useState({
     categoryName: "",
     url: "",
   });
-
-  const { category: productCategory } = useGetCategory(categoryId);
-
   const [error, setError] = useState("");
 
+  const { category: productCategory } = useGetCategory(categoryId);
   const [isVisible, message, showToaster, isDisabled] = useToaster();
-
   const updateCategory = api.categories.updateCategory.useMutation();
+  const { mutate: deleteSingleCategory } =
+    api.categories.deleteCategory.useMutation();
 
   useEffect(() => {
     if (productCategory) {
@@ -62,6 +62,25 @@ const EditCategory: NextPage = () => {
     }
   };
 
+  const deleteCategoryHandler = async (id: number) => {
+    if (window.confirm("Are you sure you want to delete this category?")) {
+      try {
+        deleteSingleCategory({ id });
+        await drinks.refetch();
+        setError("");
+        showToaster(`${formData.categoryName} deleted`, { type: "back" });
+      } catch (error) {
+        if (typeof error === "string") {
+          showToaster(error);
+          setError(error);
+        } else {
+          showToaster((error as Error).message);
+          setError((error as Error).message);
+        }
+      }
+    }
+  };
+
   if (sessionData?.user?.role != "admin") {
     return <AccessDenied />;
   }
@@ -77,8 +96,8 @@ const EditCategory: NextPage = () => {
         <div className="container mx-auto">
           <h1 className="my-5 text-center text-xl">Edit Category</h1>
           <div className="grid md:mt-5 md:grid-cols-2 md:gap-10">
-            <section className="mx-3 w-full">
-              <Form onSubmit={handleCategoryUpdate} width="md:w-100 ">
+            <section className="w-full px-3">
+              <Form onSubmit={handleCategoryUpdate} width="md:w-100">
                 <Select
                   label="Select a Category"
                   onChange={(e) => setCategoryId(parseInt(e.target.value))}
@@ -114,15 +133,15 @@ const EditCategory: NextPage = () => {
               </Form>
             </section>
             <div>
-              <div className="flex flex-col">
-                <p className="text-center text-sm">Category Image</p>
-                <div className="relative h-96">
+              <div className="my-4 flex flex-col md:my-0">
+                <p className="text-center text-sm uppercase">Category Image</p>
+                <div className="relative h-64">
                   {formData.url && (
                     <Image
                       src={formData?.url}
                       alt="image"
                       fill
-                      className="my-2 object-contain p-3 md:border-l md:border-primary-content"
+                      className="my-2 object-cover p-3 md:border-l md:border-primary-content"
                       priority
                       placeholder="empty"
                       sizes="(max-width: 768px) 100vw,
@@ -133,6 +152,16 @@ const EditCategory: NextPage = () => {
                 </div>
               </div>
             </div>
+          </div>
+          <div className="my-5 flex flex-col items-center gap-2 md:w-1/2">
+            <p>Delete whole category and all drinks associated?</p>
+            <Button
+              onClick={() => deleteCategoryHandler(categoryId)}
+              disabled={isDisabled}
+              variant="btn-outline"
+            >
+              Delete Category
+            </Button>
           </div>
         </div>
         {isVisible && (

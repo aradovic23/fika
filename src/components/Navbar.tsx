@@ -51,7 +51,11 @@ const Navbar: FC<{ children: React.ReactNode }> = ({ children }) => {
                 <>
                   <li>
                     {menuItems.map((item) => (
-                      <Link key={item.name} href={item.path}>
+                      <Link
+                        key={item.name}
+                        href={item.path}
+                        className="rounded-md"
+                      >
                         {item.name}
                       </Link>
                     ))}

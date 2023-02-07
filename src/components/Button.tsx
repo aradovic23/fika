@@ -34,7 +34,7 @@ const Button: React.FC<ButtonProps> = ({
       >
         {children}
       </button>
-      {disabled && <button className="loading btn">loading</button>}
+      {disabled && <button className="loading btn w-full">loading</button>}
     </>
   );
 };
