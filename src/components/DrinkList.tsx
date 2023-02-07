@@ -5,13 +5,15 @@ import classnames from "classnames";
 import Link from "next/link";
 import { api } from "../utils/api";
 import { useQueryClient } from "@tanstack/react-query";
-import { EditIcon } from "./EditIcon";
-import { DeleteIcon } from "./DeleteIcon";
 import { useGetCategory } from "../hooks/useGetCategory";
-import { InfoIcon } from "./InfoIcon";
 import { Modal } from "./Modal";
 import { useSession } from "next-auth/react";
 import { AnimatePresence, motion } from "framer-motion";
+import {
+  InformationCircleIcon,
+  PencilSquareIcon,
+  TrashIcon,
+} from "@heroicons/react/24/outline";
 
 export type Drink = {
   title: string;
@@ -139,9 +141,10 @@ export const DrinkList: FC<Drink> = ({
             {sessionData?.user?.role === "admin" && (
               <>
                 <Link href={`/drink/${id}`}>
-                  <EditIcon />
+                  <PencilSquareIcon className="h-6 w-6" />
                 </Link>
-                <DeleteIcon
+                <TrashIcon
+                  className="h-6 w-6"
                   onClick={() => {
                     onDeleteHandler(id);
                   }}
@@ -149,7 +152,10 @@ export const DrinkList: FC<Drink> = ({
               </>
             )}
             {category?.categoryName.toLowerCase() === "cocktails" && (
-              <InfoIcon onClick={() => setShowModal(!showModal)} />
+              <InformationCircleIcon
+                className="h-6 w-6"
+                onClick={() => setShowModal(!showModal)}
+              />
             )}
             <AnimatePresence>
               {showModal && (

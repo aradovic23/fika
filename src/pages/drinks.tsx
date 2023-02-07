@@ -7,8 +7,8 @@ import { Input } from "../components/Input";
 import { Radio } from "../components/Radio";
 import { useGetCategory } from "../hooks/useGetCategory";
 import { NoResults } from "../components/NoResults";
-import Spinner from "../components/Spinner";
 import { motion } from "framer-motion";
+import Skeleton from "../components/Skeleton";
 
 const Drinks: NextPage = () => {
   const drinks = api.drinks.getDrinks.useQuery();
@@ -78,7 +78,7 @@ const Drinks: NextPage = () => {
                   <DrinkList key={drink.id} {...drink} />
                 ))}
                 {isLoading ? (
-                  <Spinner />
+                  <Skeleton />
                 ) : (
                   filteredDrinks.length === 0 && <NoResults />
                 )}

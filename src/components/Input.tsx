@@ -1,4 +1,6 @@
-import React from "react";
+import classNames from "classnames";
+
+type InputVariant = "input-bordered" | "input-ghost";
 
 interface InputProps {
   value: string;
@@ -7,6 +9,7 @@ interface InputProps {
   required?: boolean;
   inputMode: React.HTMLAttributes<HTMLLIElement>["inputMode"];
   placeholder?: string;
+  variant?: InputVariant;
 }
 
 export const Input: React.FC<InputProps> = ({
@@ -16,6 +19,7 @@ export const Input: React.FC<InputProps> = ({
   required = false,
   inputMode,
   placeholder = "Type here...",
+  variant = "input-bordered",
 }) => {
   return (
     <div className="flex flex-col gap-1">
@@ -26,7 +30,10 @@ export const Input: React.FC<InputProps> = ({
         <input
           type="text"
           placeholder={placeholder}
-          className="input-bordered input w-full placeholder:text-sm placeholder:opacity-30"
+          className={classNames(
+            "input w-full placeholder:text-sm placeholder:opacity-30",
+            variant
+          )}
           value={value}
           onChange={onChange}
           required={required}
