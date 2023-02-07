@@ -15,7 +15,7 @@ import AccessDenied from "../components/AccessDenied";
 
 const EditCategory: NextPage = () => {
   const { data: sessionData } = useSession();
-  const { data: categories } = api.drinks.getCategories.useQuery();
+  const { data: categories } = api.categories.getCategories.useQuery();
   const [categoryId, setCategoryId] = useState(17);
   const [formData, setFormData] = useState({
     categoryName: "",
@@ -28,7 +28,7 @@ const EditCategory: NextPage = () => {
 
   const [isVisible, message, showToaster, isDisabled] = useToaster();
 
-  const updateCategory = api.drinks.updateCategory.useMutation();
+  const updateCategory = api.categories.updateCategory.useMutation();
 
   useEffect(() => {
     if (productCategory) {

@@ -33,17 +33,7 @@ export const drinksRouter = createTRPCRouter({
       });
       return drink;
     }),
-  createCategory: publicProcedure
-    .input(z.object({ categoryName: z.string(), url: z.string().optional() }))
-    .mutation(async ({ input, ctx }) => {
-      const newCategory = await ctx.prisma.category.create({
-        data: {
-          categoryName: input.categoryName,
-          url: input.url,
-        },
-      });
-      return newCategory;
-    }),
+
   getDrinks: publicProcedure.query(async ({ ctx }) => {
     const drinks = await ctx.prisma.drink.findMany({
       orderBy: {
@@ -52,12 +42,7 @@ export const drinksRouter = createTRPCRouter({
     });
     return drinks;
   }),
-  getCategories: publicProcedure.query(async ({ ctx }) => {
-    const category = await ctx.prisma.category.findMany({
-      orderBy: [{ role: "asc" }, { categoryName: "asc" }],
-    });
-    return category;
-  }),
+
   getDrinkById: publicProcedure
     .input(z.object({ id: z.string() }))
     .query(async ({ ctx, input }) => {
@@ -115,27 +100,5 @@ export const drinksRouter = createTRPCRouter({
         },
       });
       return drink;
-    }),
-  updateCategory: publicProcedure
-    .input(
-      z.object({
-        id: z.number(),
-        data: z.object({
-          categoryName: z.string().optional(),
-          url: z.string().optional(),
-        }),
-      })
-    )
-    .mutation(async ({ ctx, input }) => {
-      const category = await ctx.prisma.category.update({
-        where: {
-          id: input.id,
-        },
-        data: {
-          categoryName: input.data.categoryName,
-          url: input.data.url,
-        },
-      });
-      return category;
     }),
 });

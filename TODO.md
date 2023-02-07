@@ -1,6 +1,7 @@
 ## tasks
 
 - ability for admin to remove category
+- add custom theme colors
 - add next-translate
 - style sign in page
 - clean up volumes and types

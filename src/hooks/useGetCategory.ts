@@ -14,7 +14,7 @@ type UseGetCategoryResult = {
 };
 
 export const useGetCategory = (categoryId: number): UseGetCategoryResult => {
-  const categories = api.drinks.getCategories.useQuery();
+  const categories = api.categories.getCategories.useQuery();
 
   if (!categoryId)
     return {

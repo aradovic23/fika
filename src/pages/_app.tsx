@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 import { api } from "../utils/api";
 
 import "../styles/globals.css";
-import { Navbar } from "../components/Navbar";
+import Navbar from "../components/Navbar";
 
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,
@@ -14,14 +14,15 @@ const MyApp: AppType<{ session: Session | null }> = ({
 }) => {
   return (
     <SessionProvider session={session}>
-      <Navbar />
-      <motion.div
-        initial={{ opacity: 0.5 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.5 }}
-      >
-        <Component {...pageProps} />
-      </motion.div>
+      <Navbar>
+        <motion.div
+          initial={{ opacity: 0.5 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5 }}
+        >
+          <Component {...pageProps} />
+        </motion.div>
+      </Navbar>
     </SessionProvider>
   );
 };

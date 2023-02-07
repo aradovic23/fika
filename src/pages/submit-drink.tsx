@@ -33,8 +33,8 @@ const typeOptions: string[] = ["none", "Green", "Black", "Fruit", "Herb"];
 
 const SubmitDrink: NextPage = () => {
   const createDrinkMutation = api.drinks.createDrink.useMutation();
-  const createCategoryMutation = api.drinks.createCategory.useMutation();
-  const categories = api.drinks.getCategories.useQuery();
+  const createCategoryMutation = api.categories.createCategory.useMutation();
+  const categories = api.categories.getCategories.useQuery();
 
   const [productTitle, setProductTitle] = useState("");
   const [productPrice, setProductPrice] = useState("");

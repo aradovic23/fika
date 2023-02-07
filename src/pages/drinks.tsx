@@ -14,7 +14,7 @@ const Drinks: NextPage = () => {
   const drinks = api.drinks.getDrinks.useQuery();
   const [selectedCategory, setSelectedCategory] = useState(19);
   const [search, setSearch] = useState("");
-  const { data, isLoading } = api.drinks.getCategories.useQuery();
+  const { data, isLoading } = api.categories.getCategories.useQuery();
 
   const { category: currentCategory } = useGetCategory(selectedCategory);
 
@@ -38,7 +38,7 @@ const Drinks: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className="flex min-h-screen">
-        <section className="container mx-auto py-10">
+        <section className="container mx-auto py-5">
           <form>
             <div className="flex flex-col gap-3 px-2 md:grid md:grid-cols-3">
               <motion.div
