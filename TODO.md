@@ -1,5 +1,6 @@
 ## tasks
 
+- sanity
 - fix all forms / inputs widths (check edit product form as well)
 - change edit category layout
 - add custom theme colors
