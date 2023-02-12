@@ -1,6 +1,10 @@
 ## tasks
 
-- sanity
+- add spinner to protected routes
+- submit drink layout
+- input groups
+- add image search to edit category
+- look into adding an image for drinks and potentially add to drink id page
 - fix all forms / inputs widths (check edit product form as well)
 - change edit category layout
 - add custom theme colors

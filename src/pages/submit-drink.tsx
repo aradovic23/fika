@@ -13,6 +13,9 @@ import { useGetCategory } from "../hooks/useGetCategory";
 import { Form } from "../components/Form";
 import { useSession } from "next-auth/react";
 import AccessDenied from "../components/AccessDenied";
+import ImageSearch from "../components/ImageSearch";
+import Image from "next/image";
+import Spinner from "../components/Spinner";
 
 export const volumeOptions: string[] = [
   "none",
@@ -52,7 +55,11 @@ const SubmitDrink: NextPage = () => {
   const [isVisible, message, showToaster, isDisabled] = useToaster();
 
   const { category: currentCategory } = useGetCategory(productCategoryId);
-  const { data: sessionData } = useSession();
+  const { data: sessionData, status } = useSession();
+
+  if (status === "loading") {
+    return <Spinner />;
+  }
 
   if (sessionData?.user?.role != "admin") {
     return <AccessDenied />;
@@ -100,6 +107,7 @@ const SubmitDrink: NextPage = () => {
       await categories.refetch();
 
       setNewCategory("");
+      setCategoryUrl("");
       showToaster(`${newCategory} added`);
       setIsCreateNewCategoryChecked(!isCreateNewCategoryChecked);
     } catch (error) {
@@ -111,6 +119,10 @@ const SubmitDrink: NextPage = () => {
         setError((error as Error).message);
       }
     }
+  };
+
+  const handleSelectedImage = (image: string) => {
+    setCategoryUrl(image);
   };
 
   return (
@@ -160,13 +172,31 @@ const SubmitDrink: NextPage = () => {
                   onChange={(e) => setNewCategory(e.target.value)}
                   placeholder="Enter category name"
                 />
+                <ImageSearch handleSelectedImage={handleSelectedImage} />
                 <Input
                   label="Image Url (Optional)"
                   value={categoryUrl}
                   inputMode="text"
                   onChange={(e) => setCategoryUrl(e.target.value)}
                   placeholder="Paste image url"
+                  hidden
                 />
+
+                {categoryUrl && (
+                  <div className="relative h-52">
+                    <Image
+                      src={categoryUrl}
+                      fill
+                      alt="no img"
+                      className="rounded object-cover"
+                      sizes="(max-width: 768px) 100vw,
+          (max-width: 1200px) 50vw,
+          33vw"
+                      priority
+                      placeholder="empty"
+                    />
+                  </div>
+                )}
 
                 <button
                   onClick={handleCreateNewCategory}

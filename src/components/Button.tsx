@@ -10,6 +10,7 @@ interface ButtonProps {
   onClick?: React.MouseEventHandler;
   size?: ButtonSize;
   variant?: ButtonVariant;
+  addOnStyle?: string;
 }
 
 const Button: React.FC<ButtonProps> = ({
@@ -19,17 +20,19 @@ const Button: React.FC<ButtonProps> = ({
   onClick,
   size,
   variant,
+  addOnStyle,
 }) => {
   return (
     <>
       <button
         onClick={onClick}
         className={classNames(
-          "btn w-full text-base-300",
+          "btn text-base-300",
           variant,
           backgroundColor,
           size,
-          disabled && "hidden cursor-not-allowed opacity-50"
+          disabled && "hidden cursor-not-allowed opacity-50",
+          addOnStyle
         )}
       >
         {children}

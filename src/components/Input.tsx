@@ -5,11 +5,12 @@ type InputVariant = "input-bordered" | "input-ghost";
 interface InputProps {
   value: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  label: string;
+  label?: string;
   required?: boolean;
   inputMode: React.HTMLAttributes<HTMLLIElement>["inputMode"];
   placeholder?: string;
   variant?: InputVariant;
+  hidden?: boolean;
 }
 
 export const Input: React.FC<InputProps> = ({
@@ -20,13 +21,16 @@ export const Input: React.FC<InputProps> = ({
   inputMode,
   placeholder = "Type here...",
   variant = "input-bordered",
+  hidden,
 }) => {
   return (
-    <div className="flex flex-col gap-1">
+    <div className={`flex flex-col gap-1 ${hidden ? "hidden" : ""}`}>
       <div className="w-full">
-        <label className="label">
-          <span className="label-text">{label}</span>
-        </label>
+        {label && (
+          <label className="label">
+            <span className="label-text">{label}</span>
+          </label>
+        )}
         <input
           type="text"
           placeholder={placeholder}
