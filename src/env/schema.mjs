@@ -21,6 +21,9 @@ export const serverSchema = z.object({
   ),
   GOOGLE_CLIENT_ID: z.string(),
   GOOGLE_CLIENT_SECRET: z.string(),
+  SANITY_PROJECT_ID: z.string(),
+  SANITY_DATASET: z.string(),
+  SANITY_API_VERSION: z.string(),
 });
 
 /**
@@ -35,6 +38,9 @@ export const serverEnv = {
   NEXTAUTH_URL: process.env.NEXTAUTH_URL,
   GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
   GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
+  SANITY_PROJECT_ID: process.env.SANITY_PROJECT_ID,
+  SANITY_DATASET: process.env.SANITY_DATASET,
+  SANITY_API_VERSION: process.env.SANITY_API_VERSION,
 };
 
 /**
