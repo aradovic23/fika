@@ -1,7 +1,7 @@
 import React from "react";
 
 interface SelectProps {
-  label: string;
+  label?: string;
   onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
   children: React.ReactNode;
   disabled?: boolean;
@@ -16,9 +16,12 @@ export const Select: React.FC<SelectProps> = ({
   return (
     <div>
       <div className="w-full">
-        <label className="label">
-          <span className="label-text">{label}</span>
-        </label>
+        {label && (
+          <label className="label">
+            <span className="label-text">{label}</span>
+          </label>
+        )}
+
         <select
           disabled={disabled}
           onChange={onChange}

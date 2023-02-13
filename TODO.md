@@ -1,5 +1,6 @@
 ## tasks
 
+- add boolean fields to enable fields such as volume, types, descriptions and default to category model
 - add spinner to protected routes
 - submit drink layout
 - input groups

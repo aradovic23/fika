@@ -43,7 +43,9 @@ const Navbar: FC<{ children: React.ReactNode }> = ({ children }) => {
             </label>
           </div>
           <div className="mx-2 flex-1 justify-between px-2">
-            <a className="btn-ghost btn text-xl normal-case">Drinks App</a>
+            <Link href="/" className="btn-ghost btn text-xl normal-case">
+              Drinks App
+            </Link>
           </div>
           <div className="hidden flex-none lg:block">
             <ul className="menu menu-horizontal">

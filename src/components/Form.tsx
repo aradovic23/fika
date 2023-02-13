@@ -10,7 +10,7 @@ interface FormProps {
 export const Form: FC<FormProps> = ({
   children,
   onSubmit,
-  width = "max-w-96",
+  width = "w-full",
 }) => {
   return (
     <form onSubmit={onSubmit} className={`flex ${width} flex-col gap-5 `}>

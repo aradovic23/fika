@@ -2,11 +2,11 @@ import { type AppType } from "next/app";
 import { type Session } from "next-auth";
 import { SessionProvider } from "next-auth/react";
 import { motion } from "framer-motion";
-
+import "react-toastify/dist/ReactToastify.css";
 import { api } from "../utils/api";
-
 import "../styles/globals.css";
 import Navbar from "../components/Navbar";
+import { ToastContainer } from "react-toastify";
 
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,
@@ -21,6 +21,18 @@ const MyApp: AppType<{ session: Session | null }> = ({
           transition={{ duration: 0.5 }}
         >
           <Component {...pageProps} />
+          <ToastContainer
+            position="top-right"
+            autoClose={5000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            theme="dark"
+          />
         </motion.div>
       </Navbar>
     </SessionProvider>

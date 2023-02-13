@@ -11,6 +11,7 @@ interface ButtonProps {
   size?: ButtonSize;
   variant?: ButtonVariant;
   addOnStyle?: string;
+  htmlType?: React.ButtonHTMLAttributes<HTMLButtonElement>["type"];
 }
 
 const Button: React.FC<ButtonProps> = ({
@@ -21,10 +22,12 @@ const Button: React.FC<ButtonProps> = ({
   size,
   variant,
   addOnStyle,
+  htmlType = "submit",
 }) => {
   return (
     <>
       <button
+        type={htmlType}
         onClick={onClick}
         className={classNames(
           "btn text-base-300",
