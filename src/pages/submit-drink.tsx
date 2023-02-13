@@ -63,28 +63,35 @@ const SubmitDrink: NextPage = () => {
     e.preventDefault();
 
     try {
-      await createDrinkMutation.mutateAsync({
-        title: productTitle,
-        price: productPrice,
-        tag: productTag != "" ? productTag : null,
-        volume: productVolume?.toLowerCase() === "none" ? null : productVolume,
-        type:
-          currentCategory?.categoryName.toLowerCase() === "tea"
-            ? productType
-            : null,
-        description:
-          currentCategory?.categoryName.toLowerCase() === "cocktails"
-            ? productDescription
-            : null,
-        categoryId: productCategoryId,
-      });
-      toast.success(`${productTitle} added`);
+      await toast.promise(
+        createDrinkMutation.mutateAsync({
+          title: productTitle,
+          price: productPrice,
+          tag: productTag != "" ? productTag : null,
+          volume:
+            productVolume?.toLowerCase() === "none" ? null : productVolume,
+          type:
+            currentCategory?.categoryName.toLowerCase() === "tea"
+              ? productType
+              : null,
+          description:
+            currentCategory?.categoryName.toLowerCase() === "cocktails"
+              ? productDescription
+              : null,
+          categoryId: productCategoryId,
+        }),
+        {
+          pending: "Pending...",
+          success: `${productTitle} added`,
+          error: "Promise rejected 🤯",
+        }
+      );
       void router.push("/drinks");
     } catch (error) {
       if (typeof error === "string") {
-        toast.error(error);
+        console.log(error);
       } else {
-        toast.error((error as Error).message);
+        console.log((error as Error).message);
       }
     }
   };

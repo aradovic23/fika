@@ -24,17 +24,13 @@ export const AvatarNav: FC<AvatarProps> = ({
       </label>
       <div
         tabIndex={0}
-        className="card-compact card dropdown-content mt-3 w-52 bg-base-100 shadow"
+        className="card dropdown-content card-compact mt-3 w-52 bg-base-100 shadow"
       >
         <div className="card-body">
           <span className="text-lg font-bold">{userName}</span>
           <span className="text-info">Role: {userRole}</span>
           <div className="card-actions">
-            <Button
-              size="btn-sm"
-              variant="btn-circle"
-              onClick={() => signOut()}
-            >
+            <Button size="btn-sm" onClick={() => signOut()}>
               Log out
             </Button>
           </div>

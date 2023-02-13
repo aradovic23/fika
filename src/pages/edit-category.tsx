@@ -9,26 +9,22 @@ import { useGetCategory } from "../hooks/useGetCategory";
 import { Input } from "../components/Input";
 import Image from "next/image";
 import { Form } from "../components/Form";
-import useToaster from "../hooks/useToaster";
-import { Toast } from "../components/Toast";
 import AccessDenied from "../components/AccessDenied";
+import { toast } from "react-toastify";
+import Spinner from "../components/Spinner";
 
 const EditCategory: NextPage = () => {
-  const { data: sessionData } = useSession();
+  const { data: sessionData, status } = useSession();
   const { data: categories } = api.categories.getCategories.useQuery();
-  const drinks = api.drinks.getDrinks.useQuery();
+  const { refetch } = api.drinks.getDrinks.useQuery();
   const [categoryId, setCategoryId] = useState(34);
   const [formData, setFormData] = useState({
     categoryName: "",
     url: "",
   });
-  const [error, setError] = useState("");
-
   const { category: productCategory } = useGetCategory(categoryId);
-  const [isVisible, message, showToaster, isDisabled] = useToaster();
   const updateCategory = api.categories.updateCategory.useMutation();
-  const { mutate: deleteSingleCategory } =
-    api.categories.deleteCategory.useMutation();
+  const deleteSingleCategory = api.categories.deleteCategory.useMutation();
 
   useEffect(() => {
     if (productCategory) {
@@ -42,22 +38,25 @@ const EditCategory: NextPage = () => {
   const handleCategoryUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await updateCategory.mutateAsync({
-        id: categoryId,
-        data: {
-          categoryName: formData.categoryName,
-          url: formData.url,
-        },
-      });
-      setError("");
-      showToaster(`${formData.categoryName} updated`);
+      await toast.promise(
+        updateCategory.mutateAsync({
+          id: categoryId,
+          data: {
+            categoryName: formData.categoryName,
+            url: formData.url,
+          },
+        }),
+        {
+          pending: "Pending...",
+          success: `${formData.categoryName} updated`,
+          error: "An error occured 🤯",
+        }
+      );
     } catch (error) {
       if (typeof error === "string") {
-        showToaster(error);
-        setError(error);
+        console.log(error);
       } else {
-        showToaster((error as Error).message);
-        setError((error as Error).message);
+        console.log((error as Error).message);
       }
     }
   };
@@ -65,21 +64,21 @@ const EditCategory: NextPage = () => {
   const deleteCategoryHandler = async (id: number) => {
     if (window.confirm("Are you sure you want to delete this category?")) {
       try {
-        deleteSingleCategory({ id });
-        await drinks.refetch();
-        setError("");
-        showToaster(`${formData.categoryName} deleted`, { type: "back" });
+        await toast.promise(deleteSingleCategory.mutateAsync({ id }), {
+          pending: "Pending...",
+          success: `${formData.categoryName} deleted`,
+          error: "An error occured 🤯",
+        });
+        await refetch();
       } catch (error) {
-        if (typeof error === "string") {
-          showToaster(error);
-          setError(error);
-        } else {
-          showToaster((error as Error).message);
-          setError((error as Error).message);
-        }
+        console.log(error);
       }
     }
   };
+
+  if (status === "loading") {
+    return <Spinner />;
+  }
 
   if (sessionData?.user?.role != "admin") {
     return <AccessDenied />;
@@ -127,8 +126,11 @@ const EditCategory: NextPage = () => {
                   }
                   inputMode="text"
                 />
-                <Button disabled={isDisabled} backgroundColor="bg-secondary">
-                  Submit
+                <Button
+                  disabled={updateCategory.isLoading}
+                  backgroundColor="bg-secondary"
+                >
+                  Save
                 </Button>
               </Form>
             </section>
@@ -157,19 +159,13 @@ const EditCategory: NextPage = () => {
             <p>Delete whole category and all drinks associated?</p>
             <Button
               onClick={() => deleteCategoryHandler(categoryId)}
-              disabled={isDisabled}
-              variant="btn-outline"
+              disabled={updateCategory.isLoading}
+              backgroundColor="btn-warning"
             >
               Delete Category
             </Button>
           </div>
         </div>
-        {isVisible && (
-          <Toast
-            label={message}
-            type={error ? "alert-error" : "alert-success"}
-          />
-        )}
       </main>
     </>
   );

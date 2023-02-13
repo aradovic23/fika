@@ -4,12 +4,11 @@ import { useRouter } from "next/router";
 import { api } from "../../utils/api";
 import { useEffect, useState } from "react";
 import { Input } from "../../components/Input";
-import { Toast } from "../../components/Toast";
-import useToaster from "../../hooks/useToaster";
 import { useGetCategory } from "../../hooks/useGetCategory";
 import Button from "../../components/Button";
 import { Textarea } from "../../components/Textarea";
 import { Form } from "../../components/Form";
+import { toast } from "react-toastify";
 
 const EditDrinkPage: NextPage = () => {
   const [formData, setFormData] = useState({
@@ -20,9 +19,6 @@ const EditDrinkPage: NextPage = () => {
     description: "",
     tag: "",
   });
-  const [error, setError] = useState("");
-
-  const [isVisible, message, showToaster, isDisabled] = useToaster();
 
   const router = useRouter();
   const { id } = router.query as {
@@ -51,27 +47,29 @@ const EditDrinkPage: NextPage = () => {
   const handleProductUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await updateProduct.mutateAsync({
-        id,
-        data: {
-          title: formData.title,
-          price: formData.price,
-          volume: formData.volume === "" ? null : formData.volume,
-          type: formData.type === "" ? null : formData.type,
-          description:
-            formData.description === "" ? null : formData.description,
-          tag: formData.tag === "" ? null : formData.tag,
-        },
-      });
-      setError("");
-      showToaster(`${formData.title} updated`, { type: "back" });
+      await toast.promise(
+        updateProduct.mutateAsync({
+          id,
+          data: {
+            title: formData.title,
+            price: formData.price,
+            volume: formData.volume === "" ? null : formData.volume,
+            type: formData.type === "" ? null : formData.type,
+            description:
+              formData.description === "" ? null : formData.description,
+            tag: formData.tag === "" ? null : formData.tag,
+          },
+        }),
+        {
+          pending: "Pending...",
+          success: `${formData.title} updated`,
+          error: "An error occured 🤯",
+        }
+      );
+      router.back();
     } catch (error) {
       if (typeof error === "string") {
-        showToaster(error);
-        setError(error);
-      } else {
-        showToaster((error as Error).message);
-        setError((error as Error).message);
+        toast.error(error);
       }
     }
   };
@@ -99,7 +97,6 @@ const EditDrinkPage: NextPage = () => {
       <main className="mb-10 flex min-h-screen">
         <section className="container mx-auto flex h-screen flex-col items-center py-10">
           <h1 className="my-5 text-center text-2xl font-bold">Edit product</h1>
-          {error && <p>error</p>}
           {isLoading && <p>Loading...</p>}
           <Form onSubmit={handleProductUpdate}>
             <Input
@@ -157,16 +154,13 @@ const EditDrinkPage: NextPage = () => {
                 label="Add cocktail description"
               ></Textarea>
             )}
-            <Button disabled={isDisabled} backgroundColor="bg-primary">
+            <Button
+              disabled={updateProduct.isLoading}
+              backgroundColor="bg-primary"
+            >
               Update product
             </Button>
           </Form>
-          {isVisible && (
-            <Toast
-              label={message}
-              type={error ? "alert-error" : "alert-success"}
-            />
-          )}
         </section>
       </main>
     </>
