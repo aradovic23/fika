@@ -4,6 +4,7 @@ import { Input } from "./Input";
 import ImageSearch from "./ImageSearch";
 import Image from "next/image";
 import { toast } from "react-toastify";
+import { Checkbox } from "./Checkbox";
 
 interface Props {
   handleIsActive: (state: boolean) => void;
@@ -13,7 +14,13 @@ const CreateNewCategory = ({ handleIsActive }: Props) => {
   const createCategoryMutation = api.categories.createCategory.useMutation();
   const { refetch } = api.categories.getCategories.useQuery();
 
-  const [newCategory, setNewCategory] = useState({ name: "", url: "" });
+  const [newCategory, setNewCategory] = useState({
+    name: "",
+    url: "",
+    addTypes: false,
+    addDescription: false,
+    isDefault: false,
+  });
 
   const handleCreateNewCategory = async (e: React.FormEvent) => {
     if (newCategory.name === "") return;
@@ -22,8 +29,17 @@ const CreateNewCategory = ({ handleIsActive }: Props) => {
       await createCategoryMutation.mutateAsync({
         categoryName: newCategory.name,
         url: newCategory.url,
+        addTypes: newCategory.addTypes,
+        addDescription: newCategory.addDescription,
+        isDefault: newCategory.isDefault,
       });
-      setNewCategory({ name: "", url: "" });
+      setNewCategory({
+        name: "",
+        url: "",
+        addTypes: false,
+        addDescription: false,
+        isDefault: false,
+      });
       toast.success(`${newCategory.name} added`);
       handleIsActive(false);
       await refetch();
@@ -87,6 +103,39 @@ const CreateNewCategory = ({ handleIsActive }: Props) => {
           />
         </div>
       )}
+
+      <div className="flex space-x-2">
+        <Checkbox
+          style="checkbox_form"
+          label="Allow types?"
+          onChange={() =>
+            setNewCategory((prevState) => ({
+              ...prevState,
+              addTypes: !prevState.addTypes,
+            }))
+          }
+        />
+        <Checkbox
+          style="checkbox_form"
+          label="Allow to add description?"
+          onChange={() =>
+            setNewCategory((prevState) => ({
+              ...prevState,
+              addDescription: !prevState.addDescription,
+            }))
+          }
+        />
+        <Checkbox
+          style="checkbox_form"
+          label="Is default product?"
+          onChange={() =>
+            setNewCategory((prevState) => ({
+              ...prevState,
+              isDefault: !prevState.isDefault,
+            }))
+          }
+        />
+      </div>
 
       <button
         onClick={handleCreateNewCategory}

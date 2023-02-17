@@ -74,6 +74,7 @@ model Drink {
     createdDate DateTime  @default(now())
     description String?
     category    Category? @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+    updatedAt   DateTime  @default(now())
 }
 
 model Category {

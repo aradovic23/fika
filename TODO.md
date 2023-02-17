@@ -1,5 +1,6 @@
 ## tasks
 
+- continue refactor of submit fields on all pages
 - leverage new category fields on pages
 - add spinner to protected routes
 - submit drink layout

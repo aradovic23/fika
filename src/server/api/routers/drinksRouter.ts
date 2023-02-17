@@ -8,11 +8,11 @@ export const drinksRouter = createTRPCRouter({
       z.object({
         title: z.string(),
         price: z.string(),
-        tag: z.string().nullish(),
+        tag: z.string().optional(),
         categoryId: z.number().nullable(),
-        volume: z.string().nullish(),
-        type: z.string().nullish(),
-        description: z.string().nullish(),
+        volume: z.string().optional(),
+        type: z.string().optional(),
+        description: z.string().optional(),
       })
     )
     .mutation(async ({ input, ctx }) => {
@@ -46,12 +46,12 @@ export const drinksRouter = createTRPCRouter({
   getDrinkById: publicProcedure
     .input(z.object({ id: z.string() }))
     .query(async ({ ctx, input }) => {
-      const singleDrink = await ctx.prisma.drink.findUnique({
+      const singleDrink = await ctx.prisma.drink.findFirst({
         where: {
           id: input.id,
         },
       });
-      return singleDrink;
+      if (singleDrink) return singleDrink;
     }),
   deleteDrink: publicProcedure
     .input(z.object({ id: z.string() }))
@@ -78,10 +78,10 @@ export const drinksRouter = createTRPCRouter({
         data: z.object({
           title: z.string().optional(),
           price: z.string().optional(),
-          tag: z.string().nullable(),
-          volume: z.string().nullable(),
-          type: z.string().nullable(),
-          description: z.string().nullable(),
+          tag: z.string().optional(),
+          volume: z.string().optional(),
+          type: z.string().optional(),
+          description: z.string().optional(),
         }),
       })
     )
@@ -97,6 +97,7 @@ export const drinksRouter = createTRPCRouter({
           volume: input.data.volume,
           type: input.data.type,
           description: input.data.description,
+          updatedAt: new Date(),
         },
       });
       return drink;

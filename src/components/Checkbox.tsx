@@ -3,12 +3,17 @@ import React from "react";
 interface CheckboxProps {
   label: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  style?: string;
 }
 
-export const Checkbox: React.FC<CheckboxProps> = ({ label, onChange }) => {
+export const Checkbox: React.FC<CheckboxProps> = ({
+  label,
+  onChange,
+  style = "",
+}) => {
   return (
-    <div className="form-control my-2 mt-4 rounded-md bg-base-300/70 p-2">
-      <label className="label cursor-pointer">
+    <div className={`my-2 mt-4 rounded-md bg-base-300/70 p-2`}>
+      <label className={`label cursor-pointer ${style}`}>
         <span className="label-text">{label}</span>
         <input
           type="checkbox"

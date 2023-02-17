@@ -4,11 +4,14 @@ type Category = {
   id: number;
   categoryName: string;
   role?: string | null;
-  url: string | null;
+  url?: string | null;
+  addDescription: boolean;
+  addTypes: boolean;
+  isDefault: boolean;
 };
 
 type UseGetCategoryResult = {
-  category: Category | undefined;
+  category?: Category;
   isLoading: boolean;
   isError: boolean;
 };
@@ -16,14 +19,15 @@ type UseGetCategoryResult = {
 export const useGetCategory = (categoryId: number): UseGetCategoryResult => {
   const categories = api.categories.getCategories.useQuery();
 
-  if (!categoryId)
+  const category = categories.data?.find((cat) => categoryId === cat.id);
+
+  if (!category) {
     return {
       category: undefined,
       isLoading: categories.isLoading,
       isError: categories.isError,
     };
-
-  const category = categories.data?.find((cat) => categoryId === cat.id);
+  }
 
   return {
     category,
