@@ -1,11 +1,16 @@
 import React from "react";
 import { ExclamationTriangleIcon } from "@heroicons/react/24/solid";
+import { Heading, Stack, Text } from "@chakra-ui/react";
 
 export const NoResults = () => {
   return (
-    <div className="col-span-2 my-10 flex h-screen w-full flex-col items-center justify-start gap-2">
-      <h1 className="text-xl font-bold">No products found</h1>
+    <Stack alignItems="center" mt="5">
       <ExclamationTriangleIcon className="h-8 w-8" />
-    </div>
+      <Heading size="lg">No results found</Heading>
+      <Stack alignItems="center">
+        <Text>We couldn&apos;t find what you searched for.</Text>
+        <Text>Try searching again.</Text>
+      </Stack>
+    </Stack>
   );
 };

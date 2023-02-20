@@ -1,12 +1,13 @@
 import { type AppType } from "next/app";
 import { type Session } from "next-auth";
 import { SessionProvider } from "next-auth/react";
-import { motion } from "framer-motion";
 import "react-toastify/dist/ReactToastify.css";
 import { api } from "../utils/api";
 import "../styles/globals.css";
-import Navbar from "../components/Navbar";
 import { ToastContainer } from "react-toastify";
+import { ChakraProvider } from "@chakra-ui/react";
+import theme from "../../theme";
+import Layout from "../components/Layout";
 
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,
@@ -14,12 +15,8 @@ const MyApp: AppType<{ session: Session | null }> = ({
 }) => {
   return (
     <SessionProvider session={session}>
-      <Navbar>
-        <motion.div
-          initial={{ opacity: 0.5 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.5 }}
-        >
+      <ChakraProvider theme={theme}>
+        <Layout>
           <Component {...pageProps} />
           <ToastContainer
             position="top-right"
@@ -33,8 +30,8 @@ const MyApp: AppType<{ session: Session | null }> = ({
             pauseOnHover
             theme="dark"
           />
-        </motion.div>
-      </Navbar>
+        </Layout>
+      </ChakraProvider>
     </SessionProvider>
   );
 };

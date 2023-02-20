@@ -1,6 +1,7 @@
 import type { GetServerSideProps } from "next";
 import Head from "next/head";
 import { getProviders, signIn, signOut, useSession } from "next-auth/react";
+import { Button } from "@chakra-ui/react";
 
 type Provider = {
   id: string;
@@ -22,9 +23,8 @@ const SignIn = ({ providers }: { providers: Provider[] }) => {
       <main className="flex h-screen items-center justify-center">
         <div>
           {Object.values(providers).map((provider) => (
-            <button
+            <Button
               key={provider.id}
-              className="btn-primary btn"
               onClick={
                 sessionData
                   ? () => signOut()
@@ -35,7 +35,7 @@ const SignIn = ({ providers }: { providers: Provider[] }) => {
               }
             >
               {sessionData ? "Sign out" : "Sign in with Google"}
-            </button>
+            </Button>
           ))}
         </div>
       </main>

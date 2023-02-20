@@ -160,3 +160,16 @@ export type ResultTopicSubmissions = {
   spirituality?: Nature;
   texturesPatterns?: Nature;
 };
+
+export type TDrink = {
+  id?: string;
+  title?: string;
+  price?: string;
+  volume?: string;
+  type?: string;
+  tag?: string;
+  categoryID?: number;
+  createdDate?: Date;
+  description?: string;
+  updatedAt?: Date;
+};

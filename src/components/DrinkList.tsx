@@ -1,41 +1,36 @@
-import Image from "next/image";
 import type { FC } from "react";
-import { useState } from "react";
-import classnames from "classnames";
 import Link from "next/link";
 import { api } from "../utils/api";
 import { useQueryClient } from "@tanstack/react-query";
 import { useGetCategory } from "../hooks/useGetCategory";
-import { Modal } from "./Modal";
 import { useSession } from "next-auth/react";
-import { AnimatePresence, motion } from "framer-motion";
 import {
   InformationCircleIcon,
   PencilSquareIcon,
   TrashIcon,
 } from "@heroicons/react/24/outline";
-
-export type Drink = {
-  title: string;
-  id: string;
-  price: string;
-  volume?: string | null;
-  tag?: string | null;
-  type?: string | null;
-  description?: string | null;
-  categoryId?: number | null;
-};
-
-const typeBadgeBackgroundColor: { [index: string]: string } = {
-  none: "badge badge-error ",
-  Green: "bg-green-400",
-  Black: "bg-slate-400",
-  Fruit: "bg-red-400",
-  Herb: "bg-yellow-400",
-};
-
-const typeBadgeStyle =
-  "rounded-md px-1 py-0.5 text-xs text-black uppercase font-medium";
+import {
+  AspectRatio,
+  Badge,
+  Box,
+  Button,
+  Flex,
+  IconButton,
+  Image,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
+  ScaleFade,
+  Tag,
+  Text,
+  useColorModeValue,
+  useDisclosure,
+} from "@chakra-ui/react";
+import type { Drink } from "@prisma/client";
 
 export const DrinkList: FC<Drink> = ({
   title,
@@ -47,9 +42,9 @@ export const DrinkList: FC<Drink> = ({
   tag,
   description,
 }) => {
-  const [showModal, setShowModal] = useState(false);
   const queryClient = useQueryClient();
   const drinks = api.drinks.getDrinks.useQuery();
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   const { mutate: deleteDrink } = api.drinks.deleteDrink.useMutation({
     async onSuccess() {
@@ -62,113 +57,126 @@ export const DrinkList: FC<Drink> = ({
   });
 
   const onDeleteHandler = (id: string) => {
-    if (window.confirm("Are you sure")) {
+    if (window.confirm("Are you sure you want to delelte?")) {
       deleteDrink({ id });
     }
   };
 
-  const handleShowModal = (state: boolean) => {
-    setShowModal(state);
-  };
-
-  const { category, isError } = useGetCategory(categoryId ?? 1) ?? "";
+  const { category } = useGetCategory(categoryId ?? 1) ?? "";
   const { data: sessionData } = useSession();
+  const hasDescription = category?.addDescription;
+
+  const bg = useColorModeValue("whiteAlpha.800", "blackAlpha.400");
+  const color = useColorModeValue("gray.900", "gray.100");
+
+  const typeBadgeBackgroundColor: { [key: string]: string } = {
+    none: "teal",
+    Green: "green",
+    Black: "gray",
+    Fruit: "red",
+    Herb: "yellow",
+  };
+  const badgeColor = type ? typeBadgeBackgroundColor[type] || "gray" : "gray";
 
   return (
-    <motion.div
-      initial={{ opacity: 0, scale: 0.7 }}
-      animate={{ opacity: 1, scale: 1, y: [0, 7, 0] }}
-      transition={{ ease: "easeOut", duration: 0.5 }}
-      exit={{ opacity: 0, scale: 0 }}
-      className="flex max-h-52 flex-col gap-2 overflow-hidden rounded-lg bg-base-300"
-    >
-      <figure className="relative h-24 rounded-t-lg">
-        {isError ? (
-          <p>Error loading the image...</p>
-        ) : (
-          <Image
-            src={category?.url ?? ""}
-            alt="image"
-            fill
-            className="object-cover"
-            sizes="(max-width: 768px) 100vw,
-          (max-width: 1200px) 50vw,
-          33vw"
-            priority
-            placeholder="empty"
-          />
-        )}
-
-        {tag && (
-          <div className="absolute top-2 right-2 z-30 rounded-md bg-yellow-500 px-1 py-0.5 text-xs font-medium uppercase text-black">
-            {tag}
-          </div>
-        )}
-        <div className="absolute h-full w-full bg-gradient-to-t from-base-300"></div>
-        <div className="absolute top-10 left-5 flex h-full w-full items-center gap-3">
-          <div className="flex flex-col">
-            <div className="flex items-center gap-2">
-              <h2 className="card-title truncate text-white">{title}</h2>
-              {type && type != "none" && (
-                <div
-                  className={classnames(
-                    typeBadgeBackgroundColor[type],
-                    typeBadgeStyle
-                  )}
-                >
-                  {type}
-                </div>
-              )}
-            </div>
-            <div className="text-sm font-bold">{price} RSD</div>
-          </div>
-        </div>
-      </figure>
-
-      <div className="flex flex-col gap-4 divide-y divide-solid divide-slate-400/10 rounded-lg p-5">
-        <div className="card-actions flex justify-between pt-2">
-          <div className="flex gap-2">
-            {category && (
-              <div className="truncate text-sm uppercase">
-                {category.categoryName}
-              </div>
-            )}
-            {volume && volume != "none" && (
-              <div className="text-sm font-bold">{volume}</div>
-            )}
-          </div>
-          <div className="flex gap-2">
-            {sessionData?.user?.role === "admin" && (
-              <>
-                <Link href={`/drink/${id}`}>
-                  <PencilSquareIcon className="h-6 w-6" />
-                </Link>
-                <TrashIcon
-                  className="h-6 w-6"
-                  onClick={() => {
-                    onDeleteHandler(id);
-                  }}
-                />
-              </>
-            )}
-            {category?.categoryName.toLowerCase() === "cocktails" && (
-              <InformationCircleIcon
-                className="h-6 w-6"
-                onClick={() => setShowModal(!showModal)}
+    <>
+      <ScaleFade initialScale={0.8} in unmountOnExit>
+        <Box shadow="md" p="3" maxH="13rem" rounded="lg" bg={bg} color={color}>
+          <Box position="relative">
+            <AspectRatio ratio={4 / 3} maxH="5rem">
+              <Image
+                alt="error"
+                src={category?.url ?? ""}
+                objectFit="cover"
+                rounded="lg"
               />
+            </AspectRatio>
+            {tag && (
+              <Box position="absolute" top="2" right="2">
+                <Badge variant="solid" colorScheme="yellow">
+                  {tag}
+                </Badge>
+              </Box>
             )}
-            <AnimatePresence>
-              {showModal && (
-                <Modal
-                  description={description ?? ""}
-                  title={title}
-                  handleShowModal={handleShowModal}
+          </Box>
+          <Flex justify="space-between" mt="1">
+            <Text fontSize="xl" noOfLines={1} maxWidth="250px">
+              {title}
+            </Text>
+            <Text fontSize="lg">{price} RSD</Text>
+          </Flex>
+
+          <Flex justify="space-between" align="center" mt="1">
+            <Flex gap="3">
+              <Box>
+                <Flex gap="2">
+                  <Text casing="uppercase" as="b" fontSize="sm">
+                    {category?.categoryName}
+                  </Text>
+                  {volume && (
+                    <Text casing="uppercase" fontSize="sm">
+                      {volume}
+                    </Text>
+                  )}
+                  {type && (
+                    <Tag ml="1" colorScheme={badgeColor}>
+                      {type}
+                    </Tag>
+                  )}
+                  <Text>{description}</Text>
+                </Flex>
+              </Box>
+            </Flex>
+            <Flex justifyContent="flex-end" gap="2">
+              {sessionData?.user?.role === "admin" && (
+                <>
+                  <IconButton
+                    aria-label="edit"
+                    as={Link}
+                    href={`/drink/${id}`}
+                    icon={<PencilSquareIcon className="h-6 w-6" />}
+                  />
+                  <IconButton
+                    aria-label="delete"
+                    icon={<TrashIcon className="h-6 w-6" />}
+                    onClick={() => {
+                      onDeleteHandler(id);
+                    }}
+                  />
+                </>
+              )}
+              {hasDescription && (
+                <IconButton
+                  aria-label="delete"
+                  icon={<InformationCircleIcon className="h-6 w-6" />}
+                  onClick={onOpen}
                 />
               )}
-            </AnimatePresence>
-          </div>
-        </div>
-      </div>
-    </motion.div>
+            </Flex>
+          </Flex>
+        </Box>
+      </ScaleFade>
+      <Modal
+        isOpen={isOpen}
+        onClose={onClose}
+        motionPreset="slideInBottom"
+        isCentered
+      >
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>{title}</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <Text>{description}</Text>
+          </ModalBody>
+
+          <ModalFooter>
+            <Button colorScheme="primary" mr={3} onClick={onClose}>
+              Close
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+    </>
   );
 };

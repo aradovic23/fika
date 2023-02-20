@@ -1,14 +1,19 @@
 import { useForm } from "react-hook-form";
 import { Form } from "./Form";
-import type { TDrink } from "../pages/drink/[id]";
 import type { FC } from "react";
-import InputField from "./InputField";
+import {
+  Button,
+  FormControl,
+  FormLabel,
+  Input,
+  Textarea,
+} from "@chakra-ui/react";
+import type { TDrink } from "../../typings";
 import type { Drink } from "@prisma/client";
-import Button from "./Button";
 
 interface EditFormProps {
   drink: Drink;
-  onSubmit: (drink: TDrink) => void;
+  onSubmit: (data: TDrink) => void;
   addDescription: boolean;
   addTypes: boolean;
 }
@@ -23,48 +28,46 @@ const EditDrinkForm: FC<EditFormProps> = ({
 
   return (
     <Form onSubmit={handleSubmit(onSubmit)}>
-      <InputField
-        register={register}
-        name="title"
-        label="Title"
-        placeholder="Enter product title"
-      />
-      <InputField
-        register={register}
-        name="price"
-        label="Price"
-        placeholder="Enter product price"
-      />
-      <InputField
-        register={register}
-        name="volume"
-        label="Volume"
-        placeholder="Enter product volume"
-      />
-      {addTypes && (
-        <InputField
-          register={register}
-          name="type"
-          label="Type"
-          placeholder="Enter product type"
+      <FormControl>
+        <FormLabel htmlFor="title">Title</FormLabel>
+        <Input placeholder="Type here" id="title" {...register("title")} />
+      </FormControl>
+
+      <FormControl>
+        <FormLabel htmlFor="price">Price</FormLabel>
+        <Input
+          placeholder="Type here"
+          id="title"
+          {...register("price")}
+          inputMode="numeric"
         />
+      </FormControl>
+
+      <FormControl>
+        <FormLabel htmlFor="volume">Volume</FormLabel>
+        <Input placeholder="Type here" id="volume" {...register("volume")} />
+      </FormControl>
+
+      {addTypes && (
+        <FormControl>
+          <FormLabel htmlFor="type">Type</FormLabel>
+          <Input placeholder="Type here" id="type" {...register("type")} />
+        </FormControl>
       )}
       {addDescription && (
-        <InputField
-          register={register}
-          name="description"
-          label="Description"
-          placeholder="Enter product description"
-        />
+        <FormControl>
+          <FormLabel htmlFor="description">Description</FormLabel>
+          <Textarea
+            placeholder="Description here"
+            id="description"
+            {...register("description")}
+          />
+        </FormControl>
       )}
 
-      <InputField
-        register={register}
-        name="tag"
-        label="Tag"
-        placeholder="Enter product tag..."
-      />
-      <Button>Update</Button>
+      <Button mt={4} colorScheme="primary" type="submit">
+        Save
+      </Button>
     </Form>
   );
 };
