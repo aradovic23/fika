@@ -5,7 +5,6 @@ import { api } from "../utils/api";
 import { useEffect, useState } from "react";
 import { useGetCategory } from "../hooks/useGetCategory";
 import AccessDenied from "../components/AccessDenied";
-import { toast } from "react-toastify";
 import Spinner from "../components/Spinner";
 import { Form } from "../components/Form";
 import {
@@ -23,25 +22,30 @@ import {
   Select,
   Stack,
   Text,
+  useToast,
   VStack,
 } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
 import type { Category } from "@prisma/client";
+import ImageSearch from "../components/ImageSearch";
 
 const EditCategory: NextPage = () => {
   const { data: sessionData, status } = useSession();
   const { data: categories } = api.categories.getCategories.useQuery();
   const [categoryId, setCategoryId] = useState(0);
-
+  const [imageFromSearch, setImageFromSearch] = useState("");
   const { category: productCategory } = useGetCategory(categoryId);
   const updateCategory = api.categories.updateCategory.useMutation();
   const deleteSingleCategory = api.categories.deleteCategory.useMutation();
+
+  const hasSearchedImage = imageFromSearch !== "";
 
   const { register, handleSubmit, reset } = useForm({
     defaultValues: productCategory,
   });
 
   const utils = api.useContext();
+  const toast = useToast();
 
   useEffect(() => {
     reset(productCategory);
@@ -49,28 +53,28 @@ const EditCategory: NextPage = () => {
 
   const handleCategoryUpdate = async (category: Category) => {
     try {
-      await toast.promise(
-        updateCategory.mutateAsync(
-          {
-            id: categoryId,
-            data: {
-              categoryName: category.categoryName,
-              url: category.url,
-            },
-          },
-          {
-            onSuccess: () => {
-              void utils.categories.getCategories.invalidate();
-              void utils.drinks.getAllDrinks.invalidate();
-            },
-          }
-        ),
+      await updateCategory.mutateAsync(
         {
-          pending: "Pending...",
-          success: `success updated`,
-          error: "An error occured 🤯",
+          id: categoryId,
+          data: {
+            categoryName: category.categoryName,
+            url: hasSearchedImage ? imageFromSearch : category.url,
+          },
+        },
+        {
+          onSuccess: () => {
+            void utils.categories.getCategories.invalidate();
+            void utils.drinks.getAllDrinks.invalidate();
+          },
         }
       );
+      toast({
+        title: "Updated category",
+        status: "success",
+        isClosable: true,
+        position: "top",
+      });
+      setImageFromSearch("");
     } catch (error) {
       if (typeof error === "string") {
         console.log(error);
@@ -83,15 +87,20 @@ const EditCategory: NextPage = () => {
   const deleteCategoryHandler = async (id: number) => {
     if (window.confirm("Are you sure you want to delete this category?")) {
       try {
-        await toast.promise(deleteSingleCategory.mutateAsync({ id }), {
-          pending: "Pending...",
-          success: `deleted`,
-          error: "An error occured 🤯",
+        await deleteSingleCategory.mutateAsync({ id });
+        toast({
+          title: "Deleted category",
+          status: "success",
+          isClosable: true,
         });
       } catch (error) {
         console.log(error);
       }
     }
+  };
+
+  const handleSelectedImage = (image: string) => {
+    setImageFromSearch(image);
   };
 
   if (status === "loading") {
@@ -119,7 +128,7 @@ const EditCategory: NextPage = () => {
         </Heading>
         <Grid templateColumns="repeat(6, 1fr)">
           <GridItem
-            colSpan={{ base: 6, md: 3, lg: 2 }}
+            colSpan={{ base: 6, md: 3 }}
             as="aside"
             mr={{ base: "0", md: "3" }}
             mb={{ base: "3", md: "0" }}
@@ -155,6 +164,7 @@ const EditCategory: NextPage = () => {
                           {...register("categoryName")}
                         />
                       </FormControl>
+                      <ImageSearch handleSelectedImage={handleSelectedImage} />
                       <FormControl>
                         <FormLabel htmlFor="url">Image Url</FormLabel>
                         <Input
@@ -189,7 +199,7 @@ const EditCategory: NextPage = () => {
             </VStack>
           </GridItem>
           <GridItem
-            colSpan={{ base: 6, md: 3, lg: 4 }}
+            colSpan={{ base: 6, md: 3 }}
             as="main"
             mt={{ base: "5", md: "1" }}
           >
@@ -198,13 +208,17 @@ const EditCategory: NextPage = () => {
               {!productCategory?.url ||
                 (categoryId !== 0 && (
                   <>
-                    <Text zIndex={100} fontWeight="bold">
+                    <Text zIndex={1} fontWeight="bold">
                       Category image:
                     </Text>
                     <Box position="relative">
                       <Image
                         alt="category"
-                        src={productCategory?.url}
+                        src={
+                          hasSearchedImage
+                            ? imageFromSearch
+                            : productCategory?.url
+                        }
                         objectFit="cover"
                         rounded="lg"
                         boxSize="sm"
@@ -215,9 +229,13 @@ const EditCategory: NextPage = () => {
                         transform="scale(1.1, 1.1)"
                       />
                       <Image
-                        src={productCategory.url}
+                        src={
+                          hasSearchedImage
+                            ? imageFromSearch
+                            : productCategory?.url
+                        }
                         alt="category"
-                        zIndex={100}
+                        zIndex={1}
                         boxSize="sm"
                         rounded="lg"
                         position="relative"

@@ -123,7 +123,6 @@ export const DrinkList: FC<Drink> = ({
                       {type}
                     </Tag>
                   )}
-                  <Text>{description}</Text>
                 </Flex>
               </Box>
             </Flex>

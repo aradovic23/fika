@@ -1,11 +1,11 @@
 import { useState } from "react";
-import { Input } from "./Input";
 import { env } from "../env/client.mjs";
-import Button from "./Button";
 import Image from "next/image";
 import type { Result, UnsplashImage } from "../../typings";
 import { useQuery } from "@tanstack/react-query";
 import Spinner from "./Spinner";
+import { Button, HStack, IconButton, Input } from "@chakra-ui/react";
+import { MagnifyingGlassIcon } from "@heroicons/react/24/solid";
 
 interface Props {
   handleSelectedImage: (image: string) => void;
@@ -46,24 +46,22 @@ const ImageSearch = ({ handleSelectedImage }: Props) => {
   };
 
   return (
-    <div className="space-y-5">
-      {!isImageSelected && (
-        <div>
-          <div className="flex items-center space-x-2">
-            <div className="flex-1">
-              <Input
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                inputMode="search"
-                placeholder="Search for a image"
-              />
-            </div>
-            <Button onClick={onSubmitHandler} variant="btn-outline">
-              Search
-            </Button>
-          </div>
-        </div>
-      )}
+    <div>
+      <HStack>
+        <Input
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          inputMode="search"
+          placeholder="Search for a image"
+        />
+        <IconButton
+          aria-label="search"
+          icon={<MagnifyingGlassIcon className="h-6 w-6" />}
+          colorScheme="primary"
+          onClick={onSubmitHandler}
+          variant="outline"
+        />
+      </HStack>
       {isLoading && <Spinner />}
       {isError && <div>Error fetching data</div>}
       {!isImageSelected && (
@@ -71,15 +69,7 @@ const ImageSearch = ({ handleSelectedImage }: Props) => {
           {data?.map((image) => (
             <div key={image.id} className="relative">
               {selectedImage && (
-                <Button
-                  backgroundColor="bg-accent"
-                  addOnStyle={`${
-                    selectedImage.id !== image.id
-                      ? "hidden"
-                      : "absolute bottom-5 left-12  z-50 w-1/2 transition"
-                  }`}
-                  onClick={handleSetSelectedImage}
-                >
+                <Button color="primary" onClick={handleSetSelectedImage}>
                   Set
                 </Button>
               )}

@@ -54,6 +54,10 @@ const Drinks: NextPage = () => {
             as="aside"
             mr={{ base: "0", md: "3" }}
             mb={{ base: "3", md: "0" }}
+            bg="blackAlpha.200"
+            h={{ base: "10rem", md: "calc(100vh)" }}
+            p={{ base: "3", md: "5" }}
+            rounded="lg"
           >
             <InputGroup>
               <InputLeftElement pointerEvents="none">
