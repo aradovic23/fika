@@ -27,7 +27,7 @@ export const categoryRouter = createTRPCRouter({
     }),
   getCategories: publicProcedure.query(async ({ ctx }) => {
     const category = await ctx.prisma.category.findMany({
-      orderBy: [{ role: "asc" }, { categoryName: "asc" }],
+      orderBy: { categoryName: "asc" },
     });
     return category;
   }),

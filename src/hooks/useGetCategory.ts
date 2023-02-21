@@ -16,7 +16,9 @@ type UseGetCategoryResult = {
   isError: boolean;
 };
 
-export const useGetCategory = (categoryId: number): UseGetCategoryResult => {
+export const useGetCategory = (
+  categoryId: number | undefined
+): UseGetCategoryResult => {
   const categories = api.categories.getCategories.useQuery();
 
   const category = categories.data?.find((cat) => categoryId === cat.id);
