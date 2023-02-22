@@ -1,14 +1,5 @@
+import type { Category } from "@prisma/client";
 import { api } from "../utils/api";
-
-type Category = {
-  id: number;
-  categoryName: string;
-  role?: string | null;
-  url?: string | null;
-  addDescription: boolean;
-  addTypes: boolean;
-  isDefault: boolean;
-};
 
 type UseGetCategoryResult = {
   category?: Category;

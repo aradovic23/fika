@@ -40,7 +40,7 @@ const EditCategory: NextPage = () => {
 
   const hasSearchedImage = imageFromSearch !== "";
 
-  const { register, handleSubmit, reset } = useForm({
+  const { register, handleSubmit, reset } = useForm<Category>({
     defaultValues: productCategory,
   });
 
@@ -69,7 +69,7 @@ const EditCategory: NextPage = () => {
         }
       );
       toast({
-        title: "Updated category",
+        title: `Updated category ${category.categoryName ?? ""}`,
         status: "success",
         isClosable: true,
         position: "top",
@@ -89,9 +89,10 @@ const EditCategory: NextPage = () => {
       try {
         await deleteSingleCategory.mutateAsync({ id });
         toast({
-          title: "Deleted category",
+          title: `Deleted category #${id}`,
           status: "success",
           isClosable: true,
+          position: "top",
         });
       } catch (error) {
         console.log(error);
@@ -164,13 +165,16 @@ const EditCategory: NextPage = () => {
                           {...register("categoryName")}
                         />
                       </FormControl>
-                      <ImageSearch handleSelectedImage={handleSelectedImage} />
                       <FormControl>
-                        <FormLabel htmlFor="url">Image Url</FormLabel>
+                        <FormLabel htmlFor="url">Image</FormLabel>
+                        <ImageSearch
+                          handleSelectedImage={handleSelectedImage}
+                        />
                         <Input
                           id="url"
                           placeholder="Image url"
                           {...register("url")}
+                          hidden
                         />
                       </FormControl>
                       <Button

@@ -1,10 +1,18 @@
 import { useState } from "react";
 import { env } from "../env/client.mjs";
-import Image from "next/image";
 import type { Result, UnsplashImage } from "../../typings";
 import { useQuery } from "@tanstack/react-query";
-import Spinner from "./Spinner";
-import { Button, HStack, IconButton, Input } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  HStack,
+  IconButton,
+  Image,
+  Input,
+  SimpleGrid,
+  Spinner,
+  Text,
+} from "@chakra-ui/react";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/solid";
 
 interface Props {
@@ -16,7 +24,7 @@ const ImageSearch = ({ handleSelectedImage }: Props) => {
   const ACCESS_KEY = env.NEXT_PUBLIC_UNSPLASH_ACCESS_KEY;
   const BASE_URL = "https://api.unsplash.com";
   const [selectedImage, setSelectedImage] = useState({ url: "", id: "" });
-  const [isImageSelected, setIsImageSelected] = useState(false);
+  const [showResults, setShowResults] = useState(false);
 
   const { data, isLoading, isError, refetch } = useQuery<Result[], Error>(
     ["images"],
@@ -37,16 +45,17 @@ const ImageSearch = ({ handleSelectedImage }: Props) => {
     e.preventDefault();
     await fetchRequest();
     setSearchTerm("");
+    setShowResults(true);
   };
 
   const handleSetSelectedImage = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     handleSelectedImage(selectedImage.url);
-    setIsImageSelected(true);
+    setShowResults(false);
   };
 
   return (
-    <div>
+    <>
       <HStack>
         <Input
           value={searchTerm}
@@ -63,41 +72,70 @@ const ImageSearch = ({ handleSelectedImage }: Props) => {
         />
       </HStack>
       {isLoading && <Spinner />}
-      {isError && <div>Error fetching data</div>}
-      {!isImageSelected && (
-        <div className="grid max-h-[500px] grid-cols-2 gap-3 overflow-y-auto ">
+      {isError && <Text>Error fetching data</Text>}
+      {showResults && (
+        <SimpleGrid
+          spacing="5"
+          columns={2}
+          mt="4"
+          bg="blackAlpha.300"
+          p="5"
+          rounded="lg"
+          maxH="30rem"
+          overflowY="auto"
+        >
           {data?.map((image) => (
-            <div key={image.id} className="relative">
-              {selectedImage && (
-                <Button color="primary" onClick={handleSetSelectedImage}>
-                  Set
+            <Box key={image.id} position="relative">
+              {selectedImage.id === image.id && (
+                <Button
+                  onClick={handleSetSelectedImage}
+                  position="absolute"
+                  bottom={0}
+                  width="full"
+                  zIndex={5}
+                  size="sm"
+                  colorScheme="whatsapp"
+                  variant="solid"
+                >
+                  Select
                 </Button>
               )}
-              <div className="relative h-52 w-full transition">
+              <Box position="relative">
                 <Image
+                  alt="searchImage"
                   onClick={() =>
-                    setSelectedImage({ url: image.urls.regular, id: image.id })
+                    setSelectedImage({
+                      url: image.urls.regular,
+                      id: image.id,
+                    })
                   }
                   src={image.urls.small}
-                  fill
-                  alt="no img"
-                  className={`rounded object-cover	 ${
-                    selectedImage.id === image.id
-                      ? "opacity-20 hover:opacity-20"
-                      : "opacity-100 hover:opacity-70"
-                  }`}
-                  sizes="(max-width: 768px) 100vw,
-              (max-width: 1200px) 50vw,
-              33vw"
-                  priority
-                  placeholder="empty"
+                  rounded="lg"
+                  zIndex={2}
+                  objectFit="cover"
+                  position="relative"
+                  boxSize="200px"
                 />
-              </div>
-            </div>
+                {selectedImage.id === image.id && (
+                  <Image
+                    alt="searchImage"
+                    src={image.urls.small}
+                    rounded="lg"
+                    position="absolute"
+                    inset={0}
+                    filter="blur(5px)"
+                    zIndex={0}
+                    transform="scale(1.1)"
+                    objectFit="cover"
+                    boxSize="200px"
+                  />
+                )}
+              </Box>
+            </Box>
           ))}
-        </div>
+        </SimpleGrid>
       )}
-    </div>
+    </>
   );
 };
 
