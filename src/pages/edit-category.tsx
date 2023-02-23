@@ -11,7 +11,9 @@ import {
   Box,
   Button,
   Container,
+  Flex,
   FormControl,
+  FormErrorMessage,
   FormLabel,
   Grid,
   GridItem,
@@ -21,11 +23,12 @@ import {
   Input,
   Select,
   Stack,
+  Switch,
   Text,
   useToast,
   VStack,
 } from "@chakra-ui/react";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import type { Category } from "@prisma/client";
 import ImageSearch from "../components/ImageSearch";
 
@@ -40,7 +43,13 @@ const EditCategory: NextPage = () => {
 
   const hasSearchedImage = imageFromSearch !== "";
 
-  const { register, handleSubmit, reset } = useForm<Category>({
+  const {
+    register,
+    handleSubmit,
+    reset,
+    control,
+    formState: { errors },
+  } = useForm<Category>({
     defaultValues: productCategory,
   });
 
@@ -59,6 +68,9 @@ const EditCategory: NextPage = () => {
           data: {
             categoryName: category.categoryName,
             url: hasSearchedImage ? imageFromSearch : category.url,
+            addDescription: category.addDescription,
+            addTypes: category.addTypes,
+            isDefault: category.isDefault,
           },
         },
         {
@@ -127,7 +139,7 @@ const EditCategory: NextPage = () => {
         <Heading mt="3" textAlign="center">
           Edit category
         </Heading>
-        <Grid templateColumns="repeat(6, 1fr)">
+        <Grid templateColumns="repeat(6, 1fr)" gap="5">
           <GridItem
             colSpan={{ base: 6, md: 3 }}
             as="aside"
@@ -157,13 +169,22 @@ const EditCategory: NextPage = () => {
                 (categoryId !== 0 && (
                   <>
                     <Form onSubmit={handleSubmit(handleCategoryUpdate)}>
-                      <FormControl>
+                      <FormControl isInvalid={!!errors.categoryName}>
                         <FormLabel htmlFor="categoryName">Title</FormLabel>
                         <Input
                           id="categoryName"
                           placeholder="Category name"
-                          {...register("categoryName")}
+                          {...register("categoryName", {
+                            required: true,
+                            minLength: {
+                              value: 3,
+                              message: "Product should have minimum 3 letters",
+                            },
+                          })}
                         />
+                        <FormErrorMessage>
+                          {errors.categoryName && errors.categoryName.message}
+                        </FormErrorMessage>
                       </FormControl>
                       <FormControl>
                         <FormLabel htmlFor="url">Image</FormLabel>
@@ -177,6 +198,45 @@ const EditCategory: NextPage = () => {
                           hidden
                         />
                       </FormControl>
+                      <Flex>
+                        <FormControl>
+                          <FormLabel htmlFor="addDescription">
+                            Allow description?
+                          </FormLabel>
+                          <Controller
+                            control={control}
+                            name="addDescription"
+                            key="addDescription"
+                            defaultValue={false}
+                            render={({ field: { onChange, value, ref } }) => (
+                              <Switch
+                                onChange={onChange}
+                                ref={ref}
+                                isChecked={value}
+                                size="lg"
+                              />
+                            )}
+                          />
+                        </FormControl>
+                        <FormControl>
+                          <FormLabel htmlFor="addTypes">Allow types?</FormLabel>
+                          <Controller
+                            control={control}
+                            name="addTypes"
+                            key="addTypes"
+                            defaultValue={false}
+                            render={({ field: { onChange, value, ref } }) => (
+                              <Switch
+                                onChange={onChange}
+                                ref={ref}
+                                isChecked={value}
+                                size="lg"
+                              />
+                            )}
+                          />
+                        </FormControl>
+                      </Flex>
+
                       <Button
                         isDisabled={!productCategory}
                         type="submit"
@@ -194,6 +254,7 @@ const EditCategory: NextPage = () => {
                         disabled={updateCategory.isLoading || !productCategory}
                         colorScheme="red"
                         size="md"
+                        variant="outline"
                       >
                         Delete
                       </Button>
@@ -206,6 +267,7 @@ const EditCategory: NextPage = () => {
             colSpan={{ base: 6, md: 3 }}
             as="main"
             mt={{ base: "5", md: "1" }}
+            mb={{ base: "100", md: "0" }}
           >
             {/* Image */}
             <VStack mt="10">

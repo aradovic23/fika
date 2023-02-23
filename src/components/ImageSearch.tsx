@@ -66,9 +66,7 @@ const ImageSearch = ({ handleSelectedImage }: Props) => {
         <IconButton
           aria-label="search"
           icon={<MagnifyingGlassIcon className="h-6 w-6" />}
-          colorScheme="primary"
           onClick={onSubmitHandler}
-          variant="outline"
         />
       </HStack>
       {isLoading && <Spinner />}

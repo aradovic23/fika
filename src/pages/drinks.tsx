@@ -17,6 +17,9 @@ import {
   Select,
   SimpleGrid,
   Stack,
+  Stat,
+  StatLabel,
+  StatNumber,
 } from "@chakra-ui/react";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/solid";
 import Skeleton from "../components/Skeleton";
@@ -36,6 +39,8 @@ const Drinks: NextPage = () => {
         ? drink.title?.toLowerCase().includes(search.toLowerCase())
         : true
     );
+
+  const totalProducts = filteredDrinks.length;
 
   return (
     <>
@@ -86,6 +91,10 @@ const Drinks: NextPage = () => {
                   </option>
                 ))}
               </Select>
+              <Stat>
+                <StatLabel>Total products</StatLabel>
+                <StatNumber>{totalProducts}</StatNumber>
+              </Stat>
             </Stack>
           </GridItem>
 

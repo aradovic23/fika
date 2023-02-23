@@ -32,7 +32,6 @@ export const volumeOptions: string[] = [
 ];
 
 const typeOptions: string[] = ["none", "Green", "Black", "Fruit", "Herb"];
-
 const SubmitDrink: NextPage = () => {
   const createDrinkMutation = api.drinks.createDrink.useMutation();
   const categories = api.categories.getCategories.useQuery();
@@ -67,17 +66,10 @@ const SubmitDrink: NextPage = () => {
         createDrinkMutation.mutateAsync({
           title: productTitle,
           price: productPrice,
-          tag: productTag != "" ? productTag : null,
-          volume:
-            productVolume?.toLowerCase() === "none" ? null : productVolume,
-          type:
-            currentCategory?.categoryName.toLowerCase() === "tea"
-              ? productType
-              : null,
-          description:
-            currentCategory?.categoryName.toLowerCase() === "cocktails"
-              ? productDescription
-              : null,
+          tag: productTag,
+          volume: productVolume,
+          type: productType,
+          description: productDescription,
           categoryId: productCategoryId,
         }),
         {
@@ -118,14 +110,11 @@ const SubmitDrink: NextPage = () => {
               <Select
                 onChange={(e) => setProductCategoryId(parseInt(e.target.value))}
               >
-                {(categories.data || []).map(
-                  (category) =>
-                    category.categoryName.toLowerCase() !== "all" && (
-                      <option value={category.id} key={category.id}>
-                        {category.categoryName}
-                      </option>
-                    )
-                )}
+                {(categories.data || []).map((category) => (
+                  <option value={category.id} key={category.id}>
+                    {category.categoryName}
+                  </option>
+                ))}
               </Select>
             </div>
 
@@ -171,19 +160,14 @@ const SubmitDrink: NextPage = () => {
               </option>
             ))}
           </Select>
-          {currentCategory?.categoryName.toLowerCase() === "tea" && (
-            <Select
-              disabled={currentCategory.categoryName.toLowerCase() != "tea"}
-              label="Type"
-              onChange={(e) => setProductType(e.target.value)}
-            >
-              {typeOptions.map((type) => (
-                <option value={type} key={type}>
-                  {type}
-                </option>
-              ))}
-            </Select>
-          )}
+          <Select label="Type" onChange={(e) => setProductType(e.target.value)}>
+            {typeOptions.map((type) => (
+              <option value={type} key={type}>
+                {type}
+              </option>
+            ))}
+          </Select>
+
           <Checkbox
             label="Add a special tag?"
             onChange={() => setIsTagChecked(!isTagChecked)}
@@ -198,13 +182,11 @@ const SubmitDrink: NextPage = () => {
             />
           )}
 
-          {currentCategory?.categoryName.toLowerCase() === "cocktails" && (
-            <Textarea
-              placeholder="Cocktail description"
-              value={productDescription}
-              onChange={(e) => setProductDescription(e.target.value)}
-            ></Textarea>
-          )}
+          <Textarea
+            placeholder="Cocktail description"
+            value={productDescription}
+            onChange={(e) => setProductDescription(e.target.value)}
+          ></Textarea>
 
           <Button
             disabled={createDrinkMutation.isLoading}

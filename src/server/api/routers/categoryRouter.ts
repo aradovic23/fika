@@ -8,9 +8,9 @@ export const categoryRouter = createTRPCRouter({
       z.object({
         categoryName: z.string(),
         url: z.string().optional(),
-        addTypes: z.boolean().optional(),
-        addDescription: z.boolean().optional(),
-        isDefault: z.boolean().optional(),
+        addTypes: z.boolean(),
+        addDescription: z.boolean(),
+        isDefault: z.boolean(),
       })
     )
     .mutation(async ({ input, ctx }) => {
@@ -38,9 +38,9 @@ export const categoryRouter = createTRPCRouter({
         data: z.object({
           categoryName: z.string().optional(),
           url: z.string().optional(),
-          addTypes: z.boolean().optional(),
-          addDescription: z.boolean().optional(),
-          isDefault: z.boolean().optional(),
+          addTypes: z.boolean(),
+          addDescription: z.boolean(),
+          isDefault: z.boolean(),
         }),
       })
     )

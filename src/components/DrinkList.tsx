@@ -65,6 +65,7 @@ export const DrinkList: FC<Drink> = ({
   const { category } = useGetCategory(categoryId ?? 1) ?? "";
   const { data: sessionData } = useSession();
   const hasDescription = category?.addDescription;
+  const hasTypes = category?.addTypes;
 
   const bg = useColorModeValue("whiteAlpha.800", "blackAlpha.400");
   const color = useColorModeValue("gray.900", "gray.100");
@@ -118,7 +119,7 @@ export const DrinkList: FC<Drink> = ({
                       {volume}
                     </Text>
                   )}
-                  {type && (
+                  {hasTypes && (
                     <Tag ml="1" colorScheme={badgeColor}>
                       {type}
                     </Tag>
