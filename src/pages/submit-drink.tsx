@@ -48,11 +48,18 @@ const SubmitDrink: NextPage = () => {
     useState(false);
   const { data: sessionData, status } = useSession();
 
-  const { register, handleSubmit, formState: errors } = useForm<Drink>();
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm<Drink>();
 
-  const mockSubmit = (data: Drink) => {
-    console.log(data);
-  };
+  const watchCategoryId = watch("categoryId");
+  const { category: currentCategory } = useGetCategory(Number(watchCategoryId));
+
+  const addDescription = currentCategory?.addDescription;
+  const addTypes = currentCategory?.addTypes;
 
   const router = useRouter();
 
@@ -101,7 +108,7 @@ const SubmitDrink: NextPage = () => {
           Create a drink
         </Heading>
 
-        <Form onSubmit={handleSubmit(mockSubmit)}>
+        <Form onSubmit={handleSubmit(handleSubmitDrink)}>
           <Flex gap="2">
             <Select
               {...register("categoryId", {
@@ -171,20 +178,22 @@ const SubmitDrink: NextPage = () => {
             ))}
           </Select>
 
-          <Select
-            {...register("type", {
-              validate: {
-                notZero: (v) => Number(v) !== 0,
-              },
-            })}
-          >
-            <option value={0}>Select a type</option>
-            {typeOptions.map((type) => (
-              <option value={type} key={type}>
-                {type}
-              </option>
-            ))}
-          </Select>
+          {addTypes && (
+            <Select
+              {...register("type", {
+                validate: {
+                  notZero: (v) => Number(v) !== 0,
+                },
+              })}
+            >
+              <option value={0}>Select a type</option>
+              {typeOptions.map((type) => (
+                <option value={type} key={type}>
+                  {type}
+                </option>
+              ))}
+            </Select>
+          )}
 
           <FormControl>
             <FormLabel>Add tag?</FormLabel>
@@ -194,10 +203,15 @@ const SubmitDrink: NextPage = () => {
             )}
           </FormControl>
 
-          <FormControl>
-            <FormLabel>Description</FormLabel>
-            <Textarea placeholder="Description" {...register("description")} />
-          </FormControl>
+          {addDescription && (
+            <FormControl>
+              <FormLabel>Description</FormLabel>
+              <Textarea
+                placeholder="Description"
+                {...register("description")}
+              />
+            </FormControl>
+          )}
 
           <Button type="submit">Create product</Button>
         </Form>
