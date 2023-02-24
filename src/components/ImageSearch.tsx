@@ -56,7 +56,7 @@ const ImageSearch = ({ handleSelectedImage }: Props) => {
 
   return (
     <>
-      <HStack>
+      <HStack w="full">
         <Input
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
