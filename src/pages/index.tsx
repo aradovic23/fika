@@ -1,9 +1,23 @@
 import { type NextPage } from "next";
 import Head from "next/head";
 import Link from "next/link";
-import { Button, Flex, Heading, Stack } from "@chakra-ui/react";
+import { Button, Flex, Heading, Stack, Text } from "@chakra-ui/react";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+import nextI18nConfig from "../../next-i18next.config.mjs";
+import { useTranslation } from "next-i18next";
+
+export const getServerSideProps = async ({ locale }: { locale: string }) => ({
+  props: {
+    ...(await serverSideTranslations(locale, ["common"], nextI18nConfig, [
+      "en",
+      "sv",
+    ])),
+  },
+});
 
 const Home: NextPage = () => {
+  const { t } = useTranslation("common");
+
   return (
     <>
       <Head>
@@ -15,6 +29,7 @@ const Home: NextPage = () => {
         <Flex align="center" justify="center">
           <Stack align="center" gap="5">
             <Heading color="primary.50">Drinks App Landing Page</Heading>
+            <Text>{t("techcard.nextjs.description")}</Text>
 
             <Link href="/drinks">
               <Button bg="primary.500">See Drinks</Button>

@@ -4,17 +4,14 @@
  * This is especially useful for Docker builds.
  */
 !process.env.SKIP_ENV_VALIDATION && (await import("./src/env/server.mjs"));
+import configI18 from "./next-i18next.config.mjs";
 
 /** @type {import("next").NextConfig} */
 
 const config = {
   reactStrictMode: true,
   swcMinify: true,
-  i18n: {
-    defaultLocale: "en",
-    locales: ["en", "sr-RS"],
-    localeDetection: false,
-  },
+  i18n: configI18.i18n,
   images: {
     domains: [
       "placeimg.com",
