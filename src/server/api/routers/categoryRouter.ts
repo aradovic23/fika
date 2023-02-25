@@ -37,7 +37,7 @@ export const categoryRouter = createTRPCRouter({
         id: z.number(),
         data: z.object({
           categoryName: z.string().optional(),
-          url: z.string().optional(),
+          url: z.string().nullish(),
           addTypes: z.boolean(),
           addDescription: z.boolean(),
           isDefault: z.boolean(),

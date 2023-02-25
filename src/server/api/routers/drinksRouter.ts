@@ -8,11 +8,11 @@ export const drinksRouter = createTRPCRouter({
       z.object({
         title: z.string(),
         price: z.string(),
-        tag: z.string().optional(),
-        categoryId: z.number().nullable(),
-        volume: z.string().optional(),
-        type: z.string().optional(),
-        description: z.string().optional(),
+        tag: z.string().nullish(),
+        categoryId: z.number().nullish(),
+        volume: z.string().nullish(),
+        type: z.string().nullish(),
+        description: z.string().nullish(),
       })
     )
     .mutation(async ({ input, ctx }) => {

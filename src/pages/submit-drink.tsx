@@ -8,7 +8,6 @@ import { useSession } from "next-auth/react";
 import AccessDenied from "../components/AccessDenied";
 import Spinner from "../components/Spinner";
 import CreateNewCategory from "../components/CreateNewCategory";
-import { useRouter } from "next/router";
 import {
   Button,
   Container,
@@ -20,10 +19,13 @@ import {
   Select,
   Switch,
   Textarea,
+  useToast,
+  VStack,
 } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
 import type { Drink } from "@prisma/client";
 
+// TODO: Add to DB:
 export const volumeOptions: string[] = [
   "0.03",
   "0.05",
@@ -38,21 +40,26 @@ export const volumeOptions: string[] = [
   "0.5",
 ];
 
+// TODO: Add to DB:
 const typeOptions: string[] = ["Green", "Black", "Fruit", "Herb"];
+
 const SubmitDrink: NextPage = () => {
   const createDrinkMutation = api.drinks.createDrink.useMutation();
   const categories = api.categories.getCategories.useQuery();
 
   const [isTagChecked, setIsTagChecked] = useState(false);
+  const [isVolumeChecked, setIsVolumeCheked] = useState(false);
   const [isCreateNewCategoryChecked, setIsCreateNewCategoryChecked] =
     useState(false);
   const { data: sessionData, status } = useSession();
+  const toast = useToast();
 
   const {
     register,
     handleSubmit,
     watch,
-    formState: { errors },
+    reset,
+    formState: { isSubmitting },
   } = useForm<Drink>();
 
   const watchCategoryId = watch("categoryId");
@@ -60,8 +67,6 @@ const SubmitDrink: NextPage = () => {
 
   const addDescription = currentCategory?.addDescription;
   const addTypes = currentCategory?.addTypes;
-
-  const router = useRouter();
 
   if (status === "loading") {
     return <Spinner />;
@@ -74,15 +79,21 @@ const SubmitDrink: NextPage = () => {
   const handleSubmitDrink = async (data: Drink) => {
     try {
       await createDrinkMutation.mutateAsync({
-        title: data.title ?? "",
-        price: data.price ?? "",
+        title: data.title,
+        price: data.price,
         tag: data.tag,
         volume: data.volume,
         type: data.type,
         description: data.description,
         categoryId: Number(data.categoryId),
-      }),
-        void router.push("/drinks");
+      });
+      toast({
+        title: `${data.title ?? "Product"} created!`,
+        status: "success",
+        isClosable: true,
+        position: "top",
+      });
+      reset();
     } catch (error) {
       if (typeof error === "string") {
         console.log(error);
@@ -154,29 +165,42 @@ const SubmitDrink: NextPage = () => {
           <FormControl>
             <FormLabel>Price</FormLabel>
             <Input
+              id="price"
               placeholder="Enter price"
               inputMode="numeric"
               {...register("price", {
-                required: true,
+                required: "Req and must be a number",
                 minLength: 2,
+                pattern: /^[0-9]*$/,
               })}
             />
           </FormControl>
 
-          <Select
-            {...register("volume", {
-              validate: {
-                notZero: (v) => Number(v) > 0,
-              },
-            })}
-          >
-            <option value={0}>Select a volume</option>
-            {volumeOptions.map((volume) => (
-              <option value={volume} key={volume}>
-                {volume}
-              </option>
-            ))}
-          </Select>
+          <VStack rounded="lg" p="3" bg="blackAlpha.100">
+            <Flex w="full" justify="space-between" align="center">
+              <FormLabel>Add volume?</FormLabel>
+              <Switch
+                onChange={() => setIsVolumeCheked(!isVolumeChecked)}
+                size="lg"
+              />
+            </Flex>
+            {isVolumeChecked && (
+              <Select
+                {...register("volume", {
+                  validate: {
+                    notZero: (v) => Number(v) > 0,
+                  },
+                })}
+              >
+                <option value={0}>Select a volume</option>
+                {volumeOptions.map((volume) => (
+                  <option value={volume} key={volume}>
+                    {volume}
+                  </option>
+                ))}
+              </Select>
+            )}
+          </VStack>
 
           {addTypes && (
             <Select
@@ -195,13 +219,22 @@ const SubmitDrink: NextPage = () => {
             </Select>
           )}
 
-          <FormControl>
-            <FormLabel>Add tag?</FormLabel>
-            <Switch onChange={() => setIsTagChecked(!isTagChecked)} mb="5" />
+          <VStack rounded="lg" p="3" bg="blackAlpha.100">
+            <Flex w="full" justify="space-between" align="center">
+              <FormLabel>Add tag?</FormLabel>
+              <Switch
+                onChange={() => setIsTagChecked(!isTagChecked)}
+                size="lg"
+              />
+            </Flex>
             {isTagChecked && (
-              <Input placeholder="Enter tag" {...register("tag")} />
+              <Input
+                placeholder="Enter tag"
+                {...register("tag")}
+                colorScheme="blackAlpha"
+              />
             )}
-          </FormControl>
+          </VStack>
 
           {addDescription && (
             <FormControl>
@@ -213,7 +246,9 @@ const SubmitDrink: NextPage = () => {
             </FormControl>
           )}
 
-          <Button type="submit">Create product</Button>
+          <Button type="submit" colorScheme="primary" isLoading={isSubmitting}>
+            Create product
+          </Button>
         </Form>
       </Container>
     </>
