@@ -1,13 +1,16 @@
 {
-  "documentation": "documentation",
-  "loading": "loading",
-  "this-stack-uses": "This stack uses",
-  "techcard": {
-    "nextjs": {
-      "description": "The React Framework for Production"
-    },
-    "prisma": {
-      "description": "Build data-driven JavaScript & TypeScript apps in less time"
+  "welcome_page_title": "Drinks App Landing Page",
+  "elements": {
+    "button": {
+      "submit": "Submit",
+      "save": "Save",
+      "delete": "Delete",
+      "view_all": "View All Drinks",
+      "create_new": "Create new"
     }
-  }
+  },
+  "all_products_title": "All drinks",
+  "create_new_product": "Create new product",
+  "edit_category": "Edit category",
+  "edit_drink": "Edit product"
 }

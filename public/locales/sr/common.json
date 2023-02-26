@@ -1,0 +1,16 @@
+{
+  "welcome_page_title": "Drinks App početna stranica",
+  "elements": {
+    "button": {
+      "submit": "Napravi proizvod",
+      "save": "Sačuvaj",
+      "delete": "Obriši",
+      "view_all": "Pogledaj sve",
+      "create_new": "Napravi novo"
+    }
+  },
+  "all_products_title": "Sva pića",
+  "create_new_product": "Napravi novi proizvod",
+  "edit_category": "Izmeni kategoriju",
+  "edit_drink": "Izmeni proizvod"
+}
