@@ -8,10 +8,25 @@ import { useSession } from "next-auth/react";
 import AccessDenied from "../../components/AccessDenied";
 import Spinner from "../../components/Spinner";
 import { useGetCategory } from "../../hooks/useGetCategory";
-import type { TDrink } from "../../../typings";
 import { Container, Heading, ScaleFade, Stack } from "@chakra-ui/react";
+import type { Drink } from "@prisma/client";
+
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+import nextI18nConfig from "../../../next-i18next.config.mjs";
+import { useTranslation } from "next-i18next";
+
+export const getServerSideProps = async ({ locale }: { locale: string }) => ({
+  props: {
+    ...(await serverSideTranslations(locale, ["common"], nextI18nConfig, [
+      "en",
+      "sr",
+    ])),
+  },
+});
 
 const EditDrinkPage: NextPage = () => {
+  const { t } = useTranslation();
+
   const { data: sessionData, status } = useSession();
 
   const router = useRouter();
@@ -34,7 +49,7 @@ const EditDrinkPage: NextPage = () => {
   const addDescription = category?.addDescription ?? false;
   const addTypes = category?.addTypes ?? false;
 
-  const handleProductUpdate = async (data: TDrink) => {
+  const handleProductUpdate = async (data: Drink) => {
     await toast.promise(
       updateSingleDrink.mutateAsync(
         {
@@ -68,12 +83,14 @@ const EditDrinkPage: NextPage = () => {
     return (
       <>
         <Head>
-          <title>Edit page | {data.title}</title>
+          <title>
+            {t("edit_drink")} | {data.title}
+          </title>
         </Head>
         <Container>
           <Stack gap="3" mt="5">
             <Heading size="lg" textAlign="center">
-              Edit drink {data.title}
+              {t("edit_drink")} | {data.title}
             </Heading>
             <ScaleFade initialScale={0.9} in unmountOnExit>
               <EditDrinkForm

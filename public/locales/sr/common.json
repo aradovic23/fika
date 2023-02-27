@@ -8,7 +8,7 @@
   "elements": {
     "button": {
       "submit": "Napravi proizvod",
-      "save": "Sačuvaj",
+      "save": "Sačuvaj izmene",
       "delete": "Obriši",
       "view_all": "Pogledaj sve",
       "create_new": "Napravi novo",
@@ -21,7 +21,8 @@
       "tag": "Tag",
       "volume": "Zapremina",
       "type": "Vrsta",
-      "description": "Opis"
+      "description": "Opis",
+      "image": "Fotografija"
     },
     "placeholder": {
       "title": "Unesi naziv proizvoda",
@@ -38,7 +39,8 @@
       "add_tag": "Dodaj dodatno obeležje?",
       "add_volume": "Dodaj zapreminu proizvodu?",
       "allow_type": "Dozvoli dodavanje vrsta?",
-      "allow_description": "Dozvoli dodavanje opisa?"
+      "allow_description": "Dozvoli dodavanje opisa?",
+      "delete_category": "Obriši celu kategoriju i sve njene proizvode?"
     }
   }
 }

@@ -76,12 +76,13 @@ export const drinksRouter = createTRPCRouter({
       z.object({
         id: z.string(),
         data: z.object({
-          title: z.string().optional(),
-          price: z.string().optional(),
-          tag: z.string().optional(),
-          volume: z.string().optional(),
-          type: z.string().optional(),
-          description: z.string().optional(),
+          title: z.string(),
+          price: z.string(),
+          tag: z.string().nullish(),
+          categoryId: z.number().nullish(),
+          volume: z.string().nullish(),
+          type: z.string().nullish(),
+          description: z.string().nullish(),
         }),
       })
     )

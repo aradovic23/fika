@@ -21,7 +21,8 @@
       "tag": "Tag",
       "volume": "Volume",
       "type": "Type",
-      "description": "Description"
+      "description": "Description",
+      "image": "Image"
     },
     "placeholder": {
       "title": "Enter product title",
@@ -38,7 +39,8 @@
       "add_tag": "Add extra tag?",
       "add_volume": "Add product volume?",
       "allow_type": "Allow adding type for this category?",
-      "allow_description": "Allow adding description for this category?"
+      "allow_description": "Allow adding description for this category?",
+      "delete_category": "Delete category and all products within?"
     }
   }
 }
