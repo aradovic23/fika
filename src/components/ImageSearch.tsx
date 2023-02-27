@@ -14,12 +14,14 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/solid";
+import { useTranslation } from "react-i18next";
 
 interface Props {
   handleSelectedImage: (image: string) => void;
 }
 
 const ImageSearch = ({ handleSelectedImage }: Props) => {
+  const { t } = useTranslation();
   const [searchTerm, setSearchTerm] = useState("");
   const ACCESS_KEY = env.NEXT_PUBLIC_UNSPLASH_ACCESS_KEY;
   const BASE_URL = "https://api.unsplash.com";
@@ -61,7 +63,7 @@ const ImageSearch = ({ handleSelectedImage }: Props) => {
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           inputMode="search"
-          placeholder="Search for a image"
+          placeholder={t("elements.placeholder.image_search") ?? "Search"}
         />
         <IconButton
           aria-label="search"
@@ -95,7 +97,7 @@ const ImageSearch = ({ handleSelectedImage }: Props) => {
                   colorScheme="whatsapp"
                   variant="solid"
                 >
-                  Select
+                  {t("elements.button.select")}
                 </Button>
               )}
               <Box position="relative">

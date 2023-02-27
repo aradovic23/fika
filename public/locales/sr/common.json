@@ -1,16 +1,44 @@
 {
   "welcome_page_title": "Drinks App početna stranica",
+  "all_products_title": "Sva pića",
+  "create_new_product": "Napravi novi proizvod",
+  "edit_category": "Izmeni kategoriju",
+  "edit_drink": "Izmeni proizvod",
+  "create_new_category": "Napravi novu kategoriju",
   "elements": {
     "button": {
       "submit": "Napravi proizvod",
       "save": "Sačuvaj",
       "delete": "Obriši",
       "view_all": "Pogledaj sve",
-      "create_new": "Napravi novo"
+      "create_new": "Napravi novo",
+      "submit_category": "Napravi kategoriju",
+      "select": "Izaberi"
+    },
+    "label": {
+      "title": "Naziv",
+      "price": "Cena",
+      "tag": "Tag",
+      "volume": "Zapremina",
+      "type": "Vrsta",
+      "description": "Opis"
+    },
+    "placeholder": {
+      "title": "Unesi naziv proizvoda",
+      "price": "Unesi cenu proizvoda",
+      "volume": "Izaberi zapreminu",
+      "type": "Izaberi vrsta",
+      "tag": "Unesi dodatno obeležje",
+      "description": "Unesi opis proizvoda",
+      "category": "Odaberi kategoriju",
+      "category_title": "Unesi naziv kategorije",
+      "image_search": "Pretraži slike"
+    },
+    "additional_field": {
+      "add_tag": "Dodaj dodatno obeležje?",
+      "add_volume": "Dodaj zapreminu proizvodu?",
+      "allow_type": "Dozvoli dodavanje vrsta?",
+      "allow_description": "Dozvoli dodavanje opisa?"
     }
-  },
-  "all_products_title": "Sva pića",
-  "create_new_product": "Napravi novi proizvod",
-  "edit_category": "Izmeni kategoriju",
-  "edit_drink": "Izmeni proizvod"
+  }
 }

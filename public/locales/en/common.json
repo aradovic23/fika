@@ -1,16 +1,44 @@
 {
   "welcome_page_title": "Drinks App Landing Page",
+  "all_products_title": "All drinks",
+  "create_new_product": "Create new product",
+  "edit_category": "Edit category",
+  "edit_drink": "Edit product",
+  "create_new_category": "Create new category",
   "elements": {
     "button": {
       "submit": "Submit",
       "save": "Save",
       "delete": "Delete",
       "view_all": "View All Drinks",
-      "create_new": "Create new"
+      "create_new": "Create new",
+      "submit_category": "Submit category",
+      "select": "Select"
+    },
+    "label": {
+      "title": "Title",
+      "price": "Price",
+      "tag": "Tag",
+      "volume": "Volume",
+      "type": "Type",
+      "description": "Description"
+    },
+    "placeholder": {
+      "title": "Enter product title",
+      "price": "Enter product price",
+      "volume": "Choose a volume",
+      "type": "Choose a type",
+      "tag": "Enter extra tag",
+      "description": "Enter product description",
+      "category": "Choose a category",
+      "category_title": "Enter category name",
+      "image_search": "Search for an image"
+    },
+    "additional_field": {
+      "add_tag": "Add extra tag?",
+      "add_volume": "Add product volume?",
+      "allow_type": "Allow adding type for this category?",
+      "allow_description": "Allow adding description for this category?"
     }
-  },
-  "all_products_title": "All drinks",
-  "create_new_product": "Create new product",
-  "edit_category": "Edit category",
-  "edit_drink": "Edit product"
+  }
 }
