@@ -1,16 +1,20 @@
 import { type NextPage } from "next";
 import { useRouter } from "next/router";
 import { api } from "../../utils/api";
-import { toast } from "react-toastify";
 import EditDrinkForm from "../../components/EditDrinkForm";
 import Head from "next/head";
 import { useSession } from "next-auth/react";
 import AccessDenied from "../../components/AccessDenied";
-import Spinner from "../../components/Spinner";
 import { useGetCategory } from "../../hooks/useGetCategory";
-import { Container, Heading, ScaleFade, Stack } from "@chakra-ui/react";
+import {
+  Container,
+  Heading,
+  ScaleFade,
+  Spinner,
+  Stack,
+  useToast,
+} from "@chakra-ui/react";
 import type { Drink } from "@prisma/client";
-
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import nextI18nConfig from "../../../next-i18next.config.mjs";
 import { useTranslation } from "next-i18next";
@@ -26,6 +30,7 @@ export const getServerSideProps = async ({ locale }: { locale: string }) => ({
 
 const EditDrinkPage: NextPage = () => {
   const { t } = useTranslation();
+  const toast = useToast();
 
   const { data: sessionData, status } = useSession();
 
@@ -50,29 +55,48 @@ const EditDrinkPage: NextPage = () => {
   const addTypes = category?.addTypes ?? false;
 
   const handleProductUpdate = async (data: Drink) => {
-    await toast.promise(
-      updateSingleDrink.mutateAsync(
-        {
-          id,
-          data,
-        },
-        {
-          onSuccess: () => {
-            void utils.drinks.getDrinkById.invalidate({ id });
-            void router.back();
-          },
-        }
-      ),
+    await updateSingleDrink.mutateAsync(
       {
-        pending: "Pending...",
-        success: `Product ${data.title ?? ""} updated`,
-        error: "An error occured 🤯",
+        id,
+        data,
+      },
+      {
+        onSuccess: () => {
+          void utils.drinks.getDrinkById.invalidate({ id });
+          void router.back();
+          toast({
+            title: `Product updated!`,
+            description: `${data.title ?? ""} was successfully updated!`,
+            status: "success",
+            isClosable: true,
+            position: "top",
+          });
+        },
+        onError: (error) => {
+          toast({
+            title: `An error occurred`,
+            description: `${error.message}`,
+            status: "success",
+            isClosable: true,
+            position: "top",
+          });
+        },
       }
     );
   };
 
   if (status === "loading") {
-    return <Spinner />;
+    return (
+      <Container>
+        <Spinner
+          thickness="4px"
+          speed="0.65s"
+          emptyColor="gray.200"
+          color="blue.500"
+          size="xl"
+        />
+      </Container>
+    );
   }
 
   if (sessionData?.user?.role !== "admin") {

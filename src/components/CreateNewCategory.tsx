@@ -6,10 +6,10 @@ import type { Category } from "@prisma/client";
 import {
   Button,
   Container,
+  Flex,
   FormControl,
   FormLabel,
   Heading,
-  HStack,
   Image,
   Input,
   Switch,
@@ -28,7 +28,7 @@ const CreateNewCategory = ({ handleIsActive }: Props) => {
   const { register, handleSubmit } = useForm<Category>();
   const utils = api.useContext();
   const toast = useToast();
-  const [imageFromSearch, setimageFromSearch] = useState("");
+  const [imageFromSearch, setImageFromSearch] = useState("");
 
   const handleCreateNewCategory = async (data: Category) => {
     try {
@@ -45,7 +45,7 @@ const CreateNewCategory = ({ handleIsActive }: Props) => {
         isClosable: true,
         position: "top",
       });
-      setimageFromSearch("");
+      setImageFromSearch("");
       handleIsActive(false);
       await utils.categories.getCategories.invalidate();
     } catch (error) {
@@ -68,7 +68,7 @@ const CreateNewCategory = ({ handleIsActive }: Props) => {
   };
 
   const handleSelectedImage = (image: string) => {
-    setimageFromSearch(image);
+    setImageFromSearch(image);
   };
 
   return (
@@ -77,7 +77,6 @@ const CreateNewCategory = ({ handleIsActive }: Props) => {
         <Heading size="md">{t("create_new_category")}</Heading>
         <FormControl>
           <Input
-            variant="filled"
             placeholder={
               t("elements.placeholder.category_title") ?? "Category Name"
             }
@@ -94,27 +93,41 @@ const CreateNewCategory = ({ handleIsActive }: Props) => {
         <ImageSearch handleSelectedImage={handleSelectedImage} />
 
         <Input hidden placeholder="Image url" {...register("url")} />
-        <HStack>
-          <VStack>
+        <VStack spacing="5">
+          <Flex w="full" justify="space-between" align="center">
             <FormLabel htmlFor="addTypes">
               {t("elements.additional_field.allow_type")}
             </FormLabel>
-            <Switch id="addTypes" {...register("addTypes")} />
-          </VStack>
-          <VStack>
+            <Switch id="addTypes" {...register("addTypes")} size="lg" />
+          </Flex>
+          <Flex w="full" justify="space-between" align="center">
             <FormLabel htmlFor="addDescription">
               {t("elements.additional_field.allow_description")}
             </FormLabel>
-            <Switch id="addDescription" {...register("addDescription")} />
-          </VStack>
-          <Switch id="isDefault" {...register("isDefault")} hidden />
-        </HStack>
+            <Switch
+              id="addDescription"
+              {...register("addDescription")}
+              size="lg"
+            />
+          </Flex>
+        </VStack>
+        <Switch id="isDefault" {...register("isDefault")} hidden />
 
         {imageFromSearch && (
-          <Image boxSize="sm" alt="bla" src={imageFromSearch} rounded="lg" />
+          <Image
+            boxSize="sm"
+            alt="image"
+            src={imageFromSearch}
+            rounded="lg"
+            objectFit="cover"
+          />
         )}
 
-        <Button variant="solid" onClick={handleSubmit(handleCreateNewCategory)}>
+        <Button
+          variant="solid"
+          onClick={handleSubmit(handleCreateNewCategory)}
+          colorScheme="primary"
+        >
           {t("elements.button.submit_category")}
         </Button>
       </VStack>

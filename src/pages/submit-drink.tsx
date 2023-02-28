@@ -6,7 +6,6 @@ import { useGetCategory } from "../hooks/useGetCategory";
 import { Form } from "../components/Form";
 import { useSession } from "next-auth/react";
 import AccessDenied from "../components/AccessDenied";
-import Spinner from "../components/Spinner";
 import CreateNewCategory from "../components/CreateNewCategory";
 import {
   Button,
@@ -17,6 +16,7 @@ import {
   Heading,
   Input,
   Select,
+  Spinner,
   Switch,
   Textarea,
   useToast,
@@ -83,7 +83,17 @@ const SubmitDrink: NextPage = () => {
   const addTypes = currentCategory?.addTypes;
 
   if (status === "loading") {
-    return <Spinner />;
+    return (
+      <Container>
+        <Spinner
+          thickness="4px"
+          speed="0.65s"
+          emptyColor="gray.200"
+          color="blue.500"
+          size="xl"
+        />
+      </Container>
+    );
   }
 
   if (sessionData?.user?.role != "admin") {

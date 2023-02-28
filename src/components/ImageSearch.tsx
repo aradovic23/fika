@@ -69,9 +69,19 @@ const ImageSearch = ({ handleSelectedImage }: Props) => {
           aria-label="search"
           icon={<MagnifyingGlassIcon className="h-6 w-6" />}
           onClick={onSubmitHandler}
+          colorScheme="primary"
+          variant="solid"
         />
       </HStack>
-      {isLoading && <Spinner />}
+      {isLoading && (
+        <Spinner
+          thickness="4px"
+          speed="0.65s"
+          emptyColor="gray.200"
+          color="blue.500"
+          size="xl"
+        />
+      )}
       {isError && <Text>Error fetching data</Text>}
       {showResults && (
         <SimpleGrid

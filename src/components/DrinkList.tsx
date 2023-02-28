@@ -71,7 +71,6 @@ export const DrinkList: FC<Drink> = ({
   const color = useColorModeValue("gray.900", "gray.100");
 
   const typeBadgeBackgroundColor: { [key: string]: string } = {
-    none: "teal",
     Green: "green",
     Black: "gray",
     Fruit: "red",

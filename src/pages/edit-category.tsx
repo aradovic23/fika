@@ -5,7 +5,6 @@ import { api } from "../utils/api";
 import { useEffect, useState } from "react";
 import { useGetCategory } from "../hooks/useGetCategory";
 import AccessDenied from "../components/AccessDenied";
-import Spinner from "../components/Spinner";
 import { Form } from "../components/Form";
 import {
   Box,
@@ -22,6 +21,7 @@ import {
   Image,
   Input,
   Select,
+  Spinner,
   Stack,
   Switch,
   Text,
@@ -90,15 +90,18 @@ const EditCategory: NextPage = () => {
           onSuccess: () => {
             void utils.categories.getCategories.invalidate();
             void utils.drinks.getAllDrinks.invalidate();
+            toast({
+              title: `Category updated`,
+              description: `${
+                category.categoryName ?? ""
+              } was successfully updated!`,
+              status: "success",
+              isClosable: true,
+              position: "top",
+            });
           },
         }
       );
-      toast({
-        title: `Updated category ${category.categoryName ?? ""}`,
-        status: "success",
-        isClosable: true,
-        position: "top",
-      });
       setImageFromSearch("");
     } catch (error) {
       if (typeof error === "string") {
@@ -130,7 +133,17 @@ const EditCategory: NextPage = () => {
   };
 
   if (status === "loading") {
-    return <Spinner />;
+    return (
+      <Container>
+        <Spinner
+          thickness="4px"
+          speed="0.65s"
+          emptyColor="gray.200"
+          color="blue.500"
+          size="xl"
+        />
+      </Container>
+    );
   }
 
   if (sessionData?.user?.role != "admin") {
@@ -277,7 +290,7 @@ const EditCategory: NextPage = () => {
                         disabled={updateCategory.isLoading || !productCategory}
                         colorScheme="red"
                         size="md"
-                        variant="outline"
+                        variant="ghost"
                       >
                         {t("elements.button.delete")}
                       </Button>
