@@ -14,10 +14,12 @@ import {
   FormControl,
   FormLabel,
   Heading,
+  Image,
   Input,
   Select,
   Spinner,
   Switch,
+  Text,
   Textarea,
   useToast,
   VStack,
@@ -27,6 +29,7 @@ import type { Drink } from "@prisma/client";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import nextI18nConfig from "../../next-i18next.config.mjs";
 import { useTranslation } from "next-i18next";
+import ImageSearch from "../components/ImageSearch";
 
 export const getServerSideProps = async ({ locale }: { locale: string }) => ({
   props: {
@@ -61,6 +64,8 @@ const SubmitDrink: NextPage = () => {
 
   const [isTagChecked, setIsTagChecked] = useState(false);
   const [isVolumeChecked, setIsVolumeCheked] = useState(false);
+  const [addImage, setAddImage] = useState(false);
+  const [productImage, setProductImage] = useState("");
   const [isCreateNewCategoryChecked, setIsCreateNewCategoryChecked] =
     useState(false);
   const { data: sessionData, status } = useSession();
@@ -110,6 +115,7 @@ const SubmitDrink: NextPage = () => {
         type: data.type,
         description: data.description,
         categoryId: Number(data.categoryId),
+        image: productImage,
       });
       toast({
         title: `${data.title ?? "Product"} created!`,
@@ -118,6 +124,10 @@ const SubmitDrink: NextPage = () => {
         position: "top",
       });
       reset();
+      setProductImage("");
+      setAddImage(false);
+      setIsTagChecked(false);
+      setIsVolumeCheked(false);
     } catch (error) {
       if (typeof error === "string") {
         console.log(error);
@@ -129,6 +139,10 @@ const SubmitDrink: NextPage = () => {
 
   const handleIsActive = (state: boolean) => {
     setIsCreateNewCategoryChecked(state);
+  };
+
+  const handleSelectedImage = (image: string) => {
+    setProductImage(image);
   };
 
   return (
@@ -261,13 +275,39 @@ const SubmitDrink: NextPage = () => {
           </VStack>
 
           {addDescription && (
-            <FormControl>
-              <FormLabel>{t("elements.label.description")}</FormLabel>
-              <Textarea
-                placeholder="Description"
-                {...register("description")}
-              />
-            </FormControl>
+            <>
+              <FormControl>
+                <FormLabel>{t("elements.label.description")}</FormLabel>
+                <Textarea
+                  placeholder="Description"
+                  {...register("description")}
+                />
+              </FormControl>
+
+              <VStack rounded="lg" p="3" bg="blackAlpha.100">
+                <Flex w="full" justify="space-between" align="center">
+                  <FormLabel>
+                    {t("elements.additional_field.add_image")}
+                  </FormLabel>
+                  <Switch onChange={() => setAddImage(!addImage)} size="lg" />
+                </Flex>
+                {addImage && (
+                  <ImageSearch handleSelectedImage={handleSelectedImage} />
+                )}
+                {productImage && (
+                  <VStack>
+                    <Text>{t("elements.label.image")}</Text>
+                    <Image
+                      alt="product-image"
+                      boxSize="md"
+                      objectFit="cover"
+                      src={productImage}
+                      rounded="md"
+                    />
+                  </VStack>
+                )}
+              </VStack>
+            </>
           )}
 
           <Button type="submit" colorScheme="primary" isLoading={isSubmitting}>

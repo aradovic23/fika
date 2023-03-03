@@ -40,7 +40,8 @@
       "add_volume": "Dodaj zapreminu proizvodu?",
       "allow_type": "Dozvoli dodavanje vrsta?",
       "allow_description": "Dozvoli dodavanje opisa?",
-      "delete_category": "Obriši celu kategoriju i sve njene proizvode?"
+      "delete_category": "Obriši celu kategoriju i sve njene proizvode?",
+      "add_image": "Dodaj fotografiju za proizvod?"
     }
   }
 }

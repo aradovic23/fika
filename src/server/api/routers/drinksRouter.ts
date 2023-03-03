@@ -13,6 +13,7 @@ export const drinksRouter = createTRPCRouter({
         volume: z.string().nullish(),
         type: z.string().nullish(),
         description: z.string().nullish(),
+        image: z.string().nullish(),
       })
     )
     .mutation(async ({ input, ctx }) => {
@@ -24,6 +25,7 @@ export const drinksRouter = createTRPCRouter({
           volume: input.volume,
           type: input.type,
           description: input.description,
+          image: input.image,
           category: {
             connect: {
               id: input.categoryId ?? 1,

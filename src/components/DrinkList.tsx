@@ -29,6 +29,7 @@ import {
   Text,
   useColorModeValue,
   useDisclosure,
+  VStack,
 } from "@chakra-ui/react";
 import type { Drink } from "@prisma/client";
 
@@ -41,6 +42,7 @@ export const DrinkList: FC<Drink> = ({
   categoryId,
   tag,
   description,
+  image,
 }) => {
   const queryClient = useQueryClient();
   const drinks = api.drinks.getDrinks.useQuery();
@@ -91,6 +93,20 @@ export const DrinkList: FC<Drink> = ({
                 rounded="lg"
               />
             </AspectRatio>
+            {image && (
+              <Image
+                alt="product image"
+                src={image}
+                boxSize="50px"
+                objectFit="cover"
+                rounded="md"
+                position="absolute"
+                bottom="4"
+                left="4"
+                border="2px"
+                borderColor={bg}
+              />
+            )}
             {tag && (
               <Box position="absolute" top="2" right="2">
                 <Badge variant="solid" colorScheme="yellow">
@@ -166,7 +182,18 @@ export const DrinkList: FC<Drink> = ({
           <ModalHeader>{title}</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <Text>{description}</Text>
+            <VStack spacing={5}>
+              <Text>{description}</Text>
+              {image && (
+                <Image
+                  alt="product-image"
+                  src={image}
+                  boxSize="sm"
+                  objectFit="cover"
+                  rounded="md"
+                />
+              )}
+            </VStack>
           </ModalBody>
 
           <ModalFooter>

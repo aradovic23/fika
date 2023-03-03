@@ -40,7 +40,8 @@
       "add_volume": "Add product volume?",
       "allow_type": "Allow adding type for this category?",
       "allow_description": "Allow adding description for this category?",
-      "delete_category": "Delete category and all products within?"
+      "delete_category": "Delete category and all products within?",
+      "add_image": "Add image to the product?"
     }
   }
 }
