@@ -1,15 +1,19 @@
 import { useForm } from "react-hook-form";
 import { Form } from "./Form";
 import type { FC } from "react";
+import { useState } from "react";
 import {
   Button,
   FormControl,
   FormLabel,
+  Image,
   Input,
   Textarea,
+  VStack,
 } from "@chakra-ui/react";
 import type { Drink } from "@prisma/client";
 import { useTranslation } from "react-i18next";
+import ImageSearch from "./ImageSearch";
 
 interface EditFormProps {
   drink: Drink;
@@ -24,8 +28,17 @@ const EditDrinkForm: FC<EditFormProps> = ({
   addDescription,
   addTypes,
 }) => {
-  const { register, handleSubmit } = useForm({ defaultValues: drink });
+  const { register, handleSubmit, setValue } = useForm({
+    defaultValues: drink,
+  });
   const { t } = useTranslation();
+  const [selectedImage, setSelectedImage] = useState("");
+
+  const handleSelectedImage = (image: string) => {
+    setSelectedImage(image);
+    setValue("image", image);
+  };
+
   return (
     <Form onSubmit={handleSubmit(onSubmit)}>
       <FormControl>
@@ -55,19 +68,33 @@ const EditDrinkForm: FC<EditFormProps> = ({
         </FormControl>
       )}
       {addDescription && (
-        <FormControl>
-          <FormLabel htmlFor="description">
-            {t("elements.label.description")}
-          </FormLabel>
-          <Textarea
-            placeholder="Description here"
-            id="description"
-            {...register("description")}
+        <VStack>
+          <FormControl>
+            <FormLabel htmlFor="description">
+              {t("elements.label.description")}
+            </FormLabel>
+            <Textarea
+              placeholder="Description here"
+              id="description"
+              {...register("description")}
+            />
+          </FormControl>
+          <FormControl>
+            <FormLabel>{t("elements.label.image")}</FormLabel>
+            <ImageSearch handleSelectedImage={handleSelectedImage} />
+            <Input {...register("image")} hidden />
+          </FormControl>
+          <Image
+            src={selectedImage ? selectedImage : drink.image ?? ""}
+            alt="bla"
+            boxSize="md"
+            objectFit="cover"
+            rounded="md"
           />
-        </FormControl>
+        </VStack>
       )}
 
-      <Button mt={4} colorScheme="primary" type="submit">
+      <Button colorScheme="primary" type="submit">
         {t("elements.button.save")}
       </Button>
     </Form>

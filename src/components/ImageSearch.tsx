@@ -32,7 +32,7 @@ const ImageSearch = ({ handleSelectedImage }: Props) => {
     ["images"],
     async () => {
       const response = await fetch(
-        `${BASE_URL}/search/photos?page=1&query=${searchTerm}&per_page=20&client_id=${ACCESS_KEY}`
+        `${BASE_URL}/search/photos?page=1&query=${searchTerm}&per_page=30&client_id=${ACCESS_KEY}`
       );
       const data = (await response.json()) as UnsplashImage;
       return data.results;

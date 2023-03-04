@@ -85,6 +85,7 @@ export const drinksRouter = createTRPCRouter({
           volume: z.string().nullish(),
           type: z.string().nullish(),
           description: z.string().nullish(),
+          image: z.string().nullish(),
         }),
       })
     )
@@ -101,6 +102,7 @@ export const drinksRouter = createTRPCRouter({
           type: input.data.type,
           description: input.data.description,
           updatedAt: new Date(),
+          image: input.data.image,
         },
       });
       return drink;

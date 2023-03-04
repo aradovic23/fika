@@ -12,12 +12,15 @@ import {
   ScaleFade,
   Spinner,
   Stack,
+  Text,
   useToast,
 } from "@chakra-ui/react";
 import type { Drink } from "@prisma/client";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import nextI18nConfig from "../../../next-i18next.config.mjs";
 import { useTranslation } from "next-i18next";
+import moment from "moment";
+import "moment/locale/sr";
 
 export const getServerSideProps = async ({ locale }: { locale: string }) => ({
   props: {
@@ -53,6 +56,12 @@ const EditDrinkPage: NextPage = () => {
   const { category } = useGetCategory(data?.categoryId ?? 1);
   const addDescription = category?.addDescription ?? false;
   const addTypes = category?.addTypes ?? false;
+
+  const setMomentLocale = (locale: string) => moment.locale(locale);
+  const currentLang: string = router.locale ?? "en";
+  setMomentLocale(currentLang);
+  const updatedAt = moment(data?.updatedAt);
+  const relativeLastUpdatedAt = moment(updatedAt).fromNow();
 
   const handleProductUpdate = async (data: Drink) => {
     await updateSingleDrink.mutateAsync(
@@ -116,6 +125,9 @@ const EditDrinkPage: NextPage = () => {
             <Heading size="lg" textAlign="center">
               {t("edit_drink")} | {data.title}
             </Heading>
+            <Text textAlign="center" opacity={0.5}>
+              {t("elements.additional_field.last_edit")} {relativeLastUpdatedAt}
+            </Text>
             <ScaleFade initialScale={0.9} in unmountOnExit>
               <EditDrinkForm
                 drink={data}

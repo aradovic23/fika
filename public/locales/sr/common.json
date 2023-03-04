@@ -41,7 +41,8 @@
       "allow_type": "Dozvoli dodavanje vrsta?",
       "allow_description": "Dozvoli dodavanje opisa?",
       "delete_category": "Obriši celu kategoriju i sve njene proizvode?",
-      "add_image": "Dodaj fotografiju za proizvod?"
+      "add_image": "Dodaj fotografiju za proizvod?",
+      "last_edit": "Poslednja izmena"
     }
   }
 }
