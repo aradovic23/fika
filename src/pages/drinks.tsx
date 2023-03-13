@@ -26,6 +26,7 @@ import Skeleton from "../components/Skeleton";
 import { useTranslation } from "react-i18next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import nextI18nConfig from "../../next-i18next.config.mjs";
+import { useSession } from "next-auth/react";
 
 export const getServerSideProps = async ({ locale }: { locale: string }) => ({
   props: {
@@ -37,10 +38,13 @@ export const getServerSideProps = async ({ locale }: { locale: string }) => ({
 });
 
 const Drinks: NextPage = () => {
+  const { data: sessionData } = useSession();
   const drinks = api.drinks.getDrinks.useQuery();
   const [selectedCategory, setSelectedCategory] = useState(0);
   const [search, setSearch] = useState("");
   const { data, isLoading } = api.categories.getCategories.useQuery();
+
+  const isAdmin = sessionData?.user?.role === "admin";
 
   const filteredDrinks = (drinks.data ?? [])
     .filter((drink) =>
@@ -50,6 +54,9 @@ const Drinks: NextPage = () => {
       search != ""
         ? drink.title?.toLowerCase().includes(search.toLowerCase())
         : true
+    )
+    .filter((drink) =>
+      drink.isHidden && isAdmin ? true : !drink.isHidden ? true : false
     );
 
   const totalProducts = filteredDrinks.length;

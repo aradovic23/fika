@@ -1,5 +1,7 @@
 ## features
 
+- remove photo from ID page
+- hide product or category
 - add volumes and types to db
 - add cart
 - implement landing page base structure

@@ -4,10 +4,12 @@ import type { FC } from "react";
 import { useState } from "react";
 import {
   Button,
+  Flex,
   FormControl,
   FormLabel,
   Image,
   Input,
+  Switch,
   Textarea,
   VStack,
 } from "@chakra-ui/react";
@@ -61,6 +63,16 @@ const EditDrinkForm: FC<EditFormProps> = ({
         <Input placeholder="Type here" id="volume" {...register("volume")} />
       </FormControl>
 
+      <Flex
+        bg="blackAlpha.300"
+        p={3}
+        rounded="md"
+        justifyContent="space-between"
+      >
+        <FormLabel>{t("elements.additional_field.hide_product")}</FormLabel>
+        <Switch {...register("isHidden")} size="lg" colorScheme="green" />
+      </Flex>
+
       {addTypes && (
         <FormControl>
           <FormLabel htmlFor="type">{t("elements.label.type")}</FormLabel>
@@ -84,6 +96,10 @@ const EditDrinkForm: FC<EditFormProps> = ({
             <ImageSearch handleSelectedImage={handleSelectedImage} />
             <Input {...register("image")} hidden />
           </FormControl>
+        </VStack>
+      )}
+      {(selectedImage || drink.image) && (
+        <VStack>
           <Image
             src={selectedImage ? selectedImage : drink.image ?? ""}
             alt="bla"
@@ -91,6 +107,9 @@ const EditDrinkForm: FC<EditFormProps> = ({
             objectFit="cover"
             rounded="md"
           />
+          <Button colorScheme="red" variant="ghost">
+            Remove photo
+          </Button>
         </VStack>
       )}
 

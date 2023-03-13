@@ -22,7 +22,8 @@
       "volume": "Volume",
       "type": "Type",
       "description": "Description",
-      "image": "Image"
+      "image": "Image",
+      "hidden": "Hidden"
     },
     "placeholder": {
       "title": "Enter product title",
@@ -42,7 +43,8 @@
       "allow_description": "Allow adding description for this category?",
       "delete_category": "Delete category and all products within?",
       "add_image": "Add image to the product?",
-      "last_edit": "Last edited"
+      "last_edit": "Last edited",
+      "hide_product": "Do you want to hide the product?"
     }
   }
 }

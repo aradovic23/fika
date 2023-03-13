@@ -8,13 +8,19 @@ import {
   InformationCircleIcon,
   PencilSquareIcon,
   TrashIcon,
+  BeakerIcon,
 } from "@heroicons/react/24/outline";
+
+import { EyeSlashIcon, RectangleGroupIcon } from "@heroicons/react/24/solid";
 import {
   AspectRatio,
   Badge,
   Box,
   Button,
+  Divider,
   Flex,
+  Heading,
+  HStack,
   IconButton,
   Image,
   Modal,
@@ -26,12 +32,15 @@ import {
   ModalOverlay,
   ScaleFade,
   Tag,
+  TagLabel,
+  TagLeftIcon,
   Text,
   useColorModeValue,
   useDisclosure,
   VStack,
 } from "@chakra-ui/react";
 import type { Drink } from "@prisma/client";
+import { useTranslation } from "react-i18next";
 
 export const DrinkList: FC<Drink> = ({
   title,
@@ -43,10 +52,13 @@ export const DrinkList: FC<Drink> = ({
   tag,
   description,
   image,
+  isHidden,
 }) => {
   const queryClient = useQueryClient();
   const drinks = api.drinks.getDrinks.useQuery();
   const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const { t } = useTranslation();
 
   const { mutate: deleteDrink } = api.drinks.deleteDrink.useMutation({
     async onSuccess() {
@@ -59,7 +71,7 @@ export const DrinkList: FC<Drink> = ({
   });
 
   const onDeleteHandler = (id: string) => {
-    if (window.confirm("Are you sure you want to delelte?")) {
+    if (window.confirm("Are you sure you want to delete?")) {
       deleteDrink({ id });
     }
   };
@@ -80,96 +92,106 @@ export const DrinkList: FC<Drink> = ({
   };
   const badgeColor = type ? typeBadgeBackgroundColor[type] || "gray" : "gray";
 
+  const showHiddenProduct = isHidden && sessionData?.user?.role === "admin";
+
   return (
     <>
       <ScaleFade initialScale={0.8} in unmountOnExit>
-        <Box shadow="md" p="3" maxH="13rem" rounded="lg" bg={bg} color={color}>
-          <Box position="relative">
-            <AspectRatio ratio={4 / 3} maxH="5rem">
-              <Image
-                alt="error"
-                src={category?.url ?? ""}
-                objectFit="cover"
-                rounded="lg"
-              />
-            </AspectRatio>
-            {image && (
-              <Image
-                alt="product image"
-                src={image}
-                boxSize="50px"
-                objectFit="cover"
-                rounded="md"
-                position="absolute"
-                bottom="4"
-                left="4"
-                border="2px"
-                borderColor={bg}
-              />
-            )}
-            {tag && (
-              <Box position="absolute" top="2" right="2">
-                <Badge variant="solid" colorScheme="yellow">
-                  {tag}
-                </Badge>
-              </Box>
-            )}
+        <HStack
+          shadow="md"
+          maxH="13rem"
+          rounded="md"
+          bg={showHiddenProduct ? "blackAlpha.50" : bg}
+          color={color}
+          position="relative"
+        >
+          <Box w="10rem">
+            <Image
+              boxSize="10rem"
+              alt="image"
+              src={(image || category?.url) ?? ""}
+              objectFit="cover"
+              rounded="md"
+              borderRightRadius="0"
+              filter={showHiddenProduct ? "grayscale(100%)" : ""}
+              onClick={onOpen}
+            />
           </Box>
-          <Flex justify="space-between" mt="1">
-            <Text fontSize="xl" noOfLines={1} maxWidth="250px">
+          {showHiddenProduct && (
+            <HStack position="absolute" top="2" right="2">
+              <Tag colorScheme="red" variant="solid">
+                <TagLeftIcon boxSize="12px" as={EyeSlashIcon} />
+                <TagLabel>{t("elements.label.hidden")}</TagLabel>
+              </Tag>
+            </HStack>
+          )}
+          {tag && !showHiddenProduct && (
+            <Box position="absolute" top="2" right="2">
+              <Badge variant="solid" colorScheme="primary">
+                {tag}
+              </Badge>
+            </Box>
+          )}
+
+          {hasDescription && (
+            <IconButton
+              icon={<InformationCircleIcon className="h-4 w-4" />}
+              aria-label="info"
+              onClick={onOpen}
+              size="sm"
+              position="absolute"
+              left="0"
+              top="2"
+              colorScheme={showHiddenProduct ? "red" : "primary"}
+            />
+          )}
+
+          <VStack p="2" alignItems="flex-start" spacing={2} w="full">
+            <Text fontSize="2xl" fontWeight="bold" noOfLines={1}>
               {title}
             </Text>
-            <Text fontSize="lg">{price} RSD</Text>
-          </Flex>
-
-          <Flex justify="space-between" align="center" mt="1">
-            <Flex gap="3">
-              <Box>
-                <Flex gap="2">
-                  <Text casing="uppercase" as="b" fontSize="sm">
-                    {category?.categoryName}
-                  </Text>
-                  {volume && (
-                    <Text casing="uppercase" fontSize="sm">
-                      {volume}
-                    </Text>
-                  )}
-                  {hasTypes && (
-                    <Tag ml="1" colorScheme={badgeColor}>
-                      {type}
-                    </Tag>
-                  )}
-                </Flex>
-              </Box>
-            </Flex>
-            <Flex justifyContent="flex-end" gap="2">
+            <Text fontSize="xl">{price} RSD</Text>
+            <HStack alignItems="flex-start" spacing={3}>
+              <Tag variant="outline">
+                <TagLeftIcon boxSize="12px" as={RectangleGroupIcon} />
+                <TagLabel>{category?.categoryName}</TagLabel>
+              </Tag>
+              {volume && (
+                <Tag variant="outline">
+                  <TagLeftIcon boxSize="12px" as={BeakerIcon} />
+                  <TagLabel>{volume}</TagLabel>
+                </Tag>
+              )}
+            </HStack>
+            <HStack spacing={3} w="full">
               {sessionData?.user?.role === "admin" && (
                 <>
-                  <IconButton
+                  <Button
+                    leftIcon={<PencilSquareIcon className="h-4 w-4" />}
+                    size="sm"
                     aria-label="edit"
                     as={Link}
                     href={`/drink/${id}`}
-                    icon={<PencilSquareIcon className="h-6 w-6" />}
-                  />
-                  <IconButton
+                  >
+                    Edit
+                  </Button>
+                  <Button
+                    leftIcon={<TrashIcon className="h-4 w-4" />}
+                    colorScheme="red"
+                    variant="ghost"
+                    size="sm"
                     aria-label="delete"
-                    icon={<TrashIcon className="h-6 w-6" />}
                     onClick={() => {
                       onDeleteHandler(id);
                     }}
-                  />
+                  >
+                    Delete
+                  </Button>
                 </>
               )}
-              {hasDescription && (
-                <IconButton
-                  aria-label="delete"
-                  icon={<InformationCircleIcon className="h-6 w-6" />}
-                  onClick={onOpen}
-                />
-              )}
-            </Flex>
-          </Flex>
-        </Box>
+            </HStack>
+          </VStack>
+        </HStack>
       </ScaleFade>
       <Modal
         isOpen={isOpen}

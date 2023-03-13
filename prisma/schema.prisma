@@ -76,6 +76,7 @@ model Drink {
     category    Category? @relation(fields: [categoryId], references: [id], onDelete: Cascade)
     updatedAt   DateTime  @default(now())
     image       String?
+    isHidden    Boolean   @default(false)
 }
 
 model Category {

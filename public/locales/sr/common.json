@@ -22,7 +22,8 @@
       "volume": "Zapremina",
       "type": "Vrsta",
       "description": "Opis",
-      "image": "Fotografija"
+      "image": "Fotografija",
+      "hidden": "Sakriveno"
     },
     "placeholder": {
       "title": "Unesi naziv proizvoda",
@@ -42,7 +43,8 @@
       "allow_description": "Dozvoli dodavanje opisa?",
       "delete_category": "Obriši celu kategoriju i sve njene proizvode?",
       "add_image": "Dodaj fotografiju za proizvod?",
-      "last_edit": "Poslednja izmena"
+      "last_edit": "Poslednja izmena",
+      "hide_product": "Da li želite da sakrijete proizvod?"
     }
   }
 }
