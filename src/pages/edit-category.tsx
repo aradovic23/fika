@@ -7,6 +7,10 @@ import { useGetCategory } from "../hooks/useGetCategory";
 import AccessDenied from "../components/AccessDenied";
 import { Form } from "../components/Form";
 import {
+  Alert,
+  AlertDescription,
+  AlertIcon,
+  AlertTitle,
   Box,
   Button,
   Container,
@@ -55,6 +59,10 @@ const EditCategory: NextPage = () => {
   const deleteSingleCategory = api.categories.deleteCategory.useMutation();
 
   const hasSearchedImage = imageFromSearch !== "";
+
+  const defaultCategories = categories?.filter(
+    (category) => category.isDefault
+  );
 
   const {
     register,
@@ -271,7 +279,58 @@ const EditCategory: NextPage = () => {
                             )}
                           />
                         </FormControl>
+                        <FormControl>
+                          <FormLabel htmlFor="isDefault">
+                            Make this category default?
+                          </FormLabel>
+                          <Controller
+                            control={control}
+                            name="isDefault"
+                            key="isDefault"
+                            defaultValue={false}
+                            render={({ field: { onChange, value, ref } }) => (
+                              <Switch
+                                onChange={onChange}
+                                ref={ref}
+                                isChecked={value}
+                                size="lg"
+                              />
+                            )}
+                          />
+                        </FormControl>
                       </Flex>
+
+                      {defaultCategories && defaultCategories?.length > 1 && (
+                        <Alert status="warning" rounded="md">
+                          <AlertIcon />
+                          <AlertTitle>Default categories</AlertTitle>
+                          <AlertDescription>
+                            You have multiple default categories:&nbsp;
+                            {defaultCategories?.map((cat, index) => [
+                              index > 0 && ", ",
+                              <Text display="inline" key={cat.id}>
+                                {cat.categoryName}
+                              </Text>,
+                              index === defaultCategories.length - 1 && ".",
+                            ])}
+                          </AlertDescription>
+                        </Alert>
+                      )}
+
+                      {defaultCategories && defaultCategories.length === 1 && (
+                        <Alert status="info" rounded="md">
+                          <AlertIcon />
+                          <AlertTitle>Default category</AlertTitle>
+                          <AlertDescription>
+                            Current default category is&nbsp;
+                            {defaultCategories?.map((cat) => (
+                              <Text display="inline" key={cat.id}>
+                                {cat.categoryName}
+                              </Text>
+                            ))}
+                          </AlertDescription>
+                        </Alert>
+                      )}
 
                       <Button
                         isDisabled={!productCategory}

@@ -17,9 +17,6 @@ import {
   Select,
   SimpleGrid,
   Stack,
-  Stat,
-  StatLabel,
-  StatNumber,
 } from "@chakra-ui/react";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/solid";
 import Skeleton from "../components/Skeleton";
@@ -39,10 +36,20 @@ export const getServerSideProps = async ({ locale }: { locale: string }) => ({
 
 const Drinks: NextPage = () => {
   const { data: sessionData } = useSession();
+
   const drinks = api.drinks.getDrinks.useQuery();
-  const [selectedCategory, setSelectedCategory] = useState(0);
+
   const [search, setSearch] = useState("");
+
   const { data, isLoading } = api.categories.getCategories.useQuery();
+
+  const defaultCategory = data?.find((category) => category.isDefault);
+
+  const initialSelectedCategoryId = defaultCategory ? defaultCategory.id : 0;
+
+  const [selectedCategory, setSelectedCategory] = useState(
+    initialSelectedCategoryId
+  );
 
   const isAdmin = sessionData?.user?.role === "admin";
 
@@ -58,8 +65,6 @@ const Drinks: NextPage = () => {
     .filter((drink) =>
       drink.isHidden && isAdmin ? true : !drink.isHidden ? true : false
     );
-
-  const totalProducts = filteredDrinks.length;
 
   const { t } = useTranslation("common");
 
@@ -81,7 +86,7 @@ const Drinks: NextPage = () => {
             mr={{ base: "0", md: "3" }}
             mb={{ base: "3", md: "0" }}
             bg="blackAlpha.200"
-            h={{ base: "10rem", md: "calc(100vh)" }}
+            h={{ base: "10rem", md: "calc(100%)" }}
             p={{ base: "3", md: "5" }}
             rounded="lg"
           >
@@ -105,6 +110,13 @@ const Drinks: NextPage = () => {
                 onChange={(e) => setSelectedCategory(parseInt(e.target.value))}
                 id="select-category"
               >
+                {!defaultCategory ? (
+                  <option value={0}>All</option>
+                ) : (
+                  <option value={defaultCategory.id ?? 0}>
+                    {defaultCategory?.categoryName}
+                  </option>
+                )}
                 <option value={0}>All</option>
                 {(data || []).map((category) => (
                   <option key={category.id} value={category.id}>
@@ -112,10 +124,6 @@ const Drinks: NextPage = () => {
                   </option>
                 ))}
               </Select>
-              <Stat>
-                <StatLabel>Total products</StatLabel>
-                <StatNumber>{totalProducts}</StatNumber>
-              </Stat>
             </Stack>
           </GridItem>
 

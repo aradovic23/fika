@@ -109,4 +109,25 @@ export const drinksRouter = createTRPCRouter({
       });
       return drink;
     }),
+  removeProductImage: publicProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        data: z.object({
+          image: z.string().nullish(),
+        }),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const drink = await ctx.prisma.drink.update({
+        where: {
+          id: input.id,
+        },
+        data: {
+          updatedAt: new Date(),
+          image: input.data.image,
+        },
+      });
+      return drink;
+    }),
 });

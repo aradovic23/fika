@@ -11,11 +11,13 @@ import {
   Input,
   Switch,
   Textarea,
+  useToast,
   VStack,
 } from "@chakra-ui/react";
 import type { Drink } from "@prisma/client";
 import { useTranslation } from "react-i18next";
 import ImageSearch from "./ImageSearch";
+import { api } from "../utils/api";
 
 interface EditFormProps {
   drink: Drink;
@@ -35,10 +37,46 @@ const EditDrinkForm: FC<EditFormProps> = ({
   });
   const { t } = useTranslation();
   const [selectedImage, setSelectedImage] = useState("");
+  const utils = api.useContext();
+  const toast = useToast();
 
   const handleSelectedImage = (image: string) => {
     setSelectedImage(image);
     setValue("image", image);
+  };
+
+  const updateSingleDrink = api.drinks.removeProductImage.useMutation();
+
+  const removeProductImage = async (id: string) => {
+    await updateSingleDrink.mutateAsync(
+      {
+        id,
+        data: {
+          image: null,
+        },
+      },
+      {
+        onSuccess: () => {
+          void utils.drinks.getDrinkById.invalidate({ id });
+          toast({
+            title: `Image removed!`,
+            description: `Product image was successfully updated!`,
+            status: "success",
+            isClosable: true,
+            position: "top",
+          });
+        },
+        onError: (error) => {
+          toast({
+            title: `An error occurred`,
+            description: `${error.message}`,
+            status: "success",
+            isClosable: true,
+            position: "top",
+          });
+        },
+      }
+    );
   };
 
   return (
@@ -107,7 +145,11 @@ const EditDrinkForm: FC<EditFormProps> = ({
             objectFit="cover"
             rounded="md"
           />
-          <Button colorScheme="red" variant="ghost">
+          <Button
+            colorScheme="red"
+            variant="ghost"
+            onClick={() => removeProductImage(drink.id)}
+          >
             Remove photo
           </Button>
         </VStack>

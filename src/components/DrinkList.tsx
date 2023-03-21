@@ -5,21 +5,20 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useGetCategory } from "../hooks/useGetCategory";
 import { useSession } from "next-auth/react";
 import {
-  InformationCircleIcon,
   PencilSquareIcon,
   TrashIcon,
   BeakerIcon,
 } from "@heroicons/react/24/outline";
 
-import { EyeSlashIcon, RectangleGroupIcon } from "@heroicons/react/24/solid";
 import {
-  AspectRatio,
-  Badge,
+  EyeIcon,
+  EyeSlashIcon,
+  RectangleGroupIcon,
+  StarIcon,
+} from "@heroicons/react/24/solid";
+import {
   Box,
   Button,
-  Divider,
-  Flex,
-  Heading,
   HStack,
   IconButton,
   Image,
@@ -84,15 +83,9 @@ export const DrinkList: FC<Drink> = ({
   const bg = useColorModeValue("whiteAlpha.800", "blackAlpha.400");
   const color = useColorModeValue("gray.900", "gray.100");
 
-  const typeBadgeBackgroundColor: { [key: string]: string } = {
-    Green: "green",
-    Black: "gray",
-    Fruit: "red",
-    Herb: "yellow",
-  };
-  const badgeColor = type ? typeBadgeBackgroundColor[type] || "gray" : "gray";
-
   const showHiddenProduct = isHidden && sessionData?.user?.role === "admin";
+
+  const titleOverflow = title.length >= 13;
 
   return (
     <>
@@ -101,7 +94,9 @@ export const DrinkList: FC<Drink> = ({
           shadow="md"
           maxH="13rem"
           rounded="md"
-          bg={showHiddenProduct ? "blackAlpha.50" : bg}
+          bg={bg}
+          filter={showHiddenProduct ? "grayscale(100%)" : ""}
+          opacity={showHiddenProduct ? "0.5" : "1"}
           color={color}
           position="relative"
         >
@@ -109,61 +104,55 @@ export const DrinkList: FC<Drink> = ({
             <Image
               boxSize="10rem"
               alt="image"
-              src={(image || category?.url) ?? ""}
+              src={((hasDescription && image) || category?.url) ?? ""}
               objectFit="cover"
               rounded="md"
               borderRightRadius="0"
-              filter={showHiddenProduct ? "grayscale(100%)" : ""}
-              onClick={onOpen}
             />
           </Box>
-          {showHiddenProduct && (
-            <HStack position="absolute" top="2" right="2">
-              <Tag colorScheme="red" variant="solid">
-                <TagLeftIcon boxSize="12px" as={EyeSlashIcon} />
-                <TagLabel>{t("elements.label.hidden")}</TagLabel>
-              </Tag>
-            </HStack>
-          )}
-          {tag && !showHiddenProduct && (
-            <Box position="absolute" top="2" right="2">
-              <Badge variant="solid" colorScheme="primary">
-                {tag}
-              </Badge>
-            </Box>
-          )}
-
-          {hasDescription && (
-            <IconButton
-              icon={<InformationCircleIcon className="h-4 w-4" />}
-              aria-label="info"
-              onClick={onOpen}
-              size="sm"
-              position="absolute"
-              left="0"
-              top="2"
-              colorScheme={showHiddenProduct ? "red" : "primary"}
-            />
-          )}
 
           <VStack p="2" alignItems="flex-start" spacing={2} w="full">
-            <Text fontSize="2xl" fontWeight="bold" noOfLines={1}>
+            <Text fontSize="xl" fontWeight="bold" noOfLines={1}>
               {title}
             </Text>
-            <Text fontSize="xl">{price} RSD</Text>
+            {showHiddenProduct && (
+              <HStack
+                position="absolute"
+                top={!titleOverflow ? "2" : "10"}
+                right="2"
+              >
+                <Tag colorScheme="red" variant="solid">
+                  <TagLeftIcon boxSize="12px" as={EyeSlashIcon} />
+                  <TagLabel>{t("elements.label.hidden")}</TagLabel>
+                </Tag>
+              </HStack>
+            )}
+            {tag && !showHiddenProduct && (
+              <Box
+                position="absolute"
+                top={!titleOverflow ? "2" : "10"}
+                right="2"
+              >
+                <Tag variant="subtle" colorScheme="primary">
+                  <TagLeftIcon boxSize="12px" as={StarIcon} />
+                  <TagLabel>{tag.toUpperCase()}</TagLabel>
+                </Tag>
+              </Box>
+            )}
+            <Text fontSize="lg">{price} RSD</Text>
             <HStack alignItems="flex-start" spacing={3}>
-              <Tag variant="outline">
+              <Tag variant="ghost">
                 <TagLeftIcon boxSize="12px" as={RectangleGroupIcon} />
                 <TagLabel>{category?.categoryName}</TagLabel>
               </Tag>
               {volume && (
-                <Tag variant="outline">
+                <Tag variant="ghost">
                   <TagLeftIcon boxSize="12px" as={BeakerIcon} />
                   <TagLabel>{volume}</TagLabel>
                 </Tag>
               )}
             </HStack>
-            <HStack spacing={3} w="full">
+            <HStack spacing={3} w="full" position="relative">
               {sessionData?.user?.role === "admin" && (
                 <>
                   <Button
@@ -188,6 +177,18 @@ export const DrinkList: FC<Drink> = ({
                     Delete
                   </Button>
                 </>
+              )}
+              {hasDescription && (
+                <IconButton
+                  icon={<EyeIcon className="h-4 w-4" />}
+                  aria-label="info"
+                  onClick={onOpen}
+                  size="sm"
+                  position="absolute"
+                  right={0}
+                  colorScheme="primary"
+                  variant="outline"
+                />
               )}
             </HStack>
           </VStack>
