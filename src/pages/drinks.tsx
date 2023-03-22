@@ -85,10 +85,11 @@ const Drinks: NextPage = () => {
             as="aside"
             mr={{ base: "0", md: "3" }}
             mb={{ base: "3", md: "0" }}
-            bg="blackAlpha.200"
+            shadow="md"
+            bg="blackAlpha.50"
             h={{ base: "10rem", md: "calc(100%)" }}
             p={{ base: "3", md: "5" }}
-            rounded="lg"
+            rounded="md"
           >
             <InputGroup>
               <InputLeftElement pointerEvents="none">
@@ -127,7 +128,7 @@ const Drinks: NextPage = () => {
             </Stack>
           </GridItem>
 
-          <GridItem colSpan={{ base: 6, md: 3, lg: 4 }} as="main">
+          <GridItem colSpan={{ base: 6, md: 3, lg: 4 }} as="main" mb="5">
             <SimpleGrid spacing="5" minChildWidth="20rem">
               {filteredDrinks.map((drink) => (
                 <DrinkList key={drink.id} {...drink} />

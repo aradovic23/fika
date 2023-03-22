@@ -1,6 +1,6 @@
 ## features
 
-- add volumes and types to db
+- add volumes to db
 - add cart
 - implement landing page base structure
 - continue with translations

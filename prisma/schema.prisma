@@ -88,3 +88,9 @@ model Category {
     addDescription Boolean @default(false)
     isDefault      Boolean @default(false)
 }
+
+model Store {
+    id   Int    @id @default(autoincrement())
+    name String
+    logo String
+}

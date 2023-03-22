@@ -17,23 +17,26 @@ import {
   Link,
 } from "@chakra-ui/react";
 import AdminInfo from "./AdminInfo";
+import { api } from "../utils/api";
 
 const navigation = [
   { name: "All Drinks", path: "/drinks" },
   { name: "Submit Drink", path: "/submit-drink" },
   { name: "Edit Category", path: "/edit-category" },
+  { name: "Settings", path: "/settings" },
 ];
 
 const COMPANY_NAME = "Drinks App";
 
 const Navbar = () => {
   const { data: sessionData } = useSession();
+  const { data: storeData } = api.settings.getStore.useQuery();
 
   return (
     <Flex
       justifyContent="space-between"
       alignItems="center"
-      px="5"
+      px="10"
       py="2"
       shadow="md"
       gap="5"
@@ -42,7 +45,7 @@ const Navbar = () => {
       maxH="64px"
     >
       <Heading size="md" as={NextLink} href="/">
-        {COMPANY_NAME}
+        {storeData?.name ?? COMPANY_NAME}
       </Heading>
 
       <ButtonGroup gap="2" alignItems="center">

@@ -48,6 +48,9 @@ const EditDrinkForm: FC<EditFormProps> = ({
   const updateSingleDrink = api.drinks.removeProductImage.useMutation();
 
   const removeProductImage = async (id: string) => {
+    if (!window.confirm("Are you sure you want to delete?")) {
+      return;
+    }
     await updateSingleDrink.mutateAsync(
       {
         id,
@@ -102,7 +105,7 @@ const EditDrinkForm: FC<EditFormProps> = ({
       </FormControl>
 
       <Flex
-        bg="blackAlpha.300"
+        bg="blackAlpha.100"
         p={3}
         rounded="md"
         justifyContent="space-between"
@@ -149,13 +152,14 @@ const EditDrinkForm: FC<EditFormProps> = ({
             colorScheme="red"
             variant="ghost"
             onClick={() => removeProductImage(drink.id)}
+            size="sm"
           >
             Remove photo
           </Button>
         </VStack>
       )}
 
-      <Button colorScheme="primary" type="submit">
+      <Button colorScheme="primary" type="submit" mb="4">
         {t("elements.button.save")}
       </Button>
     </Form>
