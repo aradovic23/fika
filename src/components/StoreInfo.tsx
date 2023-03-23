@@ -1,4 +1,4 @@
-import { Box, Image, Text } from "@chakra-ui/react";
+import { Image, Text, VStack } from "@chakra-ui/react";
 import type { FC } from "react";
 
 interface Props {
@@ -7,13 +7,18 @@ interface Props {
   id?: number;
 }
 
-const StoreInfo: FC<Props> = ({ name, logo, id }) => {
+const StoreInfo: FC<Props> = ({ name, logo }) => {
   return (
-    <Box>
-      <Text>Name: {name}</Text>
-      <Image src={logo} alt="logo" boxSize="sm" />
-      <Text>{id}</Text>
-    </Box>
+    <VStack>
+      <Text>Store name: {name}</Text>
+      <Image
+        src={logo}
+        alt="logo"
+        objectFit="cover"
+        boxSize="sm"
+        rounded="md"
+      />
+    </VStack>
   );
 };
 

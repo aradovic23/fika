@@ -1,7 +1,19 @@
 import { type NextPage } from "next";
 import Head from "next/head";
 import Link from "next/link";
-import { Button, Center, Flex, Heading, Image, VStack } from "@chakra-ui/react";
+import {
+  Alert,
+  AlertDescription,
+  AlertIcon,
+  AlertTitle,
+  Button,
+  Center,
+  Flex,
+  Heading,
+  Image,
+  Spinner,
+  VStack,
+} from "@chakra-ui/react";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import nextI18nConfig from "../../next-i18next.config.mjs";
 import { useTranslation } from "next-i18next";
@@ -18,11 +30,15 @@ export const getServerSideProps = async ({ locale }: { locale: string }) => ({
 
 const Home: NextPage = () => {
   const { t } = useTranslation("common");
-  const { data: storeData } = api.settings.getStore.useQuery();
+  const { data: storeData, isLoading } = api.settings.getStore.useQuery();
 
   const buttonActions = !storeData
     ? "Visit Settings"
     : t("elements.button.view_all");
+
+  if (isLoading) {
+    return <Spinner />;
+  }
 
   return (
     <>
@@ -39,9 +55,17 @@ const Home: NextPage = () => {
       >
         <Center>
           <VStack spacing="5">
-            <Heading>
-              {storeData?.name ?? "Go to settings to add store details"}
-            </Heading>
+            <Heading>{storeData?.name ?? "Welcome"}</Heading>
+            {!storeData && (
+              <Alert status="warning" rounded="md">
+                <AlertIcon />
+                <AlertTitle>No stores</AlertTitle>
+                <AlertDescription>
+                  There is not a store added yet. Go to Settings to add a store
+                  name and logo.
+                </AlertDescription>
+              </Alert>
+            )}
             {storeData && (
               <Image
                 alt="logo"

@@ -15,6 +15,8 @@ import {
   MenuList,
   Portal,
   Link,
+  HStack,
+  Image,
 } from "@chakra-ui/react";
 import AdminInfo from "./AdminInfo";
 import { api } from "../utils/api";
@@ -44,9 +46,10 @@ const Navbar = () => {
       width="100%"
       maxH="64px"
     >
-      <Heading size="md" as={NextLink} href="/">
-        {storeData?.name ?? COMPANY_NAME}
-      </Heading>
+      <HStack as={NextLink} href="/">
+        <Image alt="logo" src={storeData?.logo} boxSize="30px" rounded="full" />
+        <Heading size="md">{storeData?.name ?? COMPANY_NAME}</Heading>
+      </HStack>
 
       <ButtonGroup gap="2" alignItems="center">
         <ColorModeSwitcher />

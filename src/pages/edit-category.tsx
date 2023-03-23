@@ -387,7 +387,7 @@ const EditCategory: NextPage = () => {
                         inset={0}
                         filter="blur(18px)"
                         zIndex={0}
-                        transform="scale(1.1, 1.1)"
+                        transform="scale(1.05, 1.05)"
                       />
                       <Image
                         src={
