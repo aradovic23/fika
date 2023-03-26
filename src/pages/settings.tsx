@@ -14,7 +14,7 @@ import {
 } from "@chakra-ui/react";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import nextI18nConfig from "../../next-i18next.config.mjs";
-import { useSession } from "next-auth/react";
+import { getSession, useSession } from "next-auth/react";
 import AccessDenied from "../components/AccessDenied";
 import CreateStoreForm from "../components/CreateStoreForm";
 import StoreInfo from "../components/StoreInfo";
@@ -67,7 +67,7 @@ const Settings: NextPage = () => {
     );
   }
 
-  if (sessionData?.user?.role !== "admin") {
+  if (sessionData?.user?.role != "ADMIN") {
     return <AccessDenied />;
   }
 

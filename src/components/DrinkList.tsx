@@ -83,7 +83,7 @@ export const DrinkList: FC<Drink> = ({
   const bg = useColorModeValue("whiteAlpha.800", "blackAlpha.400");
   const color = useColorModeValue("gray.900", "gray.100");
 
-  const showHiddenProduct = isHidden && sessionData?.user?.role === "admin";
+  const showHiddenProduct = isHidden && sessionData?.user?.role === "ADMIN";
 
   const titleOverflow = title.length >= 13;
 
@@ -153,7 +153,7 @@ export const DrinkList: FC<Drink> = ({
               )}
             </HStack>
             <HStack spacing={3} w="full" position="relative">
-              {sessionData?.user?.role === "admin" && (
+              {sessionData?.user?.role === "ADMIN" && (
                 <>
                   <Button
                     leftIcon={<PencilSquareIcon className="h-4 w-4" />}

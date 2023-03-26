@@ -1,5 +1,6 @@
 import { useSession } from "next-auth/react";
 import NextLink from "next/link";
+import type { FC } from "react";
 import React from "react";
 import { Bars3Icon } from "@heroicons/react/24/outline";
 import ColorModeSwitcher from "./ColorModeSwitcher";
@@ -30,7 +31,7 @@ const navigation = [
 
 const COMPANY_NAME = "Drinks App";
 
-const Navbar = () => {
+const Navbar: FC = () => {
   const { data: sessionData } = useSession();
   const { data: storeData } = api.settings.getStore.useQuery();
 
@@ -47,13 +48,20 @@ const Navbar = () => {
       maxH="64px"
     >
       <HStack as={NextLink} href="/">
-        <Image alt="logo" src={storeData?.logo} boxSize="30px" rounded="full" />
+        {storeData && (
+          <Image
+            alt="logo"
+            src={storeData?.logo}
+            boxSize="30px"
+            rounded="full"
+          />
+        )}
         <Heading size="md">{storeData?.name ?? COMPANY_NAME}</Heading>
       </HStack>
 
       <ButtonGroup gap="2" alignItems="center">
         <ColorModeSwitcher />
-        {sessionData?.user?.role === "admin" ? (
+        {sessionData?.user?.role === "ADMIN" ? (
           <>
             <Menu>
               <MenuButton

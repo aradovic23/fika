@@ -108,7 +108,7 @@ const EditDrinkPage: NextPage = () => {
     );
   }
 
-  if (sessionData?.user?.role !== "admin") {
+  if (sessionData?.user?.role !== "ADMIN") {
     return <AccessDenied />;
   }
 

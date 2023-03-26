@@ -24,6 +24,7 @@ import { useTranslation } from "react-i18next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import nextI18nConfig from "../../next-i18next.config.mjs";
 import { useSession } from "next-auth/react";
+import { getQueryKey } from "@trpc/react-query";
 
 export const getServerSideProps = async ({ locale }: { locale: string }) => ({
   props: {
@@ -51,7 +52,7 @@ const Drinks: NextPage = () => {
     initialSelectedCategoryId
   );
 
-  const isAdmin = sessionData?.user?.role === "admin";
+  const isAdmin = sessionData?.user?.role === "ADMIN";
 
   const filteredDrinks = (drinks.data ?? [])
     .filter((drink) =>
@@ -110,9 +111,7 @@ const Drinks: NextPage = () => {
                 onChange={(e) => setSelectedCategory(parseInt(e.target.value))}
                 id="select-category"
               >
-                {!defaultCategory ? (
-                  <option value={0}>All</option>
-                ) : (
+                {defaultCategory && (
                   <option value={defaultCategory.id ?? 0}>
                     {defaultCategory?.categoryName}
                   </option>

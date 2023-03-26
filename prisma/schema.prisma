@@ -1,37 +1,28 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
-    provider      = "prisma-client-js"
-    binaryTargets = "darwin-arm64"
+    provider = "prisma-client-js"
 }
 
 datasource db {
-    provider = "postgresql"
-    url      = env("DATABASE_URL")
+    provider     = "mysql"
+    url          = env("DATABASE_URL")
+    relationMode = "prisma"
 }
 
-model Example {
-    id        String   @id @default(cuid())
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-}
-
-// Necessary for Next auth
 model Account {
     id                String  @id @default(cuid())
     userId            String
     type              String
     provider          String
     providerAccountId String
-    refresh_token     String?
-    access_token      String?
+    refresh_token     String? @db.Text
+    access_token      String? @db.Text
     expires_at        Int?
     token_type        String?
     scope             String?
-    id_token          String?
+    id_token          String? @db.Text
     session_state     String?
-    user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
     @@unique([provider, providerAccountId])
 }
@@ -44,15 +35,20 @@ model Session {
     user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
+enum Role {
+    USER
+    ADMIN
+}
+
 model User {
     id            String    @id @default(cuid())
     name          String?
     email         String?   @unique
     emailVerified DateTime?
     image         String?
-    role          String?
     accounts      Account[]
     sessions      Session[]
+    role          Role      @default(USER)
 }
 
 model VerificationToken {
@@ -65,24 +61,24 @@ model VerificationToken {
 
 model Drink {
     id          String    @id @default(cuid())
-    title       String
-    price       String
-    volume      String?
-    type        String?
-    tag         String?
+    title       String    @db.Text()
+    price       String    @db.Text()
+    volume      String?   @db.Text()
+    type        String?   @db.Text()
+    tag         String?   @db.Text()
     categoryId  Int?
     createdDate DateTime  @default(now())
-    description String?
-    category    Category? @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+    description String?   @db.Text()
     updatedAt   DateTime  @default(now())
-    image       String?
+    image       String?   @db.Text()
     isHidden    Boolean   @default(false)
+    category    Category? @relation(fields: [categoryId], references: [id], onDelete: Cascade)
 }
 
 model Category {
     id             Int     @id @default(autoincrement())
-    categoryName   String
-    url            String? @default("https://images.unsplash.com/photo-1447933601403-0c6688de566e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1061&q=80")
+    categoryName   String  @db.Text()
+    url            String? @db.Text()
     drinks         Drink[]
     addTypes       Boolean @default(false)
     addDescription Boolean @default(false)

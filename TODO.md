@@ -10,3 +10,5 @@
 - add back to top btn
 
 ## bugs
+
+- fix default category selector for drinks page
