@@ -1,7 +1,7 @@
 import type { GetServerSideProps } from "next";
 import Head from "next/head";
 import { getProviders, signIn, signOut, useSession } from "next-auth/react";
-import { Button, Container } from "@chakra-ui/react";
+import { Button, Container, Heading } from "@chakra-ui/react";
 
 type Provider = {
   id: string;
@@ -21,24 +21,28 @@ const SignIn = ({ providers }: { providers: Provider[] }) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Container className="flex h-screen flex-col items-center justify-center gap-3">
-        <div>
-          {Object.values(providers).map((provider) => (
-            <Button
-              key={provider.id}
-              onClick={
-                sessionData
-                  ? () => signOut()
-                  : () =>
-                      signIn(provider.id, {
-                        callbackUrl: `${window.location.origin}`,
-                      })
-              }
-            >
-              {sessionData
-                ? `Sign out of ${provider.name} `
-                : `Sign in with ${provider.name}`}
-            </Button>
-          ))}
+        <Heading>
+          You are currently {sessionData ? "signed in" : "signed out"}
+        </Heading>
+        <div className="flex flex-col gap-3">
+          {!sessionData && (
+            <>
+              {Object.values(providers).map((provider) => (
+                <Button
+                  key={provider.id}
+                  colorScheme="primary"
+                  onClick={() =>
+                    signIn(provider.id, {
+                      callbackUrl: `${window.location.origin}`,
+                    })
+                  }
+                >
+                  Sign in with {provider.name}
+                </Button>
+              ))}
+            </>
+          )}
+          {sessionData && <Button onClick={() => signOut()}>Sign out</Button>}
         </div>
       </Container>
     </>

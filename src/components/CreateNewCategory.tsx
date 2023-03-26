@@ -25,7 +25,11 @@ interface Props {
 const CreateNewCategory = ({ handleIsActive }: Props) => {
   const { t } = useTranslation();
   const createCategoryMutation = api.categories.createCategory.useMutation();
-  const { register, handleSubmit } = useForm<Category>();
+  const {
+    register,
+    handleSubmit,
+    formState: { isSubmitting },
+  } = useForm<Category>();
   const utils = api.useContext();
   const toast = useToast();
   const [imageFromSearch, setImageFromSearch] = useState("");
@@ -127,6 +131,7 @@ const CreateNewCategory = ({ handleIsActive }: Props) => {
           variant="solid"
           onClick={handleSubmit(handleCreateNewCategory)}
           colorScheme="primary"
+          isLoading={isSubmitting}
         >
           {t("elements.button.submit_category")}
         </Button>

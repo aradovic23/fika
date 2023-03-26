@@ -32,7 +32,12 @@ const EditDrinkForm: FC<EditFormProps> = ({
   addDescription,
   addTypes,
 }) => {
-  const { register, handleSubmit, setValue } = useForm({
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    formState: { isSubmitting },
+  } = useForm({
     defaultValues: drink,
   });
   const { t } = useTranslation();
@@ -159,7 +164,12 @@ const EditDrinkForm: FC<EditFormProps> = ({
         </VStack>
       )}
 
-      <Button colorScheme="primary" type="submit" mb="4">
+      <Button
+        colorScheme="primary"
+        type="submit"
+        mb="4"
+        isLoading={isSubmitting}
+      >
         {t("elements.button.save")}
       </Button>
     </Form>

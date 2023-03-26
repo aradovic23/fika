@@ -12,7 +12,12 @@ interface Props {
 }
 
 const EditStoreForm: FC<Props> = (store) => {
-  const { register, reset, handleSubmit } = useForm({ defaultValues: store });
+  const {
+    register,
+    reset,
+    handleSubmit,
+    formState: { isSubmitting },
+  } = useForm({ defaultValues: store });
 
   const updateStore = api.settings.updateStore.useMutation();
 
@@ -53,7 +58,12 @@ const EditStoreForm: FC<Props> = (store) => {
       <Input placeholder="name" id="name" {...register("name")} />
       <FormLabel htmlFor="logo">Logo Image URL</FormLabel>
       <Input placeholder="logo" id="logo" {...register("logo")} />
-      <Button colorScheme="primary" type="submit" mb="4">
+      <Button
+        colorScheme="primary"
+        type="submit"
+        mb="4"
+        isLoading={isSubmitting}
+      >
         Update
       </Button>
     </Form>

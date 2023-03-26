@@ -5,7 +5,7 @@ import { api } from "../utils/api";
 import Navbar from "./Navbar";
 
 interface LayoutProps {
-  children: React.ReactNode[];
+  children: React.ReactNode;
 }
 
 const Layout = ({ children }: LayoutProps) => {

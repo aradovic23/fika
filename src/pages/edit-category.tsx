@@ -69,7 +69,7 @@ const EditCategory: NextPage = () => {
     handleSubmit,
     reset,
     control,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm<Category>({
     defaultValues: productCategory,
   });
@@ -333,7 +333,7 @@ const EditCategory: NextPage = () => {
                       )}
 
                       <Button
-                        isDisabled={!productCategory}
+                        isLoading={isSubmitting}
                         type="submit"
                         colorScheme="primary"
                       >

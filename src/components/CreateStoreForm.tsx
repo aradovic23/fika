@@ -5,7 +5,12 @@ import { api } from "../utils/api";
 import { Form } from "./Form";
 
 const CreateStoreForm = () => {
-  const { register, handleSubmit, reset } = useForm<Store>();
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { isSubmitting },
+  } = useForm<Store>();
 
   const createStore = api.settings.createStore.useMutation();
 
@@ -36,7 +41,10 @@ const CreateStoreForm = () => {
     <Form onSubmit={handleSubmit(handleCreateNewStore)}>
       <Input {...register("name")} placeholder="Enter store name" />
       <Input {...register("logo")} placeholder="Paste logo URL" />
-      <Button type="submit"> Save </Button>
+      <Button isLoading={isSubmitting} type="submit">
+        {" "}
+        Save{" "}
+      </Button>
     </Form>
   );
 };

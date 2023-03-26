@@ -24,7 +24,6 @@ import { useTranslation } from "react-i18next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import nextI18nConfig from "../../next-i18next.config.mjs";
 import { useSession } from "next-auth/react";
-import { getQueryKey } from "@trpc/react-query";
 
 export const getServerSideProps = async ({ locale }: { locale: string }) => ({
   props: {
@@ -110,18 +109,24 @@ const Drinks: NextPage = () => {
                 variant="filled"
                 onChange={(e) => setSelectedCategory(parseInt(e.target.value))}
                 id="select-category"
+                value={selectedCategory}
               >
                 {defaultCategory && (
-                  <option value={defaultCategory.id ?? 0}>
-                    {defaultCategory?.categoryName}
+                  <option value={defaultCategory.id}>
+                    {defaultCategory.categoryName}
                   </option>
                 )}
                 <option value={0}>All</option>
-                {(data || []).map((category) => (
-                  <option key={category.id} value={category.id}>
-                    {category.categoryName}
-                  </option>
-                ))}
+                {(data || []).map((category) => {
+                  if (defaultCategory && category.id === defaultCategory.id) {
+                    return null;
+                  }
+                  return (
+                    <option key={category.id} value={category.id}>
+                      {category.categoryName}
+                    </option>
+                  );
+                })}
               </Select>
             </Stack>
           </GridItem>

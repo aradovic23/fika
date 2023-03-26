@@ -1,14 +1,14 @@
 ## features
 
-- add volumes to db
-- add cart
+- blurhash
+- page loading state fixes - add one full screen, and protect data with loaders
 - implement landing page base structure
-- continue with translations
+- move types to be an input instead of select
+- add volumes to db?
+- continue with translations && look into next-itl
 - separate forms to components
 - add custom theme colors
-- style sign in page
 - add back to top btn
+- add cart - zustand
 
 ## bugs
-
-- fix default category selector for drinks page
