@@ -30,6 +30,7 @@ import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import nextI18nConfig from "../../next-i18next.config.mjs";
 import { useTranslation } from "next-i18next";
 import ImageSearch from "../components/ImageSearch";
+import { PageSpinner } from "../components/LoaderSpinner";
 
 export const getServerSideProps = async ({ locale }: { locale: string }) => ({
   props: {
@@ -88,17 +89,7 @@ const SubmitDrink: NextPage = () => {
   const addTypes = currentCategory?.addTypes;
 
   if (status === "loading") {
-    return (
-      <Container>
-        <Spinner
-          thickness="4px"
-          speed="0.65s"
-          emptyColor="gray.200"
-          color="blue.500"
-          size="xl"
-        />
-      </Container>
-    );
+    return <PageSpinner />;
   }
 
   if (sessionData?.user?.role != "ADMIN") {

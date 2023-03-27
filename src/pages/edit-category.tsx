@@ -38,6 +38,7 @@ import ImageSearch from "../components/ImageSearch";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import nextI18nConfig from "../../next-i18next.config.mjs";
 import { useTranslation } from "next-i18next";
+import { PageSpinner } from "../components/LoaderSpinner";
 
 export const getServerSideProps = async ({ locale }: { locale: string }) => ({
   props: {
@@ -51,7 +52,8 @@ export const getServerSideProps = async ({ locale }: { locale: string }) => ({
 const EditCategory: NextPage = () => {
   const { t } = useTranslation();
   const { data: sessionData, status } = useSession();
-  const { data: categories } = api.categories.getCategories.useQuery();
+  const { data: categories, isLoading } =
+    api.categories.getCategories.useQuery();
   const [categoryId, setCategoryId] = useState(0);
   const [imageFromSearch, setImageFromSearch] = useState("");
   const { category: productCategory } = useGetCategory(categoryId);
@@ -140,18 +142,8 @@ const EditCategory: NextPage = () => {
     setImageFromSearch(image);
   };
 
-  if (status === "loading") {
-    return (
-      <Container>
-        <Spinner
-          thickness="4px"
-          speed="0.65s"
-          emptyColor="gray.200"
-          color="blue.500"
-          size="xl"
-        />
-      </Container>
-    );
+  if (status === "loading" || isLoading) {
+    return <PageSpinner />;
   }
 
   if (sessionData?.user?.role != "ADMIN") {

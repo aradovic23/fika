@@ -2,7 +2,7 @@ import { type NextPage } from "next";
 import Head from "next/head";
 import { api } from "../utils/api";
 import { DrinkList } from "../components/DrinkList";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { NoResults } from "../components/NoResults";
 import {
   Container,
@@ -16,14 +16,15 @@ import {
   ScaleFade,
   Select,
   SimpleGrid,
+  Skeleton,
   Stack,
 } from "@chakra-ui/react";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/solid";
-import Skeleton from "../components/Skeleton";
 import { useTranslation } from "react-i18next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import nextI18nConfig from "../../next-i18next.config.mjs";
 import { useSession } from "next-auth/react";
+import { PageSpinner } from "../components/LoaderSpinner";
 
 export const getServerSideProps = async ({ locale }: { locale: string }) => ({
   props: {
@@ -67,6 +68,10 @@ const Drinks: NextPage = () => {
     );
 
   const { t } = useTranslation("common");
+
+  useEffect(() => {
+    setSelectedCategory(initialSelectedCategoryId);
+  }, [initialSelectedCategoryId]);
 
   return (
     <>
@@ -137,17 +142,18 @@ const Drinks: NextPage = () => {
             mb={{ base: "6rem", md: 0 }}
           >
             <SimpleGrid spacing="5" minChildWidth="20rem">
-              {filteredDrinks.map((drink) => (
-                <DrinkList key={drink.id} {...drink} />
-              ))}
               {isLoading ? (
-                <Skeleton />
+                <PageSpinner />
+              ) : filteredDrinks.length === 0 ? (
+                <ScaleFade initialScale={0.8} in unmountOnExit>
+                  <NoResults />
+                </ScaleFade>
               ) : (
-                filteredDrinks.length === 0 && (
-                  <ScaleFade initialScale={0.8} in unmountOnExit>
-                    <NoResults />
-                  </ScaleFade>
-                )
+                filteredDrinks.map((drink) => (
+                  <Skeleton key={drink.id} isLoaded={!isLoading} rounded="md">
+                    <DrinkList key={drink.id} {...drink} />
+                  </Skeleton>
+                ))
               )}
             </SimpleGrid>
           </GridItem>

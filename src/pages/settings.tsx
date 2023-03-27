@@ -20,6 +20,7 @@ import CreateStoreForm from "../components/CreateStoreForm";
 import StoreInfo from "../components/StoreInfo";
 import { api } from "../utils/api";
 import EditStoreForm from "../components/EditStoreForm";
+import { PageSpinner } from "../components/LoaderSpinner.jsx";
 
 export const getServerSideProps = async ({ locale }: { locale: string }) => ({
   props: {
@@ -33,7 +34,7 @@ export const getServerSideProps = async ({ locale }: { locale: string }) => ({
 const Settings: NextPage = () => {
   const { data: sessionData, status } = useSession();
 
-  const { data: storeData } = api.settings.getStore.useQuery();
+  const { data: storeData, isLoading } = api.settings.getStore.useQuery();
 
   const utils = api.useContext();
 
@@ -53,18 +54,8 @@ const Settings: NextPage = () => {
     deleteStore({ id });
   };
 
-  if (status === "loading") {
-    return (
-      <Container>
-        <Spinner
-          thickness="4px"
-          speed="0.65s"
-          emptyColor="gray.200"
-          color="blue.500"
-          size="xl"
-        />
-      </Container>
-    );
+  if (status === "loading" || isLoading) {
+    return <PageSpinner />;
   }
 
   if (sessionData?.user?.role != "ADMIN") {

@@ -10,7 +10,6 @@ import {
   Container,
   Heading,
   ScaleFade,
-  Spinner,
   Stack,
   Text,
   useToast,
@@ -21,6 +20,7 @@ import nextI18nConfig from "../../../next-i18next.config.mjs";
 import { useTranslation } from "next-i18next";
 import moment from "moment";
 import "moment/locale/sr";
+import { PageSpinner } from "../../components/LoaderSpinner";
 
 export const getServerSideProps = async ({ locale }: { locale: string }) => ({
   props: {
@@ -41,7 +41,7 @@ const EditDrinkPage: NextPage = () => {
   const { id } = router.query as {
     id: string;
   };
-  const { data } = api.drinks.getDrinkById.useQuery<{
+  const { data, isLoading } = api.drinks.getDrinkById.useQuery<{
     id: number;
     categoryId: number;
   }>(
@@ -94,18 +94,8 @@ const EditDrinkPage: NextPage = () => {
     );
   };
 
-  if (status === "loading") {
-    return (
-      <Container>
-        <Spinner
-          thickness="4px"
-          speed="0.65s"
-          emptyColor="gray.200"
-          color="blue.500"
-          size="xl"
-        />
-      </Container>
-    );
+  if (status === "loading" || isLoading) {
+    return <PageSpinner />;
   }
 
   if (sessionData?.user?.role !== "ADMIN") {
