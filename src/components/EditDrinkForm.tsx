@@ -53,7 +53,7 @@ const EditDrinkForm: FC<EditFormProps> = ({
   const updateSingleDrink = api.drinks.removeProductImage.useMutation();
 
   const removeProductImage = async (id: string) => {
-    if (!window.confirm("Are you sure you want to delete?")) {
+    if (!window.confirm("Are you sure you want to delete the image?")) {
       return;
     }
     await updateSingleDrink.mutateAsync(
@@ -167,7 +167,7 @@ const EditDrinkForm: FC<EditFormProps> = ({
       <Button
         colorScheme="primary"
         type="submit"
-        mb="4"
+        mb="10"
         isLoading={isSubmitting}
       >
         {t("elements.button.save")}

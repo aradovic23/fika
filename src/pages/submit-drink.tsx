@@ -232,20 +232,13 @@ const SubmitDrink: NextPage = () => {
           </VStack>
 
           {addTypes && (
-            <Select
-              {...register("type", {
-                validate: {
-                  notZero: (v) => Number(v) !== 0,
-                },
-              })}
-            >
-              <option value={0}>{t("elements.placeholder.type")}</option>
-              {typeOptions.map((type) => (
-                <option value={type} key={type}>
-                  {type}
-                </option>
-              ))}
-            </Select>
+            <>
+              <FormLabel>Type</FormLabel>
+              <Input
+                placeholder="Add custom types, such as 'Green, Black'"
+                {...register("type")}
+              />
+            </>
           )}
 
           <VStack rounded="lg" p="3" bg="blackAlpha.100">

@@ -9,18 +9,17 @@ import {
   Container,
   Heading,
   HStack,
-  Spinner,
   VStack,
 } from "@chakra-ui/react";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import nextI18nConfig from "../../next-i18next.config.mjs";
-import { getSession, useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import AccessDenied from "../components/AccessDenied";
 import CreateStoreForm from "../components/CreateStoreForm";
 import StoreInfo from "../components/StoreInfo";
 import { api } from "../utils/api";
 import EditStoreForm from "../components/EditStoreForm";
-import { PageSpinner } from "../components/LoaderSpinner.jsx";
+import { PageSpinner } from "../components/LoaderSpinner";
 
 export const getServerSideProps = async ({ locale }: { locale: string }) => ({
   props: {

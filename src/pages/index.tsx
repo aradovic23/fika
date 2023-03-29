@@ -18,6 +18,7 @@ import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import nextI18nConfig from "../../next-i18next.config.mjs";
 import { useTranslation } from "next-i18next";
 import { api } from "../utils/api";
+import { PageSpinner } from "../components/LoaderSpinner";
 
 export const getServerSideProps = async ({ locale }: { locale: string }) => ({
   props: {
@@ -37,7 +38,7 @@ const Home: NextPage = () => {
     : t("elements.button.view_all");
 
   if (isLoading) {
-    return <Spinner />;
+    return <PageSpinner />;
   }
 
   return (

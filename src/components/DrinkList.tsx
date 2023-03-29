@@ -4,17 +4,15 @@ import { api } from "../utils/api";
 import { useQueryClient } from "@tanstack/react-query";
 import { useGetCategory } from "../hooks/useGetCategory";
 import { useSession } from "next-auth/react";
-import {
-  PencilSquareIcon,
-  TrashIcon,
-  BeakerIcon,
-} from "@heroicons/react/24/outline";
+import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/outline";
 
 import {
   EyeIcon,
   EyeSlashIcon,
-  RectangleGroupIcon,
+  Squares2X2Icon,
+  BeakerIcon,
   StarIcon,
+  TagIcon,
 } from "@heroicons/react/24/solid";
 import {
   Box,
@@ -108,6 +106,7 @@ export const DrinkList: FC<Drink> = ({
               objectFit="cover"
               rounded="md"
               borderRightRadius="0"
+              fallbackSrc=""
             />
           </Box>
 
@@ -141,14 +140,20 @@ export const DrinkList: FC<Drink> = ({
             )}
             <Text fontSize="lg">{price} RSD</Text>
             <HStack alignItems="flex-start" spacing={3}>
-              <Tag variant="ghost">
-                <TagLeftIcon boxSize="12px" as={RectangleGroupIcon} />
+              <Tag variant="subtle">
+                <TagLeftIcon boxSize="12px" as={Squares2X2Icon} />
                 <TagLabel>{category?.categoryName}</TagLabel>
               </Tag>
               {volume && (
-                <Tag variant="ghost">
+                <Tag variant="subtle">
                   <TagLeftIcon boxSize="12px" as={BeakerIcon} />
                   <TagLabel>{volume}</TagLabel>
+                </Tag>
+              )}
+              {hasTypes && (
+                <Tag variant="subtle">
+                  <TagLeftIcon boxSize="12px" as={TagIcon} />
+                  <TagLabel>{type}</TagLabel>
                 </Tag>
               )}
             </HStack>

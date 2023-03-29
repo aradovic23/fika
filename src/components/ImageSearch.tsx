@@ -25,7 +25,11 @@ const ImageSearch = ({ handleSelectedImage }: Props) => {
   const [searchTerm, setSearchTerm] = useState("");
   const ACCESS_KEY = env.NEXT_PUBLIC_UNSPLASH_ACCESS_KEY;
   const BASE_URL = "https://api.unsplash.com";
-  const [selectedImage, setSelectedImage] = useState({ url: "", id: "" });
+  const [selectedImage, setSelectedImage] = useState({
+    url: "",
+    id: "",
+    blurHash: "",
+  });
   const [showResults, setShowResults] = useState(false);
 
   const { data, isLoading, isError, refetch } = useQuery<Result[], Error>(
@@ -117,6 +121,7 @@ const ImageSearch = ({ handleSelectedImage }: Props) => {
                     setSelectedImage({
                       url: image.urls.regular,
                       id: image.id,
+                      blurHash: image.blurHash,
                     })
                   }
                   src={image.urls.small}

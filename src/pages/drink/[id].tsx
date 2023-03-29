@@ -111,7 +111,7 @@ const EditDrinkPage: NextPage = () => {
           </title>
         </Head>
         <Container>
-          <Stack gap="3" mt="5">
+          <Stack gap="3" mt="5" mb="20">
             <Heading size="lg" textAlign="center">
               {t("edit_drink")} | {data.title}
             </Heading>

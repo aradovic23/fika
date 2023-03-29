@@ -1,10 +1,8 @@
 ## features
 
-- blurhash
-- page loading state fixes - add one full screen, and protect data with loaders
-- implement landing page base structure
-- move types to be an input instead of select
+- blurhash needs to go to DB for product and category
 - add volumes to db?
+- implement landing page base structure
 - continue with translations && look into next-itl
 - separate forms to components
 - add custom theme colors
