@@ -38,6 +38,7 @@ import {
 } from "@chakra-ui/react";
 import type { Drink } from "@prisma/client";
 import { useTranslation } from "react-i18next";
+import { Blurhash } from "react-blurhash";
 
 export const DrinkList: FC<Drink> = ({
   title,
@@ -50,6 +51,7 @@ export const DrinkList: FC<Drink> = ({
   description,
   image,
   isHidden,
+  blurHash,
 }) => {
   const queryClient = useQueryClient();
   const drinks = api.drinks.getDrinks.useQuery();
@@ -108,6 +110,16 @@ export const DrinkList: FC<Drink> = ({
               borderRightRadius="0"
               fallbackSrc=""
             />
+            {/* {blurHash && (
+              <Blurhash
+                hash={blurHash}
+                width={400}
+                height={300}
+                resolutionX={32}
+                resolutionY={32}
+                punch={1}
+              />
+            )} */}
           </Box>
 
           <VStack p="2" alignItems="flex-start" spacing={2} w="full">

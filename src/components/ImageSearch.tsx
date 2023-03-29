@@ -17,7 +17,7 @@ import { MagnifyingGlassIcon } from "@heroicons/react/24/solid";
 import { useTranslation } from "react-i18next";
 
 interface Props {
-  handleSelectedImage: (image: string) => void;
+  handleSelectedImage: (image: string, blur: string) => void;
 }
 
 const ImageSearch = ({ handleSelectedImage }: Props) => {
@@ -56,7 +56,7 @@ const ImageSearch = ({ handleSelectedImage }: Props) => {
 
   const handleSetSelectedImage = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    handleSelectedImage(selectedImage.url);
+    handleSelectedImage(selectedImage.url, selectedImage.blurHash);
     setShowResults(false);
   };
 
@@ -121,7 +121,7 @@ const ImageSearch = ({ handleSelectedImage }: Props) => {
                     setSelectedImage({
                       url: image.urls.regular,
                       id: image.id,
-                      blurHash: image.blurHash,
+                      blurHash: image.blur_hash ?? "",
                     })
                   }
                   src={image.urls.small}

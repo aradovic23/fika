@@ -54,6 +54,7 @@ const Navbar: FC = () => {
             src={storeData?.logo}
             boxSize="30px"
             rounded="full"
+            objectFit="cover"
           />
         )}
         <Heading size="md">{storeData?.name ?? COMPANY_NAME}</Heading>

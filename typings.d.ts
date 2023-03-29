@@ -12,7 +12,7 @@ export type Result = {
   width: number;
   height: number;
   color: string;
-  blurHash: string;
+  blur_hash: string;
   description: null | string;
   altDescription: string;
   urls: Urls;
@@ -68,7 +68,7 @@ export type CoverPhoto = {
   width: number;
   height: number;
   color: string;
-  blurHash: string;
+  blur_hash: string;
   description: null | string;
   altDescription: null | string;
   urls: Urls;

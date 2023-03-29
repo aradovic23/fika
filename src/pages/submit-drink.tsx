@@ -56,9 +56,6 @@ export const volumeOptions: string[] = [
   "0.5",
 ];
 
-// TODO: Add to DB:
-const typeOptions: string[] = ["Green", "Black", "Fruit", "Herb"];
-
 const SubmitDrink: NextPage = () => {
   const createDrinkMutation = api.drinks.createDrink.useMutation();
   const categories = api.categories.getCategories.useQuery();
@@ -67,6 +64,7 @@ const SubmitDrink: NextPage = () => {
   const [isVolumeChecked, setIsVolumeCheked] = useState(false);
   const [addImage, setAddImage] = useState(false);
   const [productImage, setProductImage] = useState("");
+  const [blurHash, setBlurHash] = useState("");
   const [isCreateNewCategoryChecked, setIsCreateNewCategoryChecked] =
     useState(false);
   const { data: sessionData, status } = useSession();
@@ -107,6 +105,7 @@ const SubmitDrink: NextPage = () => {
         description: data.description,
         categoryId: Number(data.categoryId),
         image: productImage,
+        blurHash: blurHash,
       });
       toast({
         title: `${data.title ?? "Product"} created!`,
@@ -116,6 +115,7 @@ const SubmitDrink: NextPage = () => {
       });
       reset();
       setProductImage("");
+      setBlurHash("");
       setAddImage(false);
       setIsTagChecked(false);
       setIsVolumeCheked(false);
@@ -132,8 +132,10 @@ const SubmitDrink: NextPage = () => {
     setIsCreateNewCategoryChecked(state);
   };
 
-  const handleSelectedImage = (image: string) => {
+  const handleSelectedImage = (image: string, hash: string) => {
     setProductImage(image);
+    setBlurHash(hash);
+    console.log(hash, "hash");
   };
 
   return (

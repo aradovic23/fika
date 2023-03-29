@@ -14,6 +14,7 @@ export const drinksRouter = createTRPCRouter({
         type: z.string().nullish(),
         description: z.string().nullish(),
         image: z.string().nullish(),
+        blurHash: z.string().nullish(),
       })
     )
     .mutation(async ({ input, ctx }) => {
@@ -26,6 +27,7 @@ export const drinksRouter = createTRPCRouter({
           type: input.type,
           description: input.description,
           image: input.image,
+          blurHash: input.blurHash,
           category: {
             connect: {
               id: input.categoryId ?? 1,
@@ -87,6 +89,7 @@ export const drinksRouter = createTRPCRouter({
           description: z.string().nullish(),
           image: z.string().nullish(),
           isHidden: z.boolean(),
+          blurHash: z.string().nullish(),
         }),
       })
     )
@@ -105,6 +108,7 @@ export const drinksRouter = createTRPCRouter({
           updatedAt: new Date(),
           image: input.data.image,
           isHidden: input.data.isHidden,
+          blurHash: input.data.blurHash,
         },
       });
       return drink;

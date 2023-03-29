@@ -1,6 +1,6 @@
 ## features
 
-- blurhash needs to go to DB for product and category
+- continue blurhash work
 - add volumes to db?
 - implement landing page base structure
 - continue with translations && look into next-itl
