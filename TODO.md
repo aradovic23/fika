@@ -1,6 +1,5 @@
 ## features
 
-- continue blurhash work
 - add volumes to db?
 - implement landing page base structure
 - continue with translations && look into next-itl

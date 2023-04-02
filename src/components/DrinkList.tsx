@@ -1,4 +1,5 @@
 import type { FC } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { api } from "../utils/api";
 import { useQueryClient } from "@tanstack/react-query";
@@ -14,6 +15,7 @@ import {
   StarIcon,
   TagIcon,
 } from "@heroicons/react/24/solid";
+import type { ImageProps } from "@chakra-ui/react";
 import {
   Box,
   Button,
@@ -87,6 +89,39 @@ export const DrinkList: FC<Drink> = ({
 
   const titleOverflow = title.length >= 13;
 
+  interface ImageWithBlurHashProps extends ImageProps {
+    blurHash?: string | null;
+  }
+
+  const ImageWithBlurhash = ({
+    src,
+    blurHash,
+    ...rest
+  }: ImageWithBlurHashProps) => {
+    if (blurHash) {
+      return (
+        <>
+          <Image
+            src={src}
+            alt="image"
+            {...rest}
+            fallback={
+              <Blurhash
+                hash={blurHash}
+                width="100%"
+                height="100%"
+                resolutionX={32}
+                resolutionY={32}
+              />
+            }
+          />
+        </>
+      );
+    } else {
+      return <Image src={src} {...rest} alt="image" />;
+    }
+  };
+
   return (
     <>
       <ScaleFade initialScale={0.8} in unmountOnExit>
@@ -101,28 +136,24 @@ export const DrinkList: FC<Drink> = ({
           position="relative"
         >
           <Box w="10rem">
-            <Image
+            <ImageWithBlurhash
               boxSize="10rem"
               alt="image"
               src={((hasDescription && image) || category?.url) ?? ""}
               objectFit="cover"
               rounded="md"
               borderRightRadius="0"
-              fallbackSrc=""
+              blurHash={blurHash}
             />
-            {/* {blurHash && (
-              <Blurhash
-                hash={blurHash}
-                width={400}
-                height={300}
-                resolutionX={32}
-                resolutionY={32}
-                punch={1}
-              />
-            )} */}
           </Box>
 
-          <VStack p="2" alignItems="flex-start" spacing={2} w="full">
+          <VStack
+            p="2"
+            alignItems="flex-start"
+            spacing={2}
+            w="full"
+            overflow="auto"
+          >
             <Text fontSize="xl" fontWeight="bold" noOfLines={1}>
               {title}
             </Text>
