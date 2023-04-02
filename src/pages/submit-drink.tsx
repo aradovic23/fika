@@ -31,6 +31,7 @@ import nextI18nConfig from "../../next-i18next.config.mjs";
 import { useTranslation } from "next-i18next";
 import ImageSearch from "../components/ImageSearch";
 import { PageSpinner } from "../components/LoaderSpinner";
+import CreateVolumeOption from "../components/CreateVolumeOption";
 
 export const getServerSideProps = async ({ locale }: { locale: string }) => ({
   props: {
@@ -192,6 +193,8 @@ const SubmitDrink: NextPage = () => {
               })}
             />
           </FormControl>
+
+          <CreateVolumeOption />
 
           <FormControl>
             <FormLabel>{t("elements.label.price")}</FormLabel>

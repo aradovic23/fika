@@ -43,6 +43,10 @@ export const drinksRouter = createTRPCRouter({
       orderBy: {
         title: "asc",
       },
+      include: {
+        category: true,
+        unit: true,
+      },
     });
     return drinks;
   }),
@@ -53,6 +57,9 @@ export const drinksRouter = createTRPCRouter({
       const singleDrink = await ctx.prisma.drink.findFirst({
         where: {
           id: input.id,
+        },
+        include: {
+          unit: true,
         },
       });
       if (singleDrink) return singleDrink;
