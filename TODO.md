@@ -1,6 +1,7 @@
 ## features
 
-- add volumes to db?
+- add volumes to edit product page
+- add new volumes to drinkList component
 - implement landing page base structure
 - continue with translations && look into next-itl
 - separate forms to components
