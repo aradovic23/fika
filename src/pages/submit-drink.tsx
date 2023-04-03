@@ -14,6 +14,8 @@ import {
   FormControl,
   FormLabel,
   Heading,
+  HStack,
+  IconButton,
   Image,
   Input,
   Select,
@@ -68,6 +70,7 @@ const SubmitDrink: NextPage = () => {
   const [blurHash, setBlurHash] = useState("");
   const [isCreateNewCategoryChecked, setIsCreateNewCategoryChecked] =
     useState(false);
+  const [createNewUnit, setCreateNewUnit] = useState(false);
   const { data: sessionData, status } = useSession();
   const toast = useToast();
 
@@ -83,6 +86,7 @@ const SubmitDrink: NextPage = () => {
 
   const watchCategoryId = watch("categoryId");
   const { category: currentCategory } = useGetCategory(Number(watchCategoryId));
+  const { data: unitOptions } = api.volume.getVolumeOptions.useQuery();
 
   const addDescription = currentCategory?.addDescription;
   const addTypes = currentCategory?.addTypes;
@@ -107,6 +111,7 @@ const SubmitDrink: NextPage = () => {
         categoryId: Number(data.categoryId),
         image: productImage,
         blurHash: blurHash,
+        unitId: data.unitId != "0" ? data.unitId : null,
       });
       toast({
         title: `${data.title ?? "Product"} created!`,
@@ -131,6 +136,10 @@ const SubmitDrink: NextPage = () => {
 
   const handleIsActive = (state: boolean) => {
     setIsCreateNewCategoryChecked(state);
+  };
+
+  const handleNewUnit = (state: boolean) => {
+    setCreateNewUnit(state);
   };
 
   const handleSelectedImage = (image: string, hash: string) => {
@@ -194,8 +203,6 @@ const SubmitDrink: NextPage = () => {
             />
           </FormControl>
 
-          <CreateVolumeOption />
-
           <FormControl>
             <FormLabel>{t("elements.label.price")}</FormLabel>
             <Input
@@ -214,25 +221,34 @@ const SubmitDrink: NextPage = () => {
             <Flex w="full" justify="space-between" align="center">
               <FormLabel>{t("elements.additional_field.add_volume")}</FormLabel>
               <Switch
+                isChecked={isVolumeChecked}
                 onChange={() => setIsVolumeCheked(!isVolumeChecked)}
                 size="lg"
               />
             </Flex>
             {isVolumeChecked && (
-              <Select
-                {...register("volume", {
-                  validate: {
-                    notZero: (v) => Number(v) > 0,
-                  },
-                })}
-              >
-                <option value={0}>{t("elements.placeholder.volume")}</option>
-                {volumeOptions.map((volume) => (
-                  <option value={volume} key={volume}>
-                    {volume}
-                  </option>
-                ))}
-              </Select>
+              <HStack w="full">
+                <Select
+                  {...register("unitId", {
+                    validate: {
+                      notZero: (v) => Number(v) != 0,
+                    },
+                  })}
+                >
+                  <option value={0}>Select volume</option>
+                  {unitOptions?.map((unit) => (
+                    <option value={unit.id} key={unit.id}>
+                      {unit.amount}
+                    </option>
+                  ))}
+                </Select>
+                <Button onClick={() => setCreateNewUnit(!createNewUnit)}>
+                  Create new
+                </Button>
+              </HStack>
+            )}
+            {createNewUnit && (
+              <CreateVolumeOption handleNewUnit={handleNewUnit} />
             )}
           </VStack>
 
@@ -250,6 +266,7 @@ const SubmitDrink: NextPage = () => {
             <Flex w="full" justify="space-between" align="center">
               <FormLabel>{t("elements.additional_field.add_tag")}</FormLabel>
               <Switch
+                isChecked={isTagChecked}
                 onChange={() => setIsTagChecked(!isTagChecked)}
                 size="lg"
               />

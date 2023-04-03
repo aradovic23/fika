@@ -1,7 +1,5 @@
 import {
   Container,
-  FormControl,
-  FormErrorMessage,
   HStack,
   IconButton,
   Input,
@@ -10,10 +8,15 @@ import {
 } from "@chakra-ui/react";
 import { PlusIcon } from "@heroicons/react/24/solid";
 import type { Unit } from "@prisma/client";
+import type { FC } from "react";
 import { useForm } from "react-hook-form";
 import { api } from "../utils/api";
 
-const CreateVolumeOption = () => {
+interface Props {
+  handleNewUnit: (state: boolean) => void;
+}
+
+const CreateVolumeOption: FC<Props> = ({ handleNewUnit }) => {
   const {
     register,
     handleSubmit,
@@ -43,6 +46,7 @@ const CreateVolumeOption = () => {
             position: "top",
           });
           void utils.volume.getVolumeOptions.invalidate();
+          handleNewUnit(false);
           reset();
         },
         onError: () => {

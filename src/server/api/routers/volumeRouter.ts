@@ -21,34 +21,32 @@ export const volumeRouter = createTRPCRouter({
     const volumeOptions = await ctx.prisma.unit.findMany();
     return volumeOptions;
   }),
-  updateStore: publicProcedure
+  updateVolume: publicProcedure
     .input(
       z.object({
-        id: z.number(),
+        id: z.string(),
         data: z.object({
-          name: z.string().optional(),
-          logo: z.string().optional(),
+          amount: z.string().optional(),
         }),
       })
     )
     .mutation(async ({ ctx, input }) => {
-      const category = await ctx.prisma.store.update({
+      const category = await ctx.prisma.unit.update({
         where: {
           id: input.id,
         },
         data: {
-          name: input.data.name,
-          logo: input.data.logo,
+          amount: input.data.amount,
         },
       });
       return category;
     }),
-  deleteStore: publicProcedure
-    .input(z.object({ id: z.number() }))
+  deleteVolume: publicProcedure
+    .input(z.object({ id: z.string() }))
     .mutation(async ({ ctx, input }) => {
       const { id } = input;
       try {
-        return await ctx.prisma.store.delete({
+        return await ctx.prisma.unit.delete({
           where: {
             id,
           },
