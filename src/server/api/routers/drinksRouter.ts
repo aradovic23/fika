@@ -105,6 +105,7 @@ export const drinksRouter = createTRPCRouter({
           image: z.string().nullish(),
           isHidden: z.boolean(),
           blurHash: z.string().nullish(),
+          unitId: z.string().nullish(),
         }),
       })
     )
@@ -124,6 +125,7 @@ export const drinksRouter = createTRPCRouter({
           image: input.data.image,
           isHidden: input.data.isHidden,
           blurHash: input.data.blurHash,
+          unitId: input.data.unitId,
         },
       });
       return drink;

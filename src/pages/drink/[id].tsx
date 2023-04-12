@@ -56,6 +56,7 @@ const EditDrinkPage: NextPage = () => {
   const { category } = useGetCategory(data?.categoryId ?? 1);
   const addDescription = category?.addDescription ?? false;
   const addTypes = category?.addTypes ?? false;
+  const { data: units } = api.volume.getVolumeOptions.useQuery();
 
   const setMomentLocale = (locale: string) => moment.locale(locale);
   const currentLang: string = router.locale ?? "en";
@@ -124,6 +125,7 @@ const EditDrinkPage: NextPage = () => {
                 onSubmit={handleProductUpdate}
                 addDescription={addDescription}
                 addTypes={addTypes}
+                units={units}
               />
             </ScaleFade>
           </Stack>

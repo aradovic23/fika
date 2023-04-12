@@ -9,21 +9,24 @@ import {
   FormLabel,
   Image,
   Input,
+  Select,
   Switch,
   Textarea,
   useToast,
   VStack,
 } from "@chakra-ui/react";
-import type { Drink } from "@prisma/client";
+import type { Drink, Unit } from "@prisma/client";
 import { useTranslation } from "react-i18next";
 import ImageSearch from "./ImageSearch";
 import { api } from "../utils/api";
+import { date } from "zod";
 
 interface EditFormProps {
   drink: Drink;
   onSubmit: (data: Drink) => void;
   addDescription: boolean;
   addTypes: boolean;
+  units?: Unit[];
 }
 
 const EditDrinkForm: FC<EditFormProps> = ({
@@ -31,6 +34,7 @@ const EditDrinkForm: FC<EditFormProps> = ({
   onSubmit,
   addDescription,
   addTypes,
+  units,
 }) => {
   const {
     register,
@@ -104,10 +108,16 @@ const EditDrinkForm: FC<EditFormProps> = ({
         />
       </FormControl>
 
-      <FormControl>
-        <FormLabel htmlFor="volume">{t("elements.label.volume")}</FormLabel>
-        <Input placeholder="Type here" id="volume" {...register("volume")} />
-      </FormControl>
+      <Select
+        {...register("unitId")}
+        placeholder={!drink.unitId ? "Select a volume" : undefined}
+      >
+        {units?.map((unit) => (
+          <option value={unit.id} key={unit.id}>
+            {unit.amount}
+          </option>
+        ))}
+      </Select>
 
       <Flex
         bg="blackAlpha.100"

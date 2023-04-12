@@ -31,6 +31,16 @@ const Layout = ({ children }: LayoutProps) => {
     refetchOnWindowFocus: false,
   });
 
+  const volumesKey = getQueryKey(
+    api.volume.getVolumeOptions,
+    undefined,
+    "query"
+  );
+
+  queryClient.setQueryDefaults(volumesKey, {
+    refetchOnWindowFocus: false,
+  });
+
   return (
     <>
       <Box>

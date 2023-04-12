@@ -45,6 +45,17 @@ export const categoryRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx, input }) => {
+      if (input.data.isDefault) {
+        const defaultCategories = await ctx.prisma.category.findMany({
+          where: { isDefault: true },
+        });
+        if (defaultCategories.length > 0) {
+          await ctx.prisma.category.updateMany({
+            where: { id: { in: defaultCategories.map((c) => c.id) } },
+            data: { isDefault: false },
+          });
+        }
+      }
       const category = await ctx.prisma.category.update({
         where: {
           id: input.id,
