@@ -19,7 +19,6 @@ import type { Drink, Unit } from "@prisma/client";
 import { useTranslation } from "react-i18next";
 import ImageSearch from "./ImageSearch";
 import { api } from "../utils/api";
-import { date } from "zod";
 
 interface EditFormProps {
   drink: Drink;

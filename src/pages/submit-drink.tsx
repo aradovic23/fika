@@ -15,11 +15,9 @@ import {
   FormLabel,
   Heading,
   HStack,
-  IconButton,
   Image,
   Input,
   Select,
-  Spinner,
   Switch,
   Text,
   Textarea,
@@ -43,21 +41,6 @@ export const getServerSideProps = async ({ locale }: { locale: string }) => ({
     ])),
   },
 });
-
-// TODO: Add to DB:
-export const volumeOptions: string[] = [
-  "0.03",
-  "0.05",
-  "0.1",
-  "0.187",
-  "0.2",
-  "0.25",
-  "0.3",
-  "0.33",
-  "0.35",
-  "0.4",
-  "0.5",
-];
 
 const SubmitDrink: NextPage = () => {
   const createDrinkMutation = api.drinks.createDrink.useMutation();
