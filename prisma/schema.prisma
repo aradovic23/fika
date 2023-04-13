@@ -58,8 +58,6 @@ model Drink {
   title       String    @db.Text
   price       String    @db.Text
   volume      String?   @db.Text
-  unit        Unit?     @relation(fields: [unitId], references: [id])
-  unitId      String?
   type        String?   @db.Text
   tag         String?   @db.Text
   categoryId  Int?
@@ -69,6 +67,8 @@ model Drink {
   image       String?   @db.Text
   isHidden    Boolean   @default(false)
   blurHash    String?   @db.Text
+  unitId      String?
+  unit        Unit?     @relation(fields: [unitId], references: [id])
   category    Category? @relation(fields: [categoryId], references: [id], onDelete: Cascade)
 }
 

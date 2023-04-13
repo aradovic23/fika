@@ -1,3 +1,4 @@
+import type { Prisma } from "@prisma/client";
 import { z } from "zod";
 
 import { createTRPCRouter, publicProcedure } from "../trpc";
@@ -47,14 +48,15 @@ export const drinksRouter = createTRPCRouter({
     }),
 
   getDrinks: publicProcedure.query(async ({ ctx }) => {
+    const drinkIncludes: Prisma.DrinkInclude = {
+      category: true,
+      unit: true,
+    };
     const drinks = await ctx.prisma.drink.findMany({
       orderBy: {
         title: "asc",
       },
-      include: {
-        category: true,
-        unit: true,
-      },
+      include: drinkIncludes,
     });
     return drinks;
   }),

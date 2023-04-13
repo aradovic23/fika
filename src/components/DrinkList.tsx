@@ -1,5 +1,4 @@
 import type { FC } from "react";
-import { useState } from "react";
 import Link from "next/link";
 import { api } from "../utils/api";
 import { useQueryClient } from "@tanstack/react-query";
@@ -42,19 +41,7 @@ import type { Drink } from "@prisma/client";
 import { useTranslation } from "react-i18next";
 import { Blurhash } from "react-blurhash";
 
-export const DrinkList: FC<Drink> = ({
-  title,
-  price,
-  id,
-  volume,
-  type,
-  categoryId,
-  tag,
-  description,
-  image,
-  isHidden,
-  blurHash,
-}) => {
+export const DrinkList: FC<Drink> = (drink) => {
   const queryClient = useQueryClient();
   const drinks = api.drinks.getDrinks.useQuery();
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -77,7 +64,7 @@ export const DrinkList: FC<Drink> = ({
     }
   };
 
-  const { category } = useGetCategory(categoryId ?? 1) ?? "";
+  const { category } = useGetCategory(drink.categoryId ?? 1) ?? "";
   const { data: sessionData } = useSession();
   const hasDescription = category?.addDescription;
   const hasTypes = category?.addTypes;
@@ -85,9 +72,10 @@ export const DrinkList: FC<Drink> = ({
   const bg = useColorModeValue("whiteAlpha.800", "blackAlpha.400");
   const color = useColorModeValue("gray.900", "gray.100");
 
-  const showHiddenProduct = isHidden && sessionData?.user?.role === "ADMIN";
+  const showHiddenProduct =
+    drink.isHidden && sessionData?.user?.role === "ADMIN";
 
-  const titleOverflow = title.length >= 13;
+  const titleOverflow = drink.title.length >= 13;
 
   interface ImageWithBlurHashProps extends ImageProps {
     blurHash?: string | null;
@@ -139,11 +127,11 @@ export const DrinkList: FC<Drink> = ({
             <ImageWithBlurhash
               boxSize="10rem"
               alt="image"
-              src={((hasDescription && image) || category?.url) ?? ""}
+              src={((hasDescription && drink.image) || category?.url) ?? ""}
               objectFit="cover"
               rounded="md"
               borderRightRadius="0"
-              blurHash={blurHash}
+              blurHash={drink.blurHash}
             />
           </Box>
 
@@ -155,7 +143,7 @@ export const DrinkList: FC<Drink> = ({
             overflow="auto"
           >
             <Text fontSize="xl" fontWeight="bold" noOfLines={1}>
-              {title}
+              {drink.title}
             </Text>
             {showHiddenProduct && (
               <HStack
@@ -169,7 +157,7 @@ export const DrinkList: FC<Drink> = ({
                 </Tag>
               </HStack>
             )}
-            {tag && !showHiddenProduct && (
+            {drink.tag && !showHiddenProduct && (
               <Box
                 position="absolute"
                 top={!titleOverflow ? "2" : "10"}
@@ -177,26 +165,26 @@ export const DrinkList: FC<Drink> = ({
               >
                 <Tag variant="subtle" colorScheme="primary">
                   <TagLeftIcon boxSize="12px" as={StarIcon} />
-                  <TagLabel>{tag.toUpperCase()}</TagLabel>
+                  <TagLabel>{drink.tag.toUpperCase()}</TagLabel>
                 </Tag>
               </Box>
             )}
-            <Text fontSize="lg">{price} RSD</Text>
+            <Text fontSize="lg">{drink.price} RSD</Text>
             <HStack alignItems="flex-start" spacing={3}>
               <Tag variant="subtle">
                 <TagLeftIcon boxSize="12px" as={Squares2X2Icon} />
                 <TagLabel>{category?.categoryName}</TagLabel>
               </Tag>
-              {volume && (
+              {drink.unitId && (
                 <Tag variant="subtle">
                   <TagLeftIcon boxSize="12px" as={BeakerIcon} />
-                  <TagLabel>{volume}</TagLabel>
+                  <TagLabel>{drink.unit.amount}</TagLabel>
                 </Tag>
               )}
               {hasTypes && (
                 <Tag variant="subtle">
                   <TagLeftIcon boxSize="12px" as={TagIcon} />
-                  <TagLabel>{type}</TagLabel>
+                  <TagLabel>{drink.type}</TagLabel>
                 </Tag>
               )}
             </HStack>
@@ -208,7 +196,7 @@ export const DrinkList: FC<Drink> = ({
                     size="sm"
                     aria-label="edit"
                     as={Link}
-                    href={`/drink/${id}`}
+                    href={`/drink/${drink.id}`}
                   >
                     Edit
                   </Button>
@@ -219,7 +207,7 @@ export const DrinkList: FC<Drink> = ({
                     size="sm"
                     aria-label="delete"
                     onClick={() => {
-                      onDeleteHandler(id);
+                      onDeleteHandler(drink.id);
                     }}
                   >
                     Delete
@@ -250,15 +238,15 @@ export const DrinkList: FC<Drink> = ({
       >
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>{title}</ModalHeader>
+          <ModalHeader>{drink.title}</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <VStack spacing={5}>
-              <Text>{description}</Text>
-              {image && (
+              <Text>{drink.description}</Text>
+              {drink.image && (
                 <Image
                   alt="product-image"
-                  src={image}
+                  src={drink.image}
                   boxSize="sm"
                   objectFit="cover"
                   rounded="md"
