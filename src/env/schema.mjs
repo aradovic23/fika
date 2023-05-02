@@ -23,6 +23,7 @@ export const serverSchema = z.object({
   GOOGLE_CLIENT_SECRET: z.string(),
   GITHUB_ID: z.string(),
   GITHUB_SECRET: z.string(),
+  UPLOAD_THING: z.string(),
 });
 
 /**
@@ -39,6 +40,7 @@ export const serverEnv = {
   GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
   GITHUB_ID: process.env.GITHUB_ID,
   GITHUB_SECRET: process.env.GITHUB_SECRET,
+  UPLOAD_THING: process.env.UPLOADTHING_SECRET,
 };
 
 /**

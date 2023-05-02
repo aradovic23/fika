@@ -19,6 +19,9 @@ const config = {
       "lh3.googleusercontent.com",
     ],
   },
+  experimental: {
+    esmExternals: false,
+  },
 };
 
 export default config;
