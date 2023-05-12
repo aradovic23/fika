@@ -8,6 +8,8 @@ import theme from "../../theme";
 import Layout from "../components/Layout";
 import { appWithTranslation } from "next-i18next";
 import nextI18nConfig from "../../next-i18next.config.mjs";
+import "@uploadthing/react/styles.css";
+
 
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,

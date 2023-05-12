@@ -1488,10 +1488,10 @@
     "@typescript-eslint/types" "5.53.0"
     eslint-visitor-keys "^3.3.0"
 
-"@uploadthing/react@^2.0.1":
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/@uploadthing/react/-/react-2.0.1.tgz#4eaa711bc41c33087063737b42c936d824ea92d4"
-  integrity sha512-wWqQBdFwZkIqlfwUledhzosT0bPrKuC/dS3Vx8iHRS3XsTugEroBEe5wU4bptXNkLk8C9yic/6hu+7lihDgWYg==
+"@uploadthing/react@^3.0.1":
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/@uploadthing/react/-/react-3.0.1.tgz#2b4603fe75949e442d3e1e9d47d820e23e733ddc"
+  integrity sha512-GwuUj+WxLYtq6Af/sJzLl/9T58bxz9X7C+z39e+sR8OnSgWPGmChQGJ6Lq+efeBD+fRyQ09qVbY4El32CL8opA==
 
 "@zag-js/element-size@0.3.1":
   version "0.3.1"
@@ -4084,10 +4084,10 @@ update-browserslist-db@^1.0.10:
     escalade "^3.1.1"
     picocolors "^1.0.0"
 
-uploadthing@^2.0.1:
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/uploadthing/-/uploadthing-2.0.1.tgz#5b99edf32595ef21bc450616909bd062291faef5"
-  integrity sha512-KjOfJv8yBndB91UI1n0y2VoBQ3OveplAIB0poyx7lo1CSX6cIOD5y9PFtsD0in+g5WWqakdOj8YKJwUOfvtd9w==
+uploadthing@^3.0.1:
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/uploadthing/-/uploadthing-3.0.1.tgz#b2838aa973d98f19cdc58137c8657a3fe259dd63"
+  integrity sha512-1PNvRRxk5QQwSB+Uiv7v7asVdvzb9XiuYRV6RvaKa04ukvAcs5O/Jni+qmjWkQPTtZKpMFRu3H+UMCqs51aSTA==
 
 uri-js@^4.2.2:
   version "4.4.1"

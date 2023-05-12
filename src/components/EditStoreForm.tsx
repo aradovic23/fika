@@ -1,10 +1,11 @@
-import { Button, Divider, FormLabel, Heading, Image, Input, Text, useToast } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import { Button, Divider, FormLabel, Heading, Input, Text, useToast } from "@chakra-ui/react";
+import { useEffect } from "react";
 import type { FC } from "react";
 import { useForm } from "react-hook-form";
 import { Form } from "./Form";
 import { api } from "../utils/api";
-import { MultiUploader } from "./MultiUploader";
+import { UploadButton } from "@uploadthing/react";
+import type { OurFileRouter } from "../server/uploadthing";
 
 interface Props {
   name?: string;
@@ -19,9 +20,6 @@ const EditStoreForm: FC<Props> = (store) => {
     handleSubmit,
     formState: { isSubmitting },
   } = useForm({ defaultValues: store });
-
-  const [uploadedImage, setUploadedImage] = useState<string | undefined>('');
-  const [isImageUploading, setIsImageUploading] = useState(false);
 
   const updateStore = api.settings.updateStore.useMutation();
 
@@ -39,11 +37,10 @@ const EditStoreForm: FC<Props> = (store) => {
         id: store.id ?? 0,
         data: {
           name: store.name,
-          logo: uploadedImage ? uploadedImage : store.logo,
+          logo: store.logo,
         },
       });
       await utils.settings.getStore.invalidate();
-      setUploadedImage('');
       toast({
         title: `Update successful`,
         description: `${store.name ?? ""} was successfully updated!`,
@@ -56,39 +53,30 @@ const EditStoreForm: FC<Props> = (store) => {
     }
   };
 
-  const handleUploadedImage = (image: string | undefined) => {
-    setUploadedImage(image);
-  }
-
-  const handleImageIsUploading = (state: boolean) => {
-    setIsImageUploading(state)
-  }
 
   return (
     <Form onSubmit={handleSubmit(handleStoreUpdate)}>
       <Heading size="md">Edit store info</Heading>
       <FormLabel htmlFor="name">Store name</FormLabel>
       <Input placeholder="name" id="name" {...register("name")} />
-      <FormLabel htmlFor="logo">Logo Image</FormLabel>
+      <FormLabel htmlFor="logo">Paste Image URL</FormLabel>
       <Input placeholder="logo" id="logo" {...register("logo")} />
       <Divider />
       <Text textAlign="center">OR</Text>
       <Divider />
-      {uploadedImage ? (
-        <>
-          <Text opacity={0.5}>Preview of new image</Text>
-          <Image alt='test' src={uploadedImage} />
-        </>
-      ) : <MultiUploader handleUploadedImage={handleUploadedImage} handleLoadingState={handleImageIsUploading} />}
 
-      {isImageUploading && 'uploading...'}
+      <UploadButton<OurFileRouter>
+        endpoint="imageUploader"
+        onClientUploadComplete={() => {
+          alert("Upload Completed");
+        }}
+      />
 
       <Button
         colorScheme="primary"
         type="submit"
         mb="4"
         isLoading={isSubmitting}
-        isDisabled={isImageUploading}
       >
         Update
       </Button>
