@@ -1,5 +1,5 @@
-import { Button, Divider, FormLabel, Heading, Input, Text, useToast } from "@chakra-ui/react";
-import { useEffect } from "react";
+import { Button, Divider, FormLabel, Heading, Image, Input, Text, useToast } from "@chakra-ui/react";
+import { useEffect, useState } from "react";
 import type { FC } from "react";
 import { useForm } from "react-hook-form";
 import { Form } from "./Form";
@@ -11,6 +11,11 @@ interface Props {
   name?: string;
   logo?: string;
   id?: number;
+}
+
+interface File {
+  fileKey: string;
+  fileUrl: string;
 }
 
 const EditStoreForm: FC<Props> = (store) => {
@@ -27,6 +32,8 @@ const EditStoreForm: FC<Props> = (store) => {
 
   const toast = useToast();
 
+  const [file, setFile] = useState<File | null>();
+
   useEffect(() => {
     reset(store);
   }, [store, reset]);
@@ -37,10 +44,11 @@ const EditStoreForm: FC<Props> = (store) => {
         id: store.id ?? 0,
         data: {
           name: store.name,
-          logo: store.logo,
+          logo: file?.fileUrl ? file.fileUrl : store.logo,
         },
       });
       await utils.settings.getStore.invalidate();
+      setFile(null);
       toast({
         title: `Update successful`,
         description: `${store.name ?? ""} was successfully updated!`,
@@ -67,10 +75,16 @@ const EditStoreForm: FC<Props> = (store) => {
 
       <UploadButton<OurFileRouter>
         endpoint="imageUploader"
-        onClientUploadComplete={() => {
-          alert("Upload Completed");
+        onClientUploadComplete={(res) => {
+          if (Array.isArray(res) && res.length > 0){
+            setFile(res[0])
+          }
         }}
       />
+
+      {file && (
+        <Image alt="logo" src={file.fileUrl} />
+      )}
 
       <Button
         colorScheme="primary"
