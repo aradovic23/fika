@@ -1,13 +1,14 @@
 ## features
 
-- update DrinkList so it accepts the whole object instead of desctrucutring
+- recommended row product and flag recc flag
+- add styles
 - implement landing page base structure
-- continue with translations && look into next-itl
-- separate forms to components
-- add custom theme colors
+- on page leave animation single product
 - add back to top btn
 - add cart - zustand
+- separate forms to components
+- continue with translations && look into next-itl
 
 ## bugs
 
-- fix any type for amount in drinkList
+- fix typescript for drinks unit undefined null type error

@@ -1,10 +1,9 @@
-import type { FC } from "react";
 import Link from "next/link";
 import { api } from "../utils/api";
-import { useQueryClient } from "@tanstack/react-query";
 import { useGetCategory } from "../hooks/useGetCategory";
 import { useSession } from "next-auth/react";
 import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/outline";
+import type { Prisma } from "@prisma/client";
 
 import {
   EyeIcon,
@@ -37,21 +36,20 @@ import {
   useDisclosure,
   VStack,
 } from "@chakra-ui/react";
-import type { Drink } from "@prisma/client";
 import { useTranslation } from "react-i18next";
 import { Blurhash } from "react-blurhash";
 
-export const DrinkList: FC<Drink> = (drink) => {
-  const queryClient = useQueryClient();
-  const drinks = api.drinks.getDrinks.useQuery();
+type DrinkWithUnits = Prisma.DrinkGetPayload<{ include: { unit: true } }>
+
+export const DrinkList = (drink: DrinkWithUnits) => {
+  const utils = api.useContext();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const { t } = useTranslation();
 
   const { mutate: deleteDrink } = api.drinks.deleteDrink.useMutation({
     async onSuccess() {
-      void queryClient.invalidateQueries({ queryKey: ["drink"] });
-      await drinks.refetch();
+      await utils.drinks.getDrinks.invalidate();
     },
     onError(error) {
       console.log(error);
@@ -175,7 +173,7 @@ export const DrinkList: FC<Drink> = (drink) => {
                 <TagLeftIcon boxSize="12px" as={Squares2X2Icon} />
                 <TagLabel>{category?.categoryName}</TagLabel>
               </Tag>
-              {drink.unitId && (
+              {drink.unitId && drink.unit && (
                 <Tag variant="subtle">
                   <TagLeftIcon boxSize="12px" as={BeakerIcon} />
                   <TagLabel>{drink.unit.amount}</TagLabel>

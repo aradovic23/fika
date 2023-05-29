@@ -16,7 +16,6 @@ import {
   ScaleFade,
   Select,
   SimpleGrid,
-  Skeleton,
   Stack,
 } from "@chakra-ui/react";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/solid";
@@ -24,7 +23,8 @@ import { useTranslation } from "react-i18next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import nextI18nConfig from "../../next-i18next.config.mjs";
 import { useSession } from "next-auth/react";
-import { PageSpinner } from "../components/LoaderSpinner";
+import SkeletonLoader from "../components/SkeletonLoader";
+
 
 export const getServerSideProps = async ({ locale }: { locale: string }) => ({
   props: {
@@ -143,21 +143,23 @@ const Drinks: NextPage = () => {
           >
             <SimpleGrid spacing="5" minChildWidth="20rem">
               {isLoading ? (
-                <PageSpinner />
+                <SkeletonLoader />
               ) : filteredDrinks.length === 0 ? (
                 <ScaleFade initialScale={0.8} in unmountOnExit>
                   <NoResults />
                 </ScaleFade>
               ) : (
                 filteredDrinks.map((drink) => (
-                  <Skeleton key={drink.id} isLoaded={!isLoading} rounded="md">
-                    <DrinkList key={drink.id} {...drink} />
-                  </Skeleton>
+                  <DrinkList
+                    key={drink.id}
+                    {...drink}
+                  />
                 ))
               )}
             </SimpleGrid>
           </GridItem>
         </Grid>
+
       </Container>
     </>
   );
