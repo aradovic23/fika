@@ -47,7 +47,7 @@ const Settings: NextPage = () => {
   });
 
   const handleDeleteStore = (id: number) => {
-    if (!window.confirm("u sure?")) {
+    if (!window.confirm("Are you sure you want to delete?")) {
       return;
     }
     deleteStore({ id });

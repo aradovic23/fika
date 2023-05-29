@@ -90,9 +90,10 @@ model Category {
 }
 
 model Store {
-  id   Int    @id @default(autoincrement())
-  name String
-  logo String
+  id      Int     @id @default(autoincrement())
+  name    String
+  fileKey String?
+  fileUrl String?
 }
 
 enum Role {

@@ -49,10 +49,10 @@ const Home: NextPage = () => {
 
       <Center h="calc(100vh)">
         <VStack spacing="5">
-          {storeData && (
+          {storeData?.fileUrl && (
             <Image
               alt="logo"
-              src={storeData.logo}
+              src={storeData.fileUrl}
               boxSize="300px"
               rounded="md"
               objectFit="cover"

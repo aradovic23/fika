@@ -1,4 +1,4 @@
-import { Button, Divider, FormLabel, Heading, Image, Input, Text, useToast } from "@chakra-ui/react";
+import { Box, Button, Divider, FormControl, FormLabel, Heading, HStack, Image, Input, Text, useToast, VStack } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import type { FC } from "react";
 import { useForm } from "react-hook-form";
@@ -6,10 +6,13 @@ import { Form } from "./Form";
 import { api } from "../utils/api";
 import { UploadButton } from "@uploadthing/react";
 import type { OurFileRouter } from "../server/uploadthing";
+import type { Store } from "@prisma/client";
 
 interface Props {
   name?: string;
-  logo?: string;
+  externalUrl?: string;
+  fileKey?: string;
+  fileUrl?: string;
   id?: number;
 }
 
@@ -18,7 +21,7 @@ interface File {
   fileUrl: string;
 }
 
-const EditStoreForm: FC<Props> = (store) => {
+const EditStoreForm: FC<Store> = (store) => {
   const {
     register,
     reset,
@@ -38,13 +41,14 @@ const EditStoreForm: FC<Props> = (store) => {
     reset(store);
   }, [store, reset]);
 
-  const handleStoreUpdate = async (store: Props) => {
+  const handleStoreUpdate = async (store: Store) => {
     try {
       await updateStore.mutateAsync({
         id: store.id ?? 0,
         data: {
           name: store.name,
-          logo: file?.fileUrl ? file.fileUrl : store.logo,
+          fileKey: file?.fileKey,
+          fileUrl: file?.fileUrl,
         },
       });
       await utils.settings.getStore.invalidate();
@@ -65,25 +69,35 @@ const EditStoreForm: FC<Props> = (store) => {
   return (
     <Form onSubmit={handleSubmit(handleStoreUpdate)}>
       <Heading size="md">Edit store info</Heading>
-      <FormLabel htmlFor="name">Store name</FormLabel>
-      <Input placeholder="name" id="name" {...register("name")} />
-      <FormLabel htmlFor="logo">Paste Image URL</FormLabel>
-      <Input placeholder="logo" id="logo" {...register("logo")} />
-      <Divider />
-      <Text textAlign="center">OR</Text>
-      <Divider />
-
-      <UploadButton<OurFileRouter>
-        endpoint="imageUploader"
-        onClientUploadComplete={(res) => {
-          if (Array.isArray(res) && res.length > 0){
-            setFile(res[0])
-          }
-        }}
-      />
+      <FormControl>
+        <FormLabel htmlFor="name">Store name</FormLabel>
+        <Input placeholder="name" id="name" {...register("name")} />
+      </FormControl>
+      {!file && (
+        <FormControl>
+          <FormLabel>Upload logo</FormLabel>
+          <Box p="5" border="1px" borderColor="chakra-placeholder-color" rounded="lg">
+            <UploadButton<OurFileRouter>
+              endpoint="imageUploader"
+              onClientUploadComplete={(res) => {
+                if (Array.isArray(res) && res.length > 0) {
+                  setFile(res[0])
+                }
+              }}
+            />
+          </Box>
+        </FormControl>
+      )}
 
       {file && (
-        <Image alt="logo" src={file.fileUrl} />
+        <VStack bg="green.300" p="1" rounded="lg">
+          <Image alt="logo"
+            src={file.fileUrl}
+            boxSize="100px"
+            rounded="lg"
+            objectFit="cover" />
+          <Text color="black">Image ready!</Text>
+        </VStack>
       )}
 
       <Button

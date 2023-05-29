@@ -48,10 +48,10 @@ const Navbar: FC = () => {
       maxH="64px"
     >
       <HStack as={NextLink} href="/">
-        {storeData && (
+        {storeData?.fileUrl && (
           <Image
             alt="logo"
-            src={storeData?.logo}
+            src={storeData?.fileUrl}
             boxSize="30px"
             rounded="full"
             objectFit="cover"

@@ -1,10 +1,10 @@
 import type { Prisma } from "@prisma/client";
 import { z } from "zod";
 
-import { createTRPCRouter, publicProcedure } from "../trpc";
+import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
 
 export const drinksRouter = createTRPCRouter({
-  createDrink: publicProcedure
+  createDrink: protectedProcedure
     .input(
       z.object({
         title: z.string(),
@@ -74,7 +74,7 @@ export const drinksRouter = createTRPCRouter({
       });
       if (singleDrink) return singleDrink;
     }),
-  deleteDrink: publicProcedure
+  deleteDrink: protectedProcedure
     .input(z.object({ id: z.string() }))
     .mutation(async ({ ctx, input }) => {
       const { id } = input;
@@ -92,7 +92,7 @@ export const drinksRouter = createTRPCRouter({
     const drinks = await ctx.prisma.drink.findMany();
     return drinks;
   }),
-  updateDrink: publicProcedure
+  updateDrink: protectedProcedure
     .input(
       z.object({
         id: z.string(),
@@ -132,7 +132,7 @@ export const drinksRouter = createTRPCRouter({
       });
       return drink;
     }),
-  removeProductImage: publicProcedure
+  removeProductImage: protectedProcedure
     .input(
       z.object({
         id: z.string(),

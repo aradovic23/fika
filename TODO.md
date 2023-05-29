@@ -1,7 +1,10 @@
 ## features
 
+- improve settings ui
+- extract modal to component
+- alert to component
 - recommended row product and flag recc flag
-- add styles
+- add styles with inter font
 - implement landing page base structure
 - on page leave animation single product
 - add back to top btn

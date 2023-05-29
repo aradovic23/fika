@@ -179,7 +179,7 @@ export const DrinkList = (drink: DrinkWithUnits) => {
                   <TagLabel>{drink.unit.amount}</TagLabel>
                 </Tag>
               )}
-              {hasTypes && (
+              {hasTypes && drink.type && (
                 <Tag variant="subtle">
                   <TagLeftIcon boxSize="12px" as={TagIcon} />
                   <TagLabel>{drink.type}</TagLabel>

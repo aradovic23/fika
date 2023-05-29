@@ -7,14 +7,16 @@ export const settingsRouter = createTRPCRouter({
     .input(
       z.object({
         name: z.string(),
-        logo: z.string(),
+        fileUrl: z.string().nullish(),
+        fileKey: z.string().nullish(),
       })
     )
     .mutation(async ({ input, ctx }) => {
       const store = await ctx.prisma.store.create({
         data: {
           name: input.name,
-          logo: input.logo,
+          fileUrl: input.fileUrl,
+          fileKey: input.fileKey,
         },
       });
       return store;
@@ -29,7 +31,8 @@ export const settingsRouter = createTRPCRouter({
         id: z.number(),
         data: z.object({
           name: z.string().optional(),
-          logo: z.string().optional(),
+          fileUrl: z.string().nullish(),
+          fileKey: z.string().nullish(),
         }),
       })
     )
@@ -40,7 +43,8 @@ export const settingsRouter = createTRPCRouter({
         },
         data: {
           name: input.data.name,
-          logo: input.data.logo,
+          fileUrl: input.data.fileUrl,
+          fileKey: input.data.fileKey,
         },
       });
       return category;
