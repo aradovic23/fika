@@ -1,5 +1,6 @@
 ## features
 
+- generate shades with color for UI customization Values.js
 - improve settings ui
 - extract modal to component
 - alert to component
