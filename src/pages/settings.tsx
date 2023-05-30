@@ -7,8 +7,11 @@ import {
   AlertTitle,
   Button,
   Container,
+  extendTheme,
   Heading,
   HStack,
+  Input,
+  Text,
   VStack,
 } from "@chakra-ui/react";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
@@ -20,6 +23,10 @@ import StoreInfo from "../components/StoreInfo";
 import { api } from "../utils/api";
 import EditStoreForm from "../components/EditStoreForm";
 import { PageSpinner } from "../components/LoaderSpinner";
+import type { FormEvent } from "react";
+import { useState } from "react";
+import { Sketch } from "@uiw/react-color";
+import Values from "values.js";
 
 export const getServerSideProps = async ({ locale }: { locale: string }) => ({
   props: {
@@ -30,6 +37,10 @@ export const getServerSideProps = async ({ locale }: { locale: string }) => ({
   },
 });
 
+interface Shades {
+  [key: number]: string;
+}
+
 const Settings: NextPage = () => {
   const { data: sessionData, status } = useSession();
 
@@ -37,6 +48,8 @@ const Settings: NextPage = () => {
 
   const utils = api.useContext();
 
+  const [hex, setHex] = useState("#fff");
+  const [primary, setPrimary] = useState({})
   const { mutate: deleteStore } = api.settings.deleteStore.useMutation({
     async onSuccess() {
       await utils.settings.getStore.invalidate();
@@ -46,12 +59,39 @@ const Settings: NextPage = () => {
     },
   });
 
+
   const handleDeleteStore = (id: number) => {
     if (!window.confirm("Are you sure you want to delete?")) {
       return;
     }
     deleteStore({ id });
   };
+
+  const handleSubmitColors = (e: FormEvent<Element>) => {
+    e.preventDefault();
+    try {
+      const colors: Values[] = new Values(hex).all(11);
+      const shades: Shades = {};
+
+      colors.forEach((color: Values, i: number) => {
+        const weight: number = (i + 1) * 50;
+        if (weight <= 500) {
+          shades[weight] = color.hexString();
+        }
+      })
+
+      const primary = {
+        primary: shades,
+      }
+
+
+      setPrimary(primary);
+      console.log(primary)
+
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   if (status === "loading" || isLoading) {
     return <PageSpinner />;
@@ -106,6 +146,27 @@ const Settings: NextPage = () => {
             </HStack>
           )}
           {sessionData?.user?.name}
+        </VStack>
+        <VStack mt="2">
+          <Heading size="md">Color settings</Heading>
+          <Text>Select a color</Text>
+          <Text color="grey">This will be your primary color throughout the app!</Text>
+          {/* <Sketch
+            color={hex}
+            onChange={(color) => {
+              setHex(color.hex);
+            }}
+          /> */}
+          <VStack>
+            <form onSubmit={handleSubmitColors}>
+              <Input
+                value={hex}
+                onChange={(e) => setHex(e.target.value)}
+                placeholder={hex ?? 'color'}
+              />
+              <Button colorScheme="primary" type="submit">Generate Color Scheme</Button>
+            </form>
+          </VStack>
         </VStack>
       </Container>
     </>

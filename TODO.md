@@ -1,6 +1,7 @@
 ## features
 
-- generate shades with color for UI customization Values.js
+- fix color shade values to go to 900
+- add color to DB and connect it to app
 - improve settings ui
 - extract modal to component
 - alert to component
