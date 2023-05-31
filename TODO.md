@@ -1,10 +1,7 @@
 ## features
 
-- fix color shade values to go to 900
-- add color to DB and connect it to app
 - improve settings ui
-- extract modal to component
-- alert to component
+- ability to show hide hidden products for admin
 - recommended row product and flag recc flag
 - add styles with inter font
 - implement landing page base structure
@@ -13,6 +10,7 @@
 - add cart - zustand
 - separate forms to components
 - continue with translations && look into next-itl
+- color customization
 
 ## bugs
 

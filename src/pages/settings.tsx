@@ -1,17 +1,11 @@
 import { type NextPage } from "next";
 import Head from "next/head";
 import {
-  Alert,
-  AlertDescription,
-  AlertIcon,
-  AlertTitle,
   Button,
   Container,
-  extendTheme,
   Heading,
   HStack,
-  Input,
-  Text,
+  Image,
   VStack,
 } from "@chakra-ui/react";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
@@ -19,14 +13,10 @@ import nextI18nConfig from "../../next-i18next.config.mjs";
 import { useSession } from "next-auth/react";
 import AccessDenied from "../components/AccessDenied";
 import CreateStoreForm from "../components/CreateStoreForm";
-import StoreInfo from "../components/StoreInfo";
 import { api } from "../utils/api";
 import EditStoreForm from "../components/EditStoreForm";
 import { PageSpinner } from "../components/LoaderSpinner";
-import type { FormEvent } from "react";
-import { useState } from "react";
-import { Sketch } from "@uiw/react-color";
-import Values from "values.js";
+import Notice from "../components/Notice";
 
 export const getServerSideProps = async ({ locale }: { locale: string }) => ({
   props: {
@@ -37,9 +27,6 @@ export const getServerSideProps = async ({ locale }: { locale: string }) => ({
   },
 });
 
-interface Shades {
-  [key: number]: string;
-}
 
 const Settings: NextPage = () => {
   const { data: sessionData, status } = useSession();
@@ -48,8 +35,6 @@ const Settings: NextPage = () => {
 
   const utils = api.useContext();
 
-  const [hex, setHex] = useState("#fff");
-  const [primary, setPrimary] = useState({})
   const { mutate: deleteStore } = api.settings.deleteStore.useMutation({
     async onSuccess() {
       await utils.settings.getStore.invalidate();
@@ -61,37 +46,11 @@ const Settings: NextPage = () => {
 
 
   const handleDeleteStore = (id: number) => {
-    if (!window.confirm("Are you sure you want to delete?")) {
+    if (!window.confirm("Are you sure you want to delete this store?")) {
       return;
     }
     deleteStore({ id });
   };
-
-  const handleSubmitColors = (e: FormEvent<Element>) => {
-    e.preventDefault();
-    try {
-      const colors: Values[] = new Values(hex).all(11);
-      const shades: Shades = {};
-
-      colors.forEach((color: Values, i: number) => {
-        const weight: number = (i + 1) * 50;
-        if (weight <= 500) {
-          shades[weight] = color.hexString();
-        }
-      })
-
-      const primary = {
-        primary: shades,
-      }
-
-
-      setPrimary(primary);
-      console.log(primary)
-
-    } catch (error) {
-      console.log(error);
-    }
-  }
 
   if (status === "loading" || isLoading) {
     return <PageSpinner />;
@@ -112,13 +71,7 @@ const Settings: NextPage = () => {
         <VStack spacing={5}>
           <Heading>Settings</Heading>
           {!storeData && (
-            <Alert status="info" rounded="md">
-              <AlertIcon />
-              <AlertTitle>No stores</AlertTitle>
-              <AlertDescription>
-                There is not a store added yet. Add a store details below.
-              </AlertDescription>
-            </Alert>
+            <Notice status="info" title="No store" description="Please add new store" />
           )}
           {!storeData && <CreateStoreForm />}
           {storeData && (
@@ -131,14 +84,12 @@ const Settings: NextPage = () => {
               shadow="sm"
             >
               <VStack spacing="1">
-                <StoreInfo {...storeData} />
-                <Button
-                  variant="ghost"
-                  colorScheme="red"
-                  onClick={() => handleDeleteStore(storeData?.id ?? 1)}
-                >
-                  Delete store
-                </Button>
+                <Image
+                  src={storeData.fileUrl ?? ""}
+                  alt="image"
+                  rounded="lg"
+                  boxSize="xs"
+                  objectFit="cover" />
               </VStack>
               <VStack spacing="3">
                 <EditStoreForm {...storeData} />
@@ -146,27 +97,15 @@ const Settings: NextPage = () => {
             </HStack>
           )}
           {sessionData?.user?.name}
-        </VStack>
-        <VStack mt="2">
-          <Heading size="md">Color settings</Heading>
-          <Text>Select a color</Text>
-          <Text color="grey">This will be your primary color throughout the app!</Text>
-          {/* <Sketch
-            color={hex}
-            onChange={(color) => {
-              setHex(color.hex);
-            }}
-          /> */}
-          <VStack>
-            <form onSubmit={handleSubmitColors}>
-              <Input
-                value={hex}
-                onChange={(e) => setHex(e.target.value)}
-                placeholder={hex ?? 'color'}
-              />
-              <Button colorScheme="primary" type="submit">Generate Color Scheme</Button>
-            </form>
-          </VStack>
+          <HStack>
+            <Button
+              variant="ghost"
+              colorScheme="red"
+              onClick={() => handleDeleteStore(storeData?.id ?? 1)}
+            >
+              Delete store
+            </Button>
+          </HStack>
         </VStack>
       </Container>
     </>

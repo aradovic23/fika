@@ -20,14 +20,6 @@ import {
   HStack,
   IconButton,
   Image,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
-  ScaleFade,
   Tag,
   TagLabel,
   TagLeftIcon,
@@ -38,6 +30,8 @@ import {
 } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
 import { Blurhash } from "react-blurhash";
+import { AnimatePresence, delay, motion } from "framer-motion";
+import Dialog from "./Dialog";
 
 type DrinkWithUnits = Prisma.DrinkGetPayload<{ include: { unit: true } }>
 
@@ -110,7 +104,9 @@ export const DrinkList = (drink: DrinkWithUnits) => {
 
   return (
     <>
-      <ScaleFade initialScale={0.8} in unmountOnExit>
+      <motion.div
+        style={{ y: Math.random() * 50 }} animate={{ y: 0 }} transition={{ type: "spring" }}
+      >
         <HStack
           shadow="md"
           maxH="13rem"
@@ -227,39 +223,14 @@ export const DrinkList = (drink: DrinkWithUnits) => {
             </HStack>
           </VStack>
         </HStack>
-      </ScaleFade>
-      <Modal
+      </motion.div>
+
+      <Dialog
         isOpen={isOpen}
         onClose={onClose}
-        motionPreset="slideInBottom"
-        isCentered
-      >
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>{drink.title}</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            <VStack spacing={5}>
-              <Text>{drink.description}</Text>
-              {drink.image && (
-                <Image
-                  alt="product-image"
-                  src={drink.image}
-                  boxSize="sm"
-                  objectFit="cover"
-                  rounded="md"
-                />
-              )}
-            </VStack>
-          </ModalBody>
-
-          <ModalFooter>
-            <Button colorScheme="primary" mr={3} onClick={onClose}>
-              Close
-            </Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
+        title={drink.title}
+        description={drink.description}
+        image={drink.image} />
     </>
   );
 };

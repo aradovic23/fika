@@ -1,4 +1,4 @@
-import { Box, Button, Divider, FormControl, FormLabel, Heading, HStack, Image, Input, Text, useToast, VStack } from "@chakra-ui/react";
+import { Box, Button, FormControl, FormLabel, Heading, Image, Input, Text, useToast, VStack } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import type { FC } from "react";
 import { useForm } from "react-hook-form";
@@ -7,14 +7,6 @@ import { api } from "../utils/api";
 import { UploadButton } from "@uploadthing/react";
 import type { OurFileRouter } from "../server/uploadthing";
 import type { Store } from "@prisma/client";
-
-interface Props {
-  name?: string;
-  externalUrl?: string;
-  fileKey?: string;
-  fileUrl?: string;
-  id?: number;
-}
 
 interface File {
   fileKey: string;

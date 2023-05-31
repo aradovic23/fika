@@ -8,10 +8,8 @@ import {
   AlertTitle,
   Button,
   Center,
-  Flex,
   Heading,
   Image,
-  Spinner,
   VStack,
 } from "@chakra-ui/react";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
