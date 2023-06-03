@@ -54,22 +54,23 @@ model VerificationToken {
 }
 
 model Drink {
-  id          String    @id @default(cuid())
-  title       String    @db.Text
-  price       String    @db.Text
-  volume      String?   @db.Text
-  type        String?   @db.Text
-  tag         String?   @db.Text
-  categoryId  Int?
-  createdDate DateTime  @default(now())
-  description String?   @db.Text
-  updatedAt   DateTime  @default(now())
-  image       String?   @db.Text
-  isHidden    Boolean   @default(false)
-  blurHash    String?   @db.Text
-  unitId      String?
-  unit        Unit?     @relation(fields: [unitId], references: [id])
-  category    Category? @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  id            String    @id @default(cuid())
+  title         String    @db.Text
+  price         String    @db.Text
+  volume        String?   @db.Text
+  type          String?   @db.Text
+  tag           String?   @db.Text
+  categoryId    Int?
+  createdDate   DateTime  @default(now())
+  description   String?   @db.Text
+  updatedAt     DateTime  @default(now())
+  image         String?   @db.Text
+  isHidden      Boolean   @default(false)
+  blurHash      String?   @db.Text
+  unitId        String?
+  unit          Unit?     @relation(fields: [unitId], references: [id])
+  category      Category? @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  isRecommended Boolean   @default(false)
 }
 
 model Unit {

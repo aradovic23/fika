@@ -108,6 +108,7 @@ export const drinksRouter = createTRPCRouter({
           isHidden: z.boolean(),
           blurHash: z.string().nullish(),
           unitId: z.string().nullish(),
+          isRecommended: z.boolean(),
         }),
       })
     )
@@ -128,6 +129,7 @@ export const drinksRouter = createTRPCRouter({
           isHidden: input.data.isHidden,
           blurHash: input.data.blurHash,
           unitId: input.data.unitId,
+          isRecommended: input.data.isRecommended,
         },
       });
       return drink;
@@ -149,6 +151,35 @@ export const drinksRouter = createTRPCRouter({
         data: {
           updatedAt: new Date(),
           image: input.data.image,
+        },
+      });
+      return drink;
+    }),
+  clearRecommendedProducts: protectedProcedure.mutation(async ({ ctx }) => {
+    return await ctx.prisma.drink.updateMany({
+      where: {
+        isRecommended: true,
+      },
+      data: {
+        updatedAt: new Date(),
+        isRecommended: false,
+      },
+    });
+  }),
+  removeRecommendedProduct: protectedProcedure
+    .input(
+      z.object({
+        id: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const drink = await ctx.prisma.drink.update({
+        where: {
+          id: input.id,
+        },
+        data: {
+          updatedAt: new Date(),
+          isRecommended: false,
         },
       });
       return drink;

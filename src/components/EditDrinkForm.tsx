@@ -127,6 +127,15 @@ const EditDrinkForm: FC<EditFormProps> = ({
         <FormLabel>{t("elements.additional_field.hide_product")}</FormLabel>
         <Switch {...register("isHidden")} size="lg" colorScheme="green" />
       </Flex>
+      <Flex
+        bg="blackAlpha.100"
+        p={3}
+        rounded="md"
+        justifyContent="space-between"
+      >
+        <FormLabel>Set this product to recommended</FormLabel>
+        <Switch {...register("isRecommended")} size="lg" colorScheme="green" />
+      </Flex>
 
       {addTypes && (
         <FormControl>

@@ -1,30 +1,29 @@
-import { type NextPage } from "next";
-import Head from "next/head";
-import { api } from "../utils/api";
-import { DrinkList } from "../components/DrinkList";
-import { useEffect, useState } from "react";
-import { NoResults } from "../components/NoResults";
 import {
-  Button,
   Container,
   FormLabel,
   Grid,
   GridItem,
-  Heading,
-  Input,
+  Heading, Input,
   InputGroup,
   InputLeftElement,
   ScaleFade,
   Select,
   SimpleGrid,
-  Stack,
+  Stack
 } from "@chakra-ui/react";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/solid";
-import { useTranslation } from "react-i18next";
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
-import nextI18nConfig from "../../next-i18next.config.mjs";
+import { type NextPage } from "next";
 import { useSession } from "next-auth/react";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+import Head from "next/head";
+import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import nextI18nConfig from "../../next-i18next.config.mjs";
+import { DrinkList } from "../components/DrinkList";
+import { NoResults } from "../components/NoResults";
+import RecommendedSection from "../components/RecommendedSection";
 import SkeletonLoader from "../components/SkeletonLoader";
+import { api } from "../utils/api";
 
 
 export const getServerSideProps = async ({ locale }: { locale: string }) => ({
@@ -67,6 +66,10 @@ const Drinks: NextPage = () => {
     .filter((drink) =>
       drink.isHidden && isAdmin ? true : !drink.isHidden ? true : false
     );
+
+  const recommendedDrinks = (drinks.data ?? [])
+    .filter(drink => drink.isRecommended && !drink.isHidden)
+    .sort((a, b) => Number(b.updatedAt) - Number(a.updatedAt));
 
   const { t } = useTranslation("common");
 
@@ -143,6 +146,9 @@ const Drinks: NextPage = () => {
             mb={{ base: "6rem", md: 0 }}
           >
             <SimpleGrid spacing="5" minChildWidth="20rem">
+
+              <RecommendedSection drinks={recommendedDrinks} isAdmin={isAdmin} />
+
               {isLoading ? (
                 <SkeletonLoader />
               ) : filteredDrinks.length === 0 ? (
