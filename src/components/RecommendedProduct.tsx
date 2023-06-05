@@ -1,49 +1,84 @@
-import { Button, Link, Text, VStack } from "@chakra-ui/react"
-import { XMarkIcon } from "@heroicons/react/24/outline";
-import type { Drink } from "@prisma/client"
+import {
+    Button,
+    IconButton,
+    Menu,
+    MenuButton,
+    MenuItem,
+    MenuList,
+    Text,
+    VStack,
+} from "@chakra-ui/react";
+import {
+    PencilIcon,
+    PencilSquareIcon,
+    TrashIcon,
+} from "@heroicons/react/24/outline";
+import { ChevronDownIcon } from "@heroicons/react/24/solid";
+import type { Drink } from "@prisma/client";
 import NextLink from "next/link";
 import { api } from "../utils/api";
 
 type Props = {
-    drink: Drink,
-    isAdmin: boolean
-}
+    drink: Drink;
+    isAdmin: boolean;
+};
 
 const RecommendedProduct = ({ drink, isAdmin }: Props) => {
-
-    const removeRecommendedProductMutation = api.drinks.removeRecommendedProduct.useMutation()
+    const removeRecommendedProductMutation =
+        api.drinks.removeRecommendedProduct.useMutation();
     const utils = api.useContext();
 
     const handleRemoveFromRecommended = async (id: string) => {
         await removeRecommendedProductMutation.mutateAsync({
-            id
-        })
+            id,
+        });
         await utils.drinks.getDrinks.invalidate();
-    }
+    };
 
     return (
-        <VStack position="relative" p="3" background="blackAlpha.300" minW="6rem" minH="6rem" rounded="lg" alignItems="center" justify="center" spacing="1">
-            {isAdmin && (
-                <Button
-                    position="absolute"
-                    top={0}
-                    right={0}
-                    size="xs"
-                    onClick={() => handleRemoveFromRecommended(drink.id)}
-                >
-                    <XMarkIcon />
-                </Button>
-            )}
-
+        <VStack
+            p="3"
+            background="blackAlpha.300"
+            minW="6rem"
+            minH="6rem"
+            rounded="lg"
+            alignItems="center"
+            justify="center"
+            spacing="1"
+        >
             <Text isTruncated>{drink.title}</Text>
-            <Text fontSize="2xl" fontWeight="semibold">{drink.price}</Text>
-            {isAdmin &&
-                <Link color="magenta" as={NextLink} href={`/drink/${drink.id}`}>
-                    Edit
-                </Link>
-            }
-        </VStack>
-    )
-}
+            <Text fontSize="2xl" fontWeight="semibold">
+                {drink.price}
+            </Text>
 
-export default RecommendedProduct
+            {isAdmin && (
+                <Menu>
+                    <MenuButton
+                        as={IconButton}
+                        icon={<PencilSquareIcon className="h-4 w-4" />}
+                    >
+                        Admin
+                    </MenuButton>
+                    <MenuList>
+                        <MenuItem
+                            as={NextLink}
+                            href={`/drink/${drink.id}`}
+                            icon={<PencilIcon className="h-4 w-4" />}
+                        >
+                            Edit
+                        </MenuItem>
+                        <MenuItem
+                            onClick={() => handleRemoveFromRecommended(drink.id)}
+                            color="red.500"
+                            icon={<TrashIcon className="h-4 w-4" />}
+                        >
+                            Remove
+                        </MenuItem>
+                    </MenuList>
+                </Menu>
+            )}
+        </VStack>
+    );
+};
+
+export default RecommendedProduct;

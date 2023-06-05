@@ -140,6 +140,7 @@ const Drinks: NextPage = () => {
             </Stack>
           </GridItem>
 
+
           <GridItem
             colSpan={{ base: 6, md: 3, lg: 4 }}
             as="main"

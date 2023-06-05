@@ -30,7 +30,6 @@ import {
 } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
 import { Blurhash } from "react-blurhash";
-import { AnimatePresence, delay, motion } from "framer-motion";
 import Dialog from "./Dialog";
 
 type DrinkWithUnits = Prisma.DrinkGetPayload<{ include: { unit: true } }>
@@ -104,126 +103,122 @@ export const DrinkList = (drink: DrinkWithUnits) => {
 
   return (
     <>
-      <motion.div
-        style={{ y: Math.random() * 50 }} animate={{ y: 0 }} transition={{ type: "spring" }}
+      <HStack
+        shadow="md"
+        maxH="13rem"
+        rounded="md"
+        bg={bg}
+        filter={showHiddenProduct ? "grayscale(100%)" : ""}
+        opacity={showHiddenProduct ? "0.5" : "1"}
+        color={color}
+        position="relative"
       >
-        <HStack
-          shadow="md"
-          maxH="13rem"
-          rounded="md"
-          bg={bg}
-          filter={showHiddenProduct ? "grayscale(100%)" : ""}
-          opacity={showHiddenProduct ? "0.5" : "1"}
-          color={color}
-          position="relative"
-        >
-          <Box w="10rem">
-            <ImageWithBlurhash
-              boxSize="10rem"
-              alt="image"
-              src={((hasDescription && drink.image) || category?.url) ?? ""}
-              objectFit="cover"
-              rounded="md"
-              borderRightRadius="0"
-              blurHash={drink.blurHash}
-            />
-          </Box>
+        <Box w="10rem">
+          <ImageWithBlurhash
+            boxSize="10rem"
+            alt="image"
+            src={((hasDescription && drink.image) || category?.url) ?? ""}
+            objectFit="cover"
+            rounded="md"
+            borderRightRadius="0"
+            blurHash={drink.blurHash}
+          />
+        </Box>
 
-          <VStack
-            p="2"
-            alignItems="flex-start"
-            spacing={2}
-            w="full"
-            overflow="auto"
-          >
-            <Text fontSize="xl" fontWeight="bold" noOfLines={1}>
-              {drink.title}
-            </Text>
-            {showHiddenProduct && (
-              <HStack
-                position="absolute"
-                top={!titleOverflow ? "2" : "10"}
-                right="2"
-              >
-                <Tag colorScheme="red" variant="solid">
-                  <TagLeftIcon boxSize="12px" as={EyeSlashIcon} />
-                  <TagLabel>{t("elements.label.hidden")}</TagLabel>
-                </Tag>
-              </HStack>
-            )}
-            {drink.tag && !showHiddenProduct && (
-              <Box
-                position="absolute"
-                top={!titleOverflow ? "2" : "10"}
-                right="2"
-              >
-                <Tag variant="subtle" colorScheme="primary">
-                  <TagLeftIcon boxSize="12px" as={StarIcon} />
-                  <TagLabel>{drink.tag.toUpperCase()}</TagLabel>
-                </Tag>
-              </Box>
-            )}
-            <Text fontSize="lg">{drink.price} RSD</Text>
-            <HStack alignItems="flex-start" spacing={3}>
-              <Tag variant="subtle">
-                <TagLeftIcon boxSize="12px" as={Squares2X2Icon} />
-                <TagLabel>{category?.categoryName}</TagLabel>
+        <VStack
+          p="2"
+          alignItems="flex-start"
+          spacing={2}
+          w="full"
+          overflow="auto"
+        >
+          <Text fontSize="xl" fontWeight="bold" noOfLines={1}>
+            {drink.title}
+          </Text>
+          {showHiddenProduct && (
+            <HStack
+              position="absolute"
+              top={!titleOverflow ? "2" : "10"}
+              right="2"
+            >
+              <Tag colorScheme="red" variant="solid">
+                <TagLeftIcon boxSize="12px" as={EyeSlashIcon} />
+                <TagLabel>{t("elements.label.hidden")}</TagLabel>
               </Tag>
-              {drink.unitId && drink.unit && (
-                <Tag variant="subtle">
-                  <TagLeftIcon boxSize="12px" as={BeakerIcon} />
-                  <TagLabel>{drink.unit.amount}</TagLabel>
-                </Tag>
-              )}
-              {hasTypes && drink.type && (
-                <Tag variant="subtle">
-                  <TagLeftIcon boxSize="12px" as={TagIcon} />
-                  <TagLabel>{drink.type}</TagLabel>
-                </Tag>
-              )}
             </HStack>
-            <HStack spacing={3} w="full" position="relative">
-              {sessionData?.user?.role === "ADMIN" && (
-                <>
-                  <Button
-                    leftIcon={<PencilSquareIcon className="h-4 w-4" />}
-                    size="sm"
-                    aria-label="edit"
-                    as={Link}
-                    href={`/drink/${drink.id}`}
-                  >
-                    Edit
-                  </Button>
-                  <Button
-                    leftIcon={<TrashIcon className="h-4 w-4" />}
-                    colorScheme="red"
-                    variant="ghost"
-                    size="sm"
-                    aria-label="delete"
-                    onClick={() => {
-                      onDeleteHandler(drink.id);
-                    }}
-                  >
-                    Delete
-                  </Button>
-                </>
-              )}
-              {hasDescription && (
-                <IconButton
-                  icon={<EyeIcon className="h-4 w-4" />}
-                  aria-label="info"
-                  onClick={onOpen}
+          )}
+          {drink.tag && !showHiddenProduct && (
+            <Box
+              position="absolute"
+              top={!titleOverflow ? "2" : "10"}
+              right="2"
+            >
+              <Tag variant="subtle" colorScheme="primary">
+                <TagLeftIcon boxSize="12px" as={StarIcon} />
+                <TagLabel>{drink.tag.toUpperCase()}</TagLabel>
+              </Tag>
+            </Box>
+          )}
+          <Text fontSize="lg">{drink.price} RSD</Text>
+          <HStack alignItems="flex-start" spacing={3}>
+            <Tag variant="subtle">
+              <TagLeftIcon boxSize="12px" as={Squares2X2Icon} />
+              <TagLabel>{category?.categoryName}</TagLabel>
+            </Tag>
+            {drink.unitId && drink.unit && (
+              <Tag variant="subtle">
+                <TagLeftIcon boxSize="12px" as={BeakerIcon} />
+                <TagLabel>{drink.unit.amount}</TagLabel>
+              </Tag>
+            )}
+            {hasTypes && drink.type && (
+              <Tag variant="subtle">
+                <TagLeftIcon boxSize="12px" as={TagIcon} />
+                <TagLabel>{drink.type}</TagLabel>
+              </Tag>
+            )}
+          </HStack>
+          <HStack spacing={3} w="full" position="relative">
+            {sessionData?.user?.role === "ADMIN" && (
+              <>
+                <Button
+                  leftIcon={<PencilSquareIcon className="h-4 w-4" />}
                   size="sm"
-                  position="absolute"
-                  right={0}
-                  colorScheme="primary"
-                  variant="outline"
-                />
-              )}
-            </HStack>
-          </VStack>
-        </HStack>
-      </motion.div>
+                  aria-label="edit"
+                  as={Link}
+                  href={`/drink/${drink.id}`}
+                >
+                  Edit
+                </Button>
+                <Button
+                  leftIcon={<TrashIcon className="h-4 w-4" />}
+                  colorScheme="red"
+                  variant="ghost"
+                  size="sm"
+                  aria-label="delete"
+                  onClick={() => {
+                    onDeleteHandler(drink.id);
+                  }}
+                >
+                  Delete
+                </Button>
+              </>
+            )}
+            {hasDescription && (
+              <IconButton
+                icon={<EyeIcon className="h-4 w-4" />}
+                aria-label="info"
+                onClick={onOpen}
+                size="sm"
+                position="absolute"
+                right={0}
+                colorScheme="primary"
+                variant="outline"
+              />
+            )}
+          </HStack>
+        </VStack>
+      </HStack>
 
       <Dialog
         isOpen={isOpen}
