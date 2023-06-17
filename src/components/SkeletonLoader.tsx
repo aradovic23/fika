@@ -1,10 +1,14 @@
 import { Skeleton } from "@chakra-ui/react"
 
-const SkeletonLoader = () => {
+interface Props {
+    height: string;
+}
+
+const SkeletonLoader = ({ height }: Props) => {
     return (
         <>
             {[...Array(6).keys()].map((i) => (
-                <Skeleton height="10rem" rounded="lg" key={i} />
+                <Skeleton height={height} rounded="lg" key={i} />
             ))}
         </>
     )

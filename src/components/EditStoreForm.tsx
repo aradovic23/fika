@@ -60,7 +60,6 @@ const EditStoreForm: FC<Store> = (store) => {
 
   return (
     <Form onSubmit={handleSubmit(handleStoreUpdate)}>
-      <Heading size="md">Edit store info</Heading>
       <FormControl>
         <FormLabel htmlFor="name">Store name</FormLabel>
         <Input placeholder="name" id="name" {...register("name")} />

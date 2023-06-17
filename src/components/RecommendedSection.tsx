@@ -1,8 +1,10 @@
-import { Button, Heading, HStack, VStack } from "@chakra-ui/react";
+import { Box, Button, Heading, HStack, VStack } from "@chakra-ui/react";
+import { XCircleIcon } from "@heroicons/react/24/solid";
 import type { Drink } from "@prisma/client";
 import { api } from "../utils/api";
 import { LoaderSpinner } from "./LoaderSpinner";
 import RecommendedProduct from "./RecommendedProduct";
+import SkeletonLoader from "./SkeletonLoader";
 
 type Props = {
     drinks: Drink[];
@@ -26,15 +28,20 @@ const RecommendedSection = ({ drinks, isAdmin }: Props) => {
                 <HStack justifyContent="space-between" w="full">
                     <Heading size="md">Recommendations</Heading>
                     {isAdmin && (
-                        <Button onClick={handleClearRecommended} size="xs">
-                            Clear all
-                        </Button>
+                        <Button aria-label="clear"
+                            colorScheme="primary"
+                            size="xs"
+                            onClick={handleClearRecommended}
+                            leftIcon={<XCircleIcon className="h-4 w-4" />}
+                        >Clear all</Button>
                     )}
                 </HStack>
             </VStack>
 
             {isLoading ? (
-                <LoaderSpinner />
+                <Box w="full" justifyContent="center">
+                    <LoaderSpinner />
+                </Box>
             ) : (
                 <HStack mt="2" spacing="3" overflowX="auto">
                     {drinks.map((drink) => (

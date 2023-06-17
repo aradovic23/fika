@@ -1,5 +1,4 @@
 import {
-    Button,
     IconButton,
     Menu,
     MenuButton,
@@ -13,7 +12,6 @@ import {
     PencilSquareIcon,
     TrashIcon,
 } from "@heroicons/react/24/outline";
-import { ChevronDownIcon } from "@heroicons/react/24/solid";
 import type { Drink } from "@prisma/client";
 import NextLink from "next/link";
 import { api } from "../utils/api";
@@ -38,13 +36,14 @@ const RecommendedProduct = ({ drink, isAdmin }: Props) => {
     return (
         <VStack
             p="3"
-            background="blackAlpha.300"
             minW="6rem"
             minH="6rem"
             rounded="lg"
             alignItems="center"
             justify="center"
             spacing="1"
+            border="1px"
+            borderColor="primary.100"
         >
             <Text isTruncated>{drink.title}</Text>
             <Text fontSize="2xl" fontWeight="semibold">

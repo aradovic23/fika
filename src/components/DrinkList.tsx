@@ -122,6 +122,7 @@ export const DrinkList = (drink: DrinkWithUnits) => {
             rounded="md"
             borderRightRadius="0"
             blurHash={drink.blurHash}
+            onClick={onOpen}
           />
         </Box>
 
@@ -203,18 +204,6 @@ export const DrinkList = (drink: DrinkWithUnits) => {
                   Delete
                 </Button>
               </>
-            )}
-            {hasDescription && (
-              <IconButton
-                icon={<EyeIcon className="h-4 w-4" />}
-                aria-label="info"
-                onClick={onOpen}
-                size="sm"
-                position="absolute"
-                right={0}
-                colorScheme="primary"
-                variant="outline"
-              />
             )}
           </HStack>
         </VStack>

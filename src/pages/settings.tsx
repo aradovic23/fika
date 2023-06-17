@@ -3,6 +3,8 @@ import Head from "next/head";
 import {
   Button,
   Container,
+  Grid,
+  GridItem,
   Heading,
   HStack,
   Image,
@@ -68,45 +70,41 @@ const Settings: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Container as="main" maxW="3xl" mt={5}>
-        <VStack spacing={5}>
+        <VStack spacing={5} mb={5}>
           <Heading>Settings</Heading>
           {!storeData && (
             <Notice status="info" title="No store" description="Please add new store" />
           )}
           {!storeData && <CreateStoreForm />}
-          {storeData && (
-            <HStack
-              spacing="5"
-              bg="blackAlpha.50"
-              py="2"
-              px="10"
-              rounded="md"
-              shadow="sm"
-            >
-              <VStack spacing="1">
+        </VStack>
+        {storeData && (
+          <>
+
+            <Grid templateColumns="repeat(2, 1fr)" gap={5}>
+              <GridItem>
                 <Image
                   src={storeData.fileUrl ?? ""}
                   alt="image"
                   rounded="lg"
                   boxSize="xs"
                   objectFit="cover" />
-              </VStack>
-              <VStack spacing="3">
+              </GridItem>
+              <GridItem>
                 <EditStoreForm {...storeData} />
-              </VStack>
+              </GridItem>
+            </Grid>
+            <HStack>
+              <Button
+                variant="ghost"
+                colorScheme="red"
+                onClick={() => handleDeleteStore(storeData?.id ?? 1)}
+              >
+                Delete store
+              </Button>
             </HStack>
-          )}
-          {sessionData?.user?.name}
-          <HStack>
-            <Button
-              variant="ghost"
-              colorScheme="red"
-              onClick={() => handleDeleteStore(storeData?.id ?? 1)}
-            >
-              Delete store
-            </Button>
-          </HStack>
-        </VStack>
+
+          </>
+        )}
       </Container>
     </>
   );

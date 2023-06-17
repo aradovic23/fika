@@ -147,11 +147,12 @@ const Drinks: NextPage = () => {
             mb={{ base: "6rem", md: 0 }}
           >
             <SimpleGrid spacing="5" minChildWidth="20rem">
-
-              <RecommendedSection drinks={recommendedDrinks} isAdmin={isAdmin} />
+              {!!recommendedDrinks.length && (
+                <RecommendedSection drinks={recommendedDrinks} isAdmin={isAdmin} />
+              )}
 
               {isLoading ? (
-                <SkeletonLoader />
+                <SkeletonLoader height="10rem" />
               ) : filteredDrinks.length === 0 ? (
                 <ScaleFade initialScale={0.8} in unmountOnExit>
                   <NoResults />
