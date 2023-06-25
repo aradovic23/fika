@@ -17,10 +17,11 @@ const Layout = ({ children }: LayoutProps) => {
     refetchOnWindowFocus: false,
   });
 
-  const drinksKey = getQueryKey(api.drinks.getDrinks, undefined, "query");
-  queryClient.setQueryDefaults(drinksKey, {
-    refetchOnWindowFocus: false,
-  });
+  // const drinksKey = getQueryKey(api.drinks.getDrinks, undefined, "query");
+  // queryClient.setQueryDefaults(drinksKey, {
+  //   // refetchOnWindowFocus: false,
+  //   // refetchInterval: 2
+  // });
 
   const categoriesKey = getQueryKey(
     api.categories.getCategories,

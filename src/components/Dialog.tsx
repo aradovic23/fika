@@ -22,7 +22,7 @@ const Dialog = ({ isOpen, onClose, title, description, image }: Props) => {
                 <ModalCloseButton />
                 <ModalBody>
                     <VStack spacing={5}>
-                        <Text>{description}</Text>
+                        <Text noOfLines={5}>{description}</Text>
                         {image && (
                             <Image
                                 alt="product-image"

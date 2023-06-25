@@ -1,8 +1,9 @@
 ## features
 
+- recc section UI
+- [catpuccin pastel scheme] (https://github.com/catppuccin/palette#macos-color-picker)
 - improve settings ui
 - ability to show hide hidden products for admin
-- recommended row product and flag recc flag
 - add styles with inter font
 - implement landing page base structure
 - on page leave animation single product

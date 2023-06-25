@@ -140,17 +140,18 @@ const Drinks: NextPage = () => {
             </Stack>
           </GridItem>
 
-
           <GridItem
             colSpan={{ base: 6, md: 3, lg: 4 }}
             as="main"
             mb={{ base: "6rem", md: 0 }}
           >
-            <SimpleGrid spacing="5" minChildWidth="20rem">
+            <SimpleGrid mb="4">
               {!!recommendedDrinks.length && (
                 <RecommendedSection drinks={recommendedDrinks} isAdmin={isAdmin} />
               )}
+            </SimpleGrid>
 
+            <SimpleGrid spacing="5" minChildWidth="20rem">
               {isLoading ? (
                 <SkeletonLoader height="10rem" />
               ) : filteredDrinks.length === 0 ? (
