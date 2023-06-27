@@ -1,9 +1,9 @@
-import { useSession } from "next-auth/react";
-import NextLink from "next/link";
-import type { FC } from "react";
-import React from "react";
-import { Bars3Icon } from "@heroicons/react/24/outline";
-import ColorModeSwitcher from "./ColorModeSwitcher";
+import { useSession } from 'next-auth/react';
+import NextLink from 'next/link';
+import type { FC } from 'react';
+import React from 'react';
+import { Bars3Icon } from '@heroicons/react/24/outline';
+import ColorModeSwitcher from './ColorModeSwitcher';
 import {
   Avatar,
   ButtonGroup,
@@ -18,18 +18,18 @@ import {
   Link,
   HStack,
   Image,
-} from "@chakra-ui/react";
-import AdminInfo from "./AdminInfo";
-import { api } from "../utils/api";
+} from '@chakra-ui/react';
+import AdminInfo from './AdminInfo';
+import { api } from '../utils/api';
 
 const navigation = [
-  { name: "All Drinks", path: "/drinks" },
-  { name: "Submit Drink", path: "/submit-drink" },
-  { name: "Edit Category", path: "/edit-category" },
-  { name: "Settings", path: "/settings" },
+  { name: 'All Drinks', path: '/drinks' },
+  { name: 'Submit Drink', path: '/submit-drink' },
+  { name: 'Edit Category', path: '/edit-category' },
+  { name: 'Settings', path: '/settings' },
 ];
 
-const COMPANY_NAME = "Drinks App";
+const COMPANY_NAME = 'Drinks App';
 
 const Navbar: FC = () => {
   const { data: sessionData } = useSession();
@@ -49,29 +49,20 @@ const Navbar: FC = () => {
     >
       <HStack as={NextLink} href="/">
         {storeData?.fileUrl && (
-          <Image
-            alt="logo"
-            src={storeData?.fileUrl}
-            boxSize="30px"
-            rounded="full"
-            objectFit="cover"
-          />
+          <Image alt="logo" src={storeData?.fileUrl} boxSize="30px" rounded="full" objectFit="cover" />
         )}
         <Heading size="md">{storeData?.name ?? COMPANY_NAME}</Heading>
       </HStack>
 
       <ButtonGroup gap="2" alignItems="center">
         <ColorModeSwitcher />
-        {sessionData?.user?.role === "ADMIN" ? (
+        {sessionData?.user?.role === 'ADMIN' ? (
           <>
             <Menu>
-              <MenuButton
-                as={IconButton}
-                icon={<Bars3Icon className="h-6 w-6" />}
-              ></MenuButton>
+              <MenuButton as={IconButton} icon={<Bars3Icon className="h-6 w-6" />}></MenuButton>
               <Portal>
                 <MenuList>
-                  {navigation.map((item) => (
+                  {navigation.map(item => (
                     <MenuItem as={NextLink} href={item.path} key={item.name}>
                       {item.name}
                     </MenuItem>
@@ -84,7 +75,7 @@ const Navbar: FC = () => {
                 as={Avatar}
                 size="sm"
                 src={sessionData?.user?.image}
-                name={sessionData?.user?.name ?? "Admin"}
+                name={sessionData?.user?.name ?? 'Admin'}
                 height="9"
                 width="9"
               ></MenuButton>

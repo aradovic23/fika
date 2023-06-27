@@ -1,27 +1,27 @@
-import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/outline";
-import type { Prisma } from "@prisma/client";
-import { useSession } from "next-auth/react";
-import Link from "next/link";
-import { useGetCategory } from "../hooks/useGetCategory";
-import { api } from "../utils/api";
+import { PencilSquareIcon, TrashIcon } from '@heroicons/react/24/outline';
+import type { Prisma } from '@prisma/client';
+import { useSession } from 'next-auth/react';
+import Link from 'next/link';
+import { useGetCategory } from '../hooks/useGetCategory';
+import { api } from '../utils/api';
 import {
   Box,
-  Button, Flex, HStack, Image,
+  Button,
+  Flex,
+  HStack,
+  Image,
   Tag,
   TagLabel,
   TagLeftIcon,
   Text,
   useColorModeValue,
   useDisclosure,
-  VStack
-} from "@chakra-ui/react";
-import {
-  BeakerIcon, EyeSlashIcon,
-  Squares2X2Icon, TagIcon
-} from "@heroicons/react/24/solid";
-import Dialog from "./Dialog";
+  VStack,
+} from '@chakra-ui/react';
+import { BeakerIcon, EyeSlashIcon, Squares2X2Icon, TagIcon } from '@heroicons/react/24/solid';
+import Dialog from './Dialog';
 
-type DrinkWithUnits = Prisma.DrinkGetPayload<{ include: { unit: true } }>
+type DrinkWithUnits = Prisma.DrinkGetPayload<{ include: { unit: true } }>;
 
 export const DrinkList = (drink: DrinkWithUnits) => {
   const utils = api.useContext();
@@ -32,62 +32,57 @@ export const DrinkList = (drink: DrinkWithUnits) => {
       await utils.drinks.getDrinks.invalidate();
     },
     onError(error) {
-      console.log(error);
+      console.warn(error);
     },
   });
 
   const onDeleteHandler = (id: string) => {
-    if (window.confirm("Are you sure you want to delete?")) {
+    if (window.confirm('Are you sure you want to delete?')) {
       deleteDrink({ id });
     }
   };
 
-  const { category } = useGetCategory(drink.categoryId ?? 1) ?? "";
+  const { category } = useGetCategory(drink.categoryId ?? 1) ?? '';
   const { data: sessionData } = useSession();
   const hasDescription = category?.addDescription;
   const hasTypes = category?.addTypes;
-  const isAdmin = sessionData?.user?.role === "ADMIN";
+  const isAdmin = sessionData?.user?.role === 'ADMIN';
 
-  const bg = useColorModeValue("whiteAlpha.800", "blackAlpha.400");
-  const color = useColorModeValue("gray.900", "gray.100");
+  const bg = useColorModeValue('whiteAlpha.800', 'blackAlpha.400');
+  const color = useColorModeValue('gray.900', 'gray.100');
 
-  const showHiddenProduct =
-    drink.isHidden && sessionData?.user?.role === "ADMIN";
+  const showHiddenProduct = drink.isHidden && sessionData?.user?.role === 'ADMIN';
 
   return (
     <>
       <VStack gap={3} shadow="md" rounded="lg" bg={bg} color={color} p={2}>
         <Flex w="full" gap="3">
-          <Box boxSize='5rem' position="relative" minW="5rem">
+          <Box boxSize="5rem" position="relative" minW="5rem">
             <Image
               onClick={onOpen}
-              boxSize='5rem'
+              boxSize="5rem"
               rounded="md"
               alt="product"
               objectFit="cover"
-              src={((hasDescription && drink.image) || category?.url) ?? ""}
-              filter={showHiddenProduct ? "grayscale(100%)" : undefined}
+              src={((hasDescription && drink.image) || category?.url) ?? ''}
+              filter={showHiddenProduct ? 'grayscale(100%)' : undefined}
             />
             {showHiddenProduct && (
-              <Tag
-                pos="absolute"
-                inset={0}
-                m="auto"
-                colorScheme="red"
-                w="50%"
-                h="50%"
-                variant="solid">
-                <EyeSlashIcon className="w-4 h-4 absolute inset-0 m-auto" />
+              <Tag pos="absolute" inset={0} m="auto" colorScheme="red" w="50%" h="50%" variant="solid">
+                <EyeSlashIcon className="absolute inset-0 m-auto h-4 w-4" />
               </Tag>
             )}
           </Box>
           <VStack w="full" overflow="hidden">
             <HStack justify="space-between" w="full" align="baseline">
               <Box>
-                <Text lineHeight={1} fontWeight="bold" fontSize="xl">{drink.title}</Text>
+                <Text lineHeight={1} fontWeight="bold" fontSize="xl">
+                  {drink.title}
+                </Text>
               </Box>
               <Box>
-                <Text fontSize="xl">{drink.price}
+                <Text fontSize="xl">
+                  {drink.price}
                   <Text ml="1" as="span" fontSize="sm">
                     RSD
                   </Text>
@@ -149,7 +144,8 @@ export const DrinkList = (drink: DrinkWithUnits) => {
         onClose={onClose}
         title={drink.title}
         description={drink.description}
-        image={drink.image} />
+        image={drink.image}
+      />
     </>
   );
 };

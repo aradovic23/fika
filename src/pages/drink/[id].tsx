@@ -1,33 +1,23 @@
-import { type NextPage } from "next";
-import { useRouter } from "next/router";
-import { api } from "../../utils/api";
-import EditDrinkForm from "../../components/EditDrinkForm";
-import Head from "next/head";
-import { useSession } from "next-auth/react";
-import AccessDenied from "../../components/AccessDenied";
-import { useGetCategory } from "../../hooks/useGetCategory";
-import {
-  Container,
-  Heading,
-  ScaleFade,
-  Stack,
-  Text,
-  useToast,
-} from "@chakra-ui/react";
-import type { Drink } from "@prisma/client";
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
-import nextI18nConfig from "../../../next-i18next.config.mjs";
-import { useTranslation } from "next-i18next";
-import moment from "moment";
-import "moment/locale/sr";
-import { PageSpinner } from "../../components/LoaderSpinner";
+import { type NextPage } from 'next';
+import { useRouter } from 'next/router';
+import { api } from '../../utils/api';
+import EditDrinkForm from '../../components/EditDrinkForm';
+import Head from 'next/head';
+import { useSession } from 'next-auth/react';
+import AccessDenied from '../../components/AccessDenied';
+import { useGetCategory } from '../../hooks/useGetCategory';
+import { Container, Heading, ScaleFade, Stack, Text, useToast } from '@chakra-ui/react';
+import type { Drink } from '@prisma/client';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import nextI18nConfig from '../../../next-i18next.config.mjs';
+import { useTranslation } from 'next-i18next';
+import moment from 'moment';
+import 'moment/locale/sr';
+import { PageSpinner } from '../../components/LoaderSpinner';
 
 export const getServerSideProps = async ({ locale }: { locale: string }) => ({
   props: {
-    ...(await serverSideTranslations(locale, ["common"], nextI18nConfig, [
-      "en",
-      "sr",
-    ])),
+    ...(await serverSideTranslations(locale, ['common'], nextI18nConfig, ['en', 'sr'])),
   },
 });
 
@@ -59,7 +49,7 @@ const EditDrinkPage: NextPage = () => {
   const { data: units } = api.volume.getVolumeOptions.useQuery();
 
   const setMomentLocale = (locale: string) => moment.locale(locale);
-  const currentLang: string = router.locale ?? "en";
+  const currentLang: string = router.locale ?? 'en';
   setMomentLocale(currentLang);
   const updatedAt = moment(data?.updatedAt);
   const relativeLastUpdatedAt = moment(updatedAt).fromNow();
@@ -76,30 +66,30 @@ const EditDrinkPage: NextPage = () => {
           void router.back();
           toast({
             title: `Product updated!`,
-            description: `${data.title ?? ""} was successfully updated!`,
-            status: "success",
+            description: `${data.title ?? ''} was successfully updated!`,
+            status: 'success',
             isClosable: true,
-            position: "top",
+            position: 'top',
           });
         },
-        onError: (error) => {
+        onError: error => {
           toast({
             title: `An error occurred`,
             description: `${error.message}`,
-            status: "success",
+            status: 'success',
             isClosable: true,
-            position: "top",
+            position: 'top',
           });
         },
       }
     );
   };
 
-  if (status === "loading" || isLoading) {
+  if (status === 'loading' || isLoading) {
     return <PageSpinner />;
   }
 
-  if (sessionData?.user?.role !== "ADMIN") {
+  if (sessionData?.user?.role !== 'ADMIN') {
     return <AccessDenied />;
   }
 
@@ -108,16 +98,16 @@ const EditDrinkPage: NextPage = () => {
       <>
         <Head>
           <title>
-            {t("edit_drink")} | {data.title}
+            {t('edit_drink')} | {data.title}
           </title>
         </Head>
         <Container>
           <Stack gap="3" mt="5" mb="20">
             <Heading size="lg" textAlign="center">
-              {t("edit_drink")} | {data.title}
+              {t('edit_drink')} | {data.title}
             </Heading>
             <Text textAlign="center" opacity={0.5}>
-              {t("elements.additional_field.last_edit")} {relativeLastUpdatedAt}
+              {t('elements.additional_field.last_edit')} {relativeLastUpdatedAt}
             </Text>
             <ScaleFade initialScale={0.9} in unmountOnExit>
               <EditDrinkForm

@@ -1,15 +1,11 @@
-import { Image } from "@chakra-ui/react";
-import type { ImageProps } from "@chakra-ui/react"
-import { Blurhash } from "react-blurhash";
+import { Image } from '@chakra-ui/react';
+import type { ImageProps } from '@chakra-ui/react';
+import { Blurhash } from 'react-blurhash';
 
 interface ImageWithBlurHashProps extends ImageProps {
   blurHash?: string | null;
 }
-const ImageWithBlurhash = ({
-  src,
-  blurHash,
-  ...rest
-}: ImageWithBlurHashProps) => {
+const ImageWithBlurhash = ({ src, blurHash, ...rest }: ImageWithBlurHashProps) => {
   if (blurHash) {
     return (
       <>
@@ -17,15 +13,7 @@ const ImageWithBlurhash = ({
           src={src}
           alt="image"
           {...rest}
-          fallback={
-            <Blurhash
-              hash={blurHash}
-              width="100%"
-              height="100%"
-              resolutionX={32}
-              resolutionY={32}
-            />
-          }
+          fallback={<Blurhash hash={blurHash} width="100%" height="100%" resolutionX={32} resolutionY={32} />}
         />
       </>
     );
@@ -34,4 +22,4 @@ const ImageWithBlurhash = ({
   }
 };
 
-export default ImageWithBlurhash
+export default ImageWithBlurhash;

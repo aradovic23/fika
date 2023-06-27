@@ -1,13 +1,6 @@
-import {
-  Button,
-  Center,
-  Container,
-  Heading,
-  Text,
-  VStack,
-} from "@chakra-ui/react";
-import Head from "next/head";
-import Link from "next/link";
+import { Button, Center, Container, Heading, Text, VStack } from '@chakra-ui/react';
+import Head from 'next/head';
+import Link from 'next/link';
 
 const AccessDenied = () => {
   return (
@@ -18,9 +11,7 @@ const AccessDenied = () => {
       <Center h="calc(100vh)">
         <VStack spacing="3">
           <Heading>Access denied</Heading>
-          <Text>
-            You are not signed in or you don&apos;t have admin permissions
-          </Text>
+          <Text>You are not signed in or you don&apos;t have admin permissions</Text>
           <Link href="/signin">
             <Button colorScheme="red">Go to Sign in page</Button>
           </Link>

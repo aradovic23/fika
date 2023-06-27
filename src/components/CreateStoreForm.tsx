@@ -1,11 +1,11 @@
-import { Button, Input, useToast, FormLabel, FormControl, Box, VStack, Image, Text } from "@chakra-ui/react";
-import type { Store } from "@prisma/client";
-import { UploadButton } from "@uploadthing/react";
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import type { OurFileRouter } from "../server/uploadthing";
-import { api } from "../utils/api";
-import { Form } from "./Form";
+import { Button, Input, useToast, FormLabel, FormControl, Box, VStack, Image, Text } from '@chakra-ui/react';
+import type { Store } from '@prisma/client';
+import { UploadButton } from '@uploadthing/react';
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import type { OurFileRouter } from '../server/uploadthing';
+import { api } from '../utils/api';
+import { Form } from './Form';
 
 interface File {
   fileKey: string;
@@ -24,7 +24,6 @@ const CreateStoreForm = () => {
 
   const [file, setFile] = useState<File | null>();
 
-
   const utils = api.useContext();
 
   const toast = useToast();
@@ -38,9 +37,9 @@ const CreateStoreForm = () => {
       });
       toast({
         title: `Created store`,
-        status: "success",
+        status: 'success',
         isClosable: true,
-        position: "top",
+        position: 'top',
       });
       reset();
       await utils.settings.getStore.invalidate();
@@ -53,18 +52,17 @@ const CreateStoreForm = () => {
     <Form onSubmit={handleSubmit(handleCreateNewStore)}>
       <FormControl>
         <FormLabel>Your Store Name</FormLabel>
-        <Input {...register("name")} placeholder="Enter store name" />
+        <Input {...register('name')} placeholder="Enter store name" />
       </FormControl>
       {!file && (
-
         <FormControl>
           <FormLabel>Your Store Logo</FormLabel>
           <Box border="1px" borderColor="chakra-placeholder-color" rounded="lg" p="5">
             <UploadButton<OurFileRouter>
               endpoint="imageUploader"
-              onClientUploadComplete={(res) => {
+              onClientUploadComplete={res => {
                 if (Array.isArray(res) && res.length > 0) {
-                  setFile(res[0])
+                  setFile(res[0]);
                 }
               }}
             />
@@ -73,11 +71,7 @@ const CreateStoreForm = () => {
       )}
       {file && (
         <VStack bg="green.300" p="1" rounded="lg">
-          <Image alt="logo"
-            src={file.fileUrl}
-            boxSize="200px"
-            rounded="lg"
-            objectFit="cover" />
+          <Image alt="logo" src={file.fileUrl} boxSize="200px" rounded="lg" objectFit="cover" />
           <Text color="black">Image ready!</Text>
         </VStack>
       )}

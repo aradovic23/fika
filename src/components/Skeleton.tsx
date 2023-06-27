@@ -1,5 +1,5 @@
-import { PhotoIcon } from "@heroicons/react/24/solid";
-import React from "react";
+import { PhotoIcon } from '@heroicons/react/24/solid';
+import React from 'react';
 
 const Skeleton = () => {
   return (

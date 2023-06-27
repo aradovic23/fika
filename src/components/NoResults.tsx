@@ -1,5 +1,5 @@
-import { ExclamationTriangleIcon } from "@heroicons/react/24/solid";
-import { Heading, Stack, Text } from "@chakra-ui/react";
+import { ExclamationTriangleIcon } from '@heroicons/react/24/solid';
+import { Heading, Stack, Text } from '@chakra-ui/react';
 
 export const NoResults = () => {
   return (

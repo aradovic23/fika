@@ -1,11 +1,11 @@
-import { type NextPage } from "next";
-import { useSession } from "next-auth/react";
-import Head from "next/head";
-import { api } from "../utils/api";
-import { useEffect, useState } from "react";
-import { useGetCategory } from "../hooks/useGetCategory";
-import AccessDenied from "../components/AccessDenied";
-import { Form } from "../components/Form";
+import { type NextPage } from 'next';
+import { useSession } from 'next-auth/react';
+import Head from 'next/head';
+import { api } from '../utils/api';
+import { useEffect, useState } from 'react';
+import { useGetCategory } from '../hooks/useGetCategory';
+import AccessDenied from '../components/AccessDenied';
+import { Form } from '../components/Form';
 import {
   Alert,
   AlertDescription,
@@ -31,40 +31,34 @@ import {
   Text,
   useToast,
   VStack,
-} from "@chakra-ui/react";
-import { Controller, useForm } from "react-hook-form";
-import type { Category } from "@prisma/client";
-import ImageSearch from "../components/ImageSearch";
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
-import nextI18nConfig from "../../next-i18next.config.mjs";
-import { useTranslation } from "next-i18next";
-import { PageSpinner } from "../components/LoaderSpinner";
+} from '@chakra-ui/react';
+import { Controller, useForm } from 'react-hook-form';
+import type { Category } from '@prisma/client';
+import ImageSearch from '../components/ImageSearch';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import nextI18nConfig from '../../next-i18next.config.mjs';
+import { useTranslation } from 'next-i18next';
+import { PageSpinner } from '../components/LoaderSpinner';
 
 export const getServerSideProps = async ({ locale }: { locale: string }) => ({
   props: {
-    ...(await serverSideTranslations(locale, ["common"], nextI18nConfig, [
-      "en",
-      "sr",
-    ])),
+    ...(await serverSideTranslations(locale, ['common'], nextI18nConfig, ['en', 'sr'])),
   },
 });
 
 const EditCategory: NextPage = () => {
   const { t } = useTranslation();
   const { data: sessionData, status } = useSession();
-  const { data: categories, isLoading } =
-    api.categories.getCategories.useQuery();
+  const { data: categories, isLoading } = api.categories.getCategories.useQuery();
   const [categoryId, setCategoryId] = useState(0);
-  const [imageFromSearch, setImageFromSearch] = useState("");
+  const [imageFromSearch, setImageFromSearch] = useState('');
   const { category: productCategory } = useGetCategory(categoryId);
   const updateCategory = api.categories.updateCategory.useMutation();
   const deleteSingleCategory = api.categories.deleteCategory.useMutation();
 
-  const hasSearchedImage = imageFromSearch !== "";
+  const hasSearchedImage = imageFromSearch !== '';
 
-  const defaultCategories = categories?.filter(
-    (category) => category.isDefault
-  );
+  const defaultCategories = categories?.filter(category => category.isDefault);
 
   const {
     register,
@@ -102,19 +96,17 @@ const EditCategory: NextPage = () => {
             void utils.drinks.getAllDrinks.invalidate();
             toast({
               title: `Category updated`,
-              description: `${
-                category.categoryName ?? ""
-              } was successfully updated!`,
-              status: "success",
+              description: `${category.categoryName ?? ''} was successfully updated!`,
+              status: 'success',
               isClosable: true,
-              position: "top",
+              position: 'top',
             });
           },
         }
       );
-      setImageFromSearch("");
+      setImageFromSearch('');
     } catch (error) {
-      if (typeof error === "string") {
+      if (typeof error === 'string') {
         console.log(error);
       } else {
         console.log((error as Error).message);
@@ -123,14 +115,14 @@ const EditCategory: NextPage = () => {
   };
 
   const deleteCategoryHandler = async (id: number) => {
-    if (window.confirm("Are you sure?")) {
+    if (window.confirm('Are you sure?')) {
       try {
         await deleteSingleCategory.mutateAsync({ id });
         toast({
           title: `Deleted category #${id}`,
-          status: "success",
+          status: 'success',
           isClosable: true,
-          position: "top",
+          position: 'top',
         });
       } catch (error) {
         console.log(error);
@@ -142,11 +134,11 @@ const EditCategory: NextPage = () => {
     setImageFromSearch(image);
   };
 
-  if (status === "loading" || isLoading) {
+  if (status === 'loading' || isLoading) {
     return <PageSpinner />;
   }
 
-  if (sessionData?.user?.role != "ADMIN") {
+  if (sessionData?.user?.role != 'ADMIN') {
     return <AccessDenied />;
   }
 
@@ -157,35 +149,22 @@ const EditCategory: NextPage = () => {
   return (
     <>
       <Head>
-        <title>{t("edit_category")}</title>
+        <title>{t('edit_category')}</title>
         <meta name="description" content="Generated by create-t3-app" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Container as="main" maxW="4xl">
         <Heading mt="3" textAlign="center">
-          {t("edit_category")}
+          {t('edit_category')}
         </Heading>
         <Grid templateColumns="repeat(6, 1fr)" gap="5">
-          <GridItem
-            colSpan={{ base: 6, md: 3 }}
-            as="aside"
-            mr={{ base: "0", md: "3" }}
-            mb={{ base: "3", md: "0" }}
-          >
+          <GridItem colSpan={{ base: 6, md: 3 }} as="aside" mr={{ base: '0', md: '3' }} mb={{ base: '3', md: '0' }}>
             <VStack spacing="5" mt="10">
               <Stack w="full">
-                <FormLabel htmlFor="select-category">
-                  {t("elements.placeholder.category")}
-                </FormLabel>
-                <Select
-                  variant="filled"
-                  onChange={handleCategoryChange}
-                  id="select-category"
-                >
-                  <option value={0}>
-                    {t("elements.placeholder.category")}
-                  </option>
-                  {(categories || []).map((category) => (
+                <FormLabel htmlFor="select-category">{t('elements.placeholder.category')}</FormLabel>
+                <Select variant="filled" onChange={handleCategoryChange} id="select-category">
+                  <option value={0}>{t('elements.placeholder.category')}</option>
+                  {(categories || []).map(category => (
                     <option key={category.id} value={category.id}>
                       {category.categoryName}
                     </option>
@@ -198,44 +177,29 @@ const EditCategory: NextPage = () => {
                   <>
                     <Form onSubmit={handleSubmit(handleCategoryUpdate)}>
                       <FormControl isInvalid={!!errors.categoryName}>
-                        <FormLabel htmlFor="categoryName">
-                          {t("elements.label.title")}
-                        </FormLabel>
+                        <FormLabel htmlFor="categoryName">{t('elements.label.title')}</FormLabel>
                         <Input
                           id="categoryName"
-                          placeholder={
-                            t("elements.placeholder.category_title") ?? "Name"
-                          }
-                          {...register("categoryName", {
+                          placeholder={t('elements.placeholder.category_title') ?? 'Name'}
+                          {...register('categoryName', {
                             required: true,
                             minLength: {
                               value: 3,
-                              message: "Product should have minimum 3 letters",
+                              message: 'Product should have minimum 3 letters',
                             },
                           })}
                         />
-                        <FormErrorMessage>
-                          {errors.categoryName && errors.categoryName.message}
-                        </FormErrorMessage>
+                        <FormErrorMessage>{errors.categoryName && errors.categoryName.message}</FormErrorMessage>
                       </FormControl>
                       <FormControl>
-                        <FormLabel htmlFor="url">
-                          {t("elements.label.image")}
-                        </FormLabel>
-                        <ImageSearch
-                          handleSelectedImage={handleSelectedImage}
-                        />
-                        <Input
-                          id="url"
-                          placeholder="Image url"
-                          {...register("url")}
-                          hidden
-                        />
+                        <FormLabel htmlFor="url">{t('elements.label.image')}</FormLabel>
+                        <ImageSearch handleSelectedImage={handleSelectedImage} />
+                        <Input id="url" placeholder="Image url" {...register('url')} hidden />
                       </FormControl>
                       <Flex>
                         <FormControl>
                           <FormLabel htmlFor="addDescription">
-                            {t("elements.additional_field.allow_description")}
+                            {t('elements.additional_field.allow_description')}
                           </FormLabel>
                           <Controller
                             control={control}
@@ -243,50 +207,31 @@ const EditCategory: NextPage = () => {
                             key="addDescription"
                             defaultValue={false}
                             render={({ field: { onChange, value, ref } }) => (
-                              <Switch
-                                onChange={onChange}
-                                ref={ref}
-                                isChecked={value}
-                                size="lg"
-                              />
+                              <Switch onChange={onChange} ref={ref} isChecked={value} size="lg" />
                             )}
                           />
                         </FormControl>
                         <FormControl>
-                          <FormLabel htmlFor="addTypes">
-                            {t("elements.additional_field.allow_type")}
-                          </FormLabel>
+                          <FormLabel htmlFor="addTypes">{t('elements.additional_field.allow_type')}</FormLabel>
                           <Controller
                             control={control}
                             name="addTypes"
                             key="addTypes"
                             defaultValue={false}
                             render={({ field: { onChange, value, ref } }) => (
-                              <Switch
-                                onChange={onChange}
-                                ref={ref}
-                                isChecked={value}
-                                size="lg"
-                              />
+                              <Switch onChange={onChange} ref={ref} isChecked={value} size="lg" />
                             )}
                           />
                         </FormControl>
                         <FormControl>
-                          <FormLabel htmlFor="isDefault">
-                            Make this category default?
-                          </FormLabel>
+                          <FormLabel htmlFor="isDefault">Make this category default?</FormLabel>
                           <Controller
                             control={control}
                             name="isDefault"
                             key="isDefault"
                             defaultValue={false}
                             render={({ field: { onChange, value, ref } }) => (
-                              <Switch
-                                onChange={onChange}
-                                ref={ref}
-                                isChecked={value}
-                                size="lg"
-                              />
+                              <Switch onChange={onChange} ref={ref} isChecked={value} size="lg" />
                             )}
                           />
                         </FormControl>
@@ -299,11 +244,11 @@ const EditCategory: NextPage = () => {
                           <AlertDescription>
                             You have multiple default categories:&nbsp;
                             {defaultCategories?.map((cat, index) => [
-                              index > 0 && ", ",
+                              index > 0 && ', ',
                               <Text display="inline" key={cat.id}>
                                 {cat.categoryName}
                               </Text>,
-                              index === defaultCategories.length - 1 && ".",
+                              index === defaultCategories.length - 1 && '.',
                             ])}
                           </AlertDescription>
                         </Alert>
@@ -315,7 +260,7 @@ const EditCategory: NextPage = () => {
                           <AlertTitle>Default category</AlertTitle>
                           <AlertDescription>
                             Current default category is&nbsp;
-                            {defaultCategories?.map((cat) => (
+                            {defaultCategories?.map(cat => (
                               <Text display="inline" key={cat.id}>
                                 {cat.categoryName}
                               </Text>
@@ -324,18 +269,12 @@ const EditCategory: NextPage = () => {
                         </Alert>
                       )}
 
-                      <Button
-                        isLoading={isSubmitting}
-                        type="submit"
-                        colorScheme="primary"
-                      >
-                        {t("elements.button.save")}
+                      <Button isLoading={isSubmitting} type="submit" colorScheme="primary">
+                        {t('elements.button.save')}
                       </Button>
                     </Form>
                     <HStack bg="blackAlpha.400" p="5" rounded="lg">
-                      <Text>
-                        {t("elements.additional_field.delete_category")}
-                      </Text>
+                      <Text>{t('elements.additional_field.delete_category')}</Text>
                       <Button
                         onClick={() => deleteCategoryHandler(categoryId)}
                         disabled={updateCategory.isLoading || !productCategory}
@@ -343,35 +282,26 @@ const EditCategory: NextPage = () => {
                         size="md"
                         variant="ghost"
                       >
-                        {t("elements.button.delete")}
+                        {t('elements.button.delete')}
                       </Button>
                     </HStack>
                   </>
                 ))}
             </VStack>
           </GridItem>
-          <GridItem
-            colSpan={{ base: 6, md: 3 }}
-            as="main"
-            mt={{ base: "5", md: "1" }}
-            mb={{ base: "100", md: "0" }}
-          >
+          <GridItem colSpan={{ base: 6, md: 3 }} as="main" mt={{ base: '5', md: '1' }} mb={{ base: '100', md: '0' }}>
             {/* Image */}
             <VStack mt="10">
               {!productCategory?.url ||
                 (categoryId !== 0 && (
                   <>
                     <Text zIndex={1} fontWeight="bold">
-                      {t("elements.label.image")}
+                      {t('elements.label.image')}
                     </Text>
                     <Box position="relative">
                       <Image
                         alt="category"
-                        src={
-                          hasSearchedImage
-                            ? imageFromSearch
-                            : productCategory?.url
-                        }
+                        src={hasSearchedImage ? imageFromSearch : productCategory?.url}
                         objectFit="cover"
                         rounded="lg"
                         boxSize="sm"
@@ -382,11 +312,7 @@ const EditCategory: NextPage = () => {
                         transform="scale(1.05, 1.05)"
                       />
                       <Image
-                        src={
-                          hasSearchedImage
-                            ? imageFromSearch
-                            : productCategory?.url
-                        }
+                        src={hasSearchedImage ? imageFromSearch : productCategory?.url}
                         alt="category"
                         zIndex={1}
                         boxSize="sm"

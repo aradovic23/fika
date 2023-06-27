@@ -1,16 +1,9 @@
-import {
-  Container,
-  HStack,
-  IconButton,
-  Input,
-  Text,
-  useToast,
-} from "@chakra-ui/react";
-import { PlusIcon } from "@heroicons/react/24/solid";
-import type { Unit } from "@prisma/client";
-import type { FC } from "react";
-import { useForm } from "react-hook-form";
-import { api } from "../utils/api";
+import { Container, HStack, IconButton, Input, Text, useToast } from '@chakra-ui/react';
+import { PlusIcon } from '@heroicons/react/24/solid';
+import type { Unit } from '@prisma/client';
+import type { FC } from 'react';
+import { useForm } from 'react-hook-form';
+import { api } from '../utils/api';
 
 interface Props {
   handleNewUnit: (state: boolean) => void;
@@ -41,9 +34,9 @@ const CreateVolumeOption: FC<Props> = ({ handleNewUnit }) => {
         onSuccess: () => {
           toast({
             title: `Created volume amount ${data.amount}`,
-            status: "success",
+            status: 'success',
             isClosable: true,
-            position: "top",
+            position: 'top',
           });
           void utils.volume.getVolumeOptions.invalidate();
           handleNewUnit(false);
@@ -51,11 +44,11 @@ const CreateVolumeOption: FC<Props> = ({ handleNewUnit }) => {
         },
         onError: () => {
           toast({
-            title: "Duplicate",
+            title: 'Duplicate',
             description: `Volume with ${data.amount} amount already exists. Add a different option.`,
-            status: "warning",
+            status: 'warning',
             isClosable: true,
-            position: "top",
+            position: 'top',
           });
           reset();
         },
@@ -68,12 +61,11 @@ const CreateVolumeOption: FC<Props> = ({ handleNewUnit }) => {
       <HStack spacing={5}>
         <Input
           placeholder="Enter volume amount (For example 0.30 or 0.05)"
-          {...register("amount", {
+          {...register('amount', {
             required: true,
             pattern: {
               value: /^\d{1,3}\.\d{2}$/,
-              message:
-                "Volume unit should have at least 3 characters (e.g 0.30)",
+              message: 'Volume unit should have at least 3 characters (e.g 0.30)',
             },
           })}
         />

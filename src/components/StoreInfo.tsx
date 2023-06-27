@@ -1,5 +1,5 @@
-import { Image, VStack } from "@chakra-ui/react";
-import type { FC } from "react";
+import { Image, VStack } from '@chakra-ui/react';
+import type { FC } from 'react';
 
 interface Props {
   name?: string;
@@ -8,19 +8,7 @@ interface Props {
 }
 
 const StoreInfo: FC<Props> = ({ fileUrl }) => {
-  return (
-    <VStack>
-      {fileUrl && (
-        <Image
-          src={fileUrl}
-          alt="logo"
-          objectFit="cover"
-          boxSize="sm"
-          rounded="md"
-        />
-      )}
-    </VStack>
-  );
+  return <VStack>{fileUrl && <Image src={fileUrl} alt="logo" objectFit="cover" boxSize="sm" rounded="md" />}</VStack>;
 };
 
 export default StoreInfo;

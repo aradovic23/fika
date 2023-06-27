@@ -1,17 +1,17 @@
-import { Skeleton } from "@chakra-ui/react"
+import { Skeleton } from '@chakra-ui/react';
 
 interface Props {
-    height: string;
+  height: string;
 }
 
 const SkeletonLoader = ({ height }: Props) => {
-    return (
-        <>
-            {[...Array(6).keys()].map((i) => (
-                <Skeleton height={height} rounded="lg" key={i} />
-            ))}
-        </>
-    )
-}
+  return (
+    <>
+      {[...Array(6).keys()].map(i => (
+        <Skeleton height={height} rounded="lg" key={i} />
+      ))}
+    </>
+  );
+};
 
-export default SkeletonLoader
+export default SkeletonLoader;

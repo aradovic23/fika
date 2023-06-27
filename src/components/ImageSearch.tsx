@@ -1,20 +1,10 @@
-import { useState } from "react";
-import { env } from "../env/client.mjs";
-import type { Result, UnsplashImage } from "../../typings";
-import { useQuery } from "@tanstack/react-query";
-import {
-  Box,
-  Button,
-  HStack,
-  IconButton,
-  Image,
-  Input,
-  SimpleGrid,
-  Spinner,
-  Text,
-} from "@chakra-ui/react";
-import { MagnifyingGlassIcon } from "@heroicons/react/24/solid";
-import { useTranslation } from "react-i18next";
+import { useState } from 'react';
+import { env } from '../env/client.mjs';
+import type { Result, UnsplashImage } from '../../typings';
+import { useQuery } from '@tanstack/react-query';
+import { Box, Button, HStack, IconButton, Image, Input, SimpleGrid, Spinner, Text } from '@chakra-ui/react';
+import { MagnifyingGlassIcon } from '@heroicons/react/24/solid';
+import { useTranslation } from 'react-i18next';
 
 interface Props {
   handleSelectedImage: (image: string, blur: string) => void;
@@ -22,26 +12,23 @@ interface Props {
 
 const ImageSearch = ({ handleSelectedImage }: Props) => {
   const { t } = useTranslation();
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState('');
   const ACCESS_KEY = env.NEXT_PUBLIC_UNSPLASH_ACCESS_KEY;
-  const BASE_URL = "https://api.unsplash.com";
+  const BASE_URL = 'https://api.unsplash.com';
   const [selectedImage, setSelectedImage] = useState({
-    url: "",
-    id: "",
-    blurHash: "",
+    url: '',
+    id: '',
+    blurHash: '',
   });
   const [showResults, setShowResults] = useState(false);
 
-  const { data, isLoading, isError, refetch } = useQuery<Result[], Error>(
-    ["images"],
-    async () => {
-      const response = await fetch(
-        `${BASE_URL}/search/photos?page=1&query=${searchTerm}&per_page=30&client_id=${ACCESS_KEY}`
-      );
-      const data = (await response.json()) as UnsplashImage;
-      return data.results;
-    }
-  );
+  const { data, isLoading, isError, refetch } = useQuery<Result[], Error>(['images'], async () => {
+    const response = await fetch(
+      `${BASE_URL}/search/photos?page=1&query=${searchTerm}&per_page=30&client_id=${ACCESS_KEY}`
+    );
+    const data = (await response.json()) as UnsplashImage;
+    return data.results;
+  });
 
   const fetchRequest = async (): Promise<void> => {
     await refetch();
@@ -50,7 +37,7 @@ const ImageSearch = ({ handleSelectedImage }: Props) => {
   const onSubmitHandler = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
     await fetchRequest();
-    setSearchTerm("");
+    setSearchTerm('');
     setShowResults(true);
   };
 
@@ -65,9 +52,9 @@ const ImageSearch = ({ handleSelectedImage }: Props) => {
       <HStack w="full">
         <Input
           value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
+          onChange={e => setSearchTerm(e.target.value)}
           inputMode="search"
-          placeholder={t("elements.placeholder.image_search") ?? "Search"}
+          placeholder={t('elements.placeholder.image_search') ?? 'Search'}
         />
         <IconButton
           aria-label="search"
@@ -77,28 +64,11 @@ const ImageSearch = ({ handleSelectedImage }: Props) => {
           variant="solid"
         />
       </HStack>
-      {isLoading && (
-        <Spinner
-          thickness="4px"
-          speed="0.65s"
-          emptyColor="gray.200"
-          color="blue.500"
-          size="xl"
-        />
-      )}
+      {isLoading && <Spinner thickness="4px" speed="0.65s" emptyColor="gray.200" color="blue.500" size="xl" />}
       {isError && <Text>Error fetching data</Text>}
       {showResults && (
-        <SimpleGrid
-          spacing="5"
-          columns={2}
-          mt="4"
-          bg="blackAlpha.300"
-          p="5"
-          rounded="lg"
-          maxH="30rem"
-          overflowY="auto"
-        >
-          {data?.map((image) => (
+        <SimpleGrid spacing="5" columns={2} mt="4" bg="blackAlpha.300" p="5" rounded="lg" maxH="30rem" overflowY="auto">
+          {data?.map(image => (
             <Box key={image.id} position="relative">
               {selectedImage.id === image.id && (
                 <Button
@@ -111,7 +81,7 @@ const ImageSearch = ({ handleSelectedImage }: Props) => {
                   colorScheme="whatsapp"
                   variant="solid"
                 >
-                  {t("elements.button.select")}
+                  {t('elements.button.select')}
                 </Button>
               )}
               <Box position="relative">
@@ -121,7 +91,7 @@ const ImageSearch = ({ handleSelectedImage }: Props) => {
                     setSelectedImage({
                       url: image.urls.regular,
                       id: image.id,
-                      blurHash: image.blur_hash ?? "",
+                      blurHash: image.blur_hash ?? '',
                     })
                   }
                   src={image.urls.small}

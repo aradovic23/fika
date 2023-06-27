@@ -1,7 +1,7 @@
-import { useForm } from "react-hook-form";
-import { Form } from "./Form";
-import type { FC } from "react";
-import { useState } from "react";
+import { useForm } from 'react-hook-form';
+import { Form } from './Form';
+import type { FC } from 'react';
+import { useState } from 'react';
 import {
   Button,
   Flex,
@@ -14,11 +14,11 @@ import {
   Textarea,
   useToast,
   VStack,
-} from "@chakra-ui/react";
-import type { Drink, Unit } from "@prisma/client";
-import { useTranslation } from "react-i18next";
-import ImageSearch from "./ImageSearch";
-import { api } from "../utils/api";
+} from '@chakra-ui/react';
+import type { Drink, Unit } from '@prisma/client';
+import { useTranslation } from 'react-i18next';
+import ImageSearch from './ImageSearch';
+import { api } from '../utils/api';
 
 interface EditFormProps {
   drink: Drink;
@@ -28,13 +28,7 @@ interface EditFormProps {
   units?: Unit[];
 }
 
-const EditDrinkForm: FC<EditFormProps> = ({
-  drink,
-  onSubmit,
-  addDescription,
-  addTypes,
-  units,
-}) => {
+const EditDrinkForm: FC<EditFormProps> = ({ drink, onSubmit, addDescription, addTypes, units }) => {
   const {
     register,
     handleSubmit,
@@ -44,19 +38,19 @@ const EditDrinkForm: FC<EditFormProps> = ({
     defaultValues: drink,
   });
   const { t } = useTranslation();
-  const [selectedImage, setSelectedImage] = useState("");
+  const [selectedImage, setSelectedImage] = useState('');
   const utils = api.useContext();
   const toast = useToast();
 
   const handleSelectedImage = (image: string) => {
     setSelectedImage(image);
-    setValue("image", image);
+    setValue('image', image);
   };
 
   const updateSingleDrink = api.drinks.removeProductImage.useMutation();
 
   const removeProductImage = async (id: string) => {
-    if (!window.confirm("Are you sure you want to delete the image?")) {
+    if (!window.confirm('Are you sure you want to delete the image?')) {
       return;
     }
     await updateSingleDrink.mutateAsync(
@@ -72,18 +66,18 @@ const EditDrinkForm: FC<EditFormProps> = ({
           toast({
             title: `Image removed!`,
             description: `Product image was successfully updated!`,
-            status: "success",
+            status: 'success',
             isClosable: true,
-            position: "top",
+            position: 'top',
           });
         },
-        onError: (error) => {
+        onError: error => {
           toast({
             title: `An error occurred`,
             description: `${error.message}`,
-            status: "success",
+            status: 'success',
             isClosable: true,
-            position: "top",
+            position: 'top',
           });
         },
       }
@@ -93,102 +87,68 @@ const EditDrinkForm: FC<EditFormProps> = ({
   return (
     <Form onSubmit={handleSubmit(onSubmit)}>
       <FormControl>
-        <FormLabel htmlFor="title">{t("elements.label.title")}</FormLabel>
-        <Input placeholder="Type here" id="title" {...register("title")} />
+        <FormLabel htmlFor="title">{t('elements.label.title')}</FormLabel>
+        <Input placeholder="Type here" id="title" {...register('title')} />
       </FormControl>
 
       <FormControl>
-        <FormLabel htmlFor="price">{t("elements.label.price")}</FormLabel>
-        <Input
-          placeholder="Type here"
-          id="title"
-          {...register("price")}
-          inputMode="numeric"
-        />
+        <FormLabel htmlFor="price">{t('elements.label.price')}</FormLabel>
+        <Input placeholder="Type here" id="title" {...register('price')} inputMode="numeric" />
       </FormControl>
 
-      <Select
-        {...register("unitId")}
-        placeholder={!drink.unitId ? "Select a volume" : undefined}
-      >
-        {units?.map((unit) => (
+      <Select {...register('unitId')} placeholder={!drink.unitId ? 'Select a volume' : undefined}>
+        {units?.map(unit => (
           <option value={unit.id} key={unit.id}>
             {unit.amount}
           </option>
         ))}
       </Select>
 
-      <Flex
-        bg="blackAlpha.100"
-        p={3}
-        rounded="md"
-        justifyContent="space-between"
-      >
-        <FormLabel>{t("elements.additional_field.hide_product")}</FormLabel>
-        <Switch {...register("isHidden")} size="lg" colorScheme="green" />
+      <Flex bg="blackAlpha.100" p={3} rounded="md" justifyContent="space-between">
+        <FormLabel>{t('elements.additional_field.hide_product')}</FormLabel>
+        <Switch {...register('isHidden')} size="lg" colorScheme="green" />
       </Flex>
-      <Flex
-        bg="blackAlpha.100"
-        p={3}
-        rounded="md"
-        justifyContent="space-between"
-      >
+      <Flex bg="blackAlpha.100" p={3} rounded="md" justifyContent="space-between">
         <FormLabel>Set this product to recommended</FormLabel>
-        <Switch {...register("isRecommended")} size="lg" colorScheme="green" />
+        <Switch {...register('isRecommended')} size="lg" colorScheme="green" />
       </Flex>
 
       {addTypes && (
         <FormControl>
-          <FormLabel htmlFor="type">{t("elements.label.type")}</FormLabel>
-          <Input placeholder="Type here" id="type" {...register("type")} />
+          <FormLabel htmlFor="type">{t('elements.label.type')}</FormLabel>
+          <Input placeholder="Type here" id="type" {...register('type')} />
         </FormControl>
       )}
       {addDescription && (
         <VStack>
           <FormControl>
-            <FormLabel htmlFor="description">
-              {t("elements.label.description")}
-            </FormLabel>
-            <Textarea
-              placeholder="Description here"
-              id="description"
-              {...register("description")}
-            />
+            <FormLabel htmlFor="description">{t('elements.label.description')}</FormLabel>
+            <Textarea placeholder="Description here" id="description" {...register('description')} />
           </FormControl>
           <FormControl>
-            <FormLabel>{t("elements.label.image")}</FormLabel>
+            <FormLabel>{t('elements.label.image')}</FormLabel>
             <ImageSearch handleSelectedImage={handleSelectedImage} />
-            <Input {...register("image")} hidden />
+            <Input {...register('image')} hidden />
           </FormControl>
         </VStack>
       )}
       {(selectedImage || drink.image) && (
         <VStack>
           <Image
-            src={selectedImage ? selectedImage : drink.image ?? ""}
+            src={selectedImage ? selectedImage : drink.image ?? ''}
             alt="bla"
             boxSize="md"
             objectFit="cover"
             rounded="md"
           />
-          <Button
-            colorScheme="red"
-            variant="ghost"
-            onClick={() => removeProductImage(drink.id)}
-            size="sm"
-          >
+          <Button colorScheme="red" variant="ghost" onClick={() => removeProductImage(drink.id)} size="sm">
             Remove photo
           </Button>
         </VStack>
       )}
 
-      <Button
-        colorScheme="primary"
-        type="submit"
-        mb="10"
-        isLoading={isSubmitting}
-      >
-        {t("elements.button.save")}
+      <Button colorScheme="primary" type="submit" mb="10" isLoading={isSubmitting}>
+        {t('elements.button.save')}
       </Button>
     </Form>
   );

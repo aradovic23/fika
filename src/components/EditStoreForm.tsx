@@ -1,19 +1,19 @@
-import { Box, Button, FormControl, FormLabel, Heading, Image, Input, Text, useToast, VStack } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
-import type { FC } from "react";
-import { useForm } from "react-hook-form";
-import { Form } from "./Form";
-import { api } from "../utils/api";
-import { UploadButton } from "@uploadthing/react";
-import type { OurFileRouter } from "../server/uploadthing";
-import type { Store } from "@prisma/client";
+import { Box, Button, FormControl, FormLabel, Heading, Image, Input, Text, useToast, VStack } from '@chakra-ui/react';
+import { useEffect, useState } from 'react';
+import type { FC } from 'react';
+import { useForm } from 'react-hook-form';
+import { Form } from './Form';
+import { api } from '../utils/api';
+import { UploadButton } from '@uploadthing/react';
+import type { OurFileRouter } from '../server/uploadthing';
+import type { Store } from '@prisma/client';
 
 interface File {
   fileKey: string;
   fileUrl: string;
 }
 
-const EditStoreForm: FC<Store> = (store) => {
+const EditStoreForm: FC<Store> = store => {
   const {
     register,
     reset,
@@ -47,22 +47,21 @@ const EditStoreForm: FC<Store> = (store) => {
       setFile(null);
       toast({
         title: `Update successful`,
-        description: `${store.name ?? ""} was successfully updated!`,
-        status: "success",
+        description: `${store.name ?? ''} was successfully updated!`,
+        status: 'success',
         isClosable: true,
-        position: "top",
+        position: 'top',
       });
     } catch (err) {
-      console.log(err);
+      console.warn(err);
     }
   };
-
 
   return (
     <Form onSubmit={handleSubmit(handleStoreUpdate)}>
       <FormControl>
         <FormLabel htmlFor="name">Store name</FormLabel>
-        <Input placeholder="name" id="name" {...register("name")} />
+        <Input placeholder="name" id="name" {...register('name')} />
       </FormControl>
       {!file && (
         <FormControl>
@@ -70,9 +69,9 @@ const EditStoreForm: FC<Store> = (store) => {
           <Box p="5" border="1px" borderColor="chakra-placeholder-color" rounded="lg">
             <UploadButton<OurFileRouter>
               endpoint="imageUploader"
-              onClientUploadComplete={(res) => {
+              onClientUploadComplete={res => {
                 if (Array.isArray(res) && res.length > 0) {
-                  setFile(res[0])
+                  setFile(res[0]);
                 }
               }}
             />
@@ -82,21 +81,12 @@ const EditStoreForm: FC<Store> = (store) => {
 
       {file && (
         <VStack bg="green.300" p="1" rounded="lg">
-          <Image alt="logo"
-            src={file.fileUrl}
-            boxSize="100px"
-            rounded="lg"
-            objectFit="cover" />
+          <Image alt="logo" src={file.fileUrl} boxSize="100px" rounded="lg" objectFit="cover" />
           <Text color="black">Image ready!</Text>
         </VStack>
       )}
 
-      <Button
-        colorScheme="primary"
-        type="submit"
-        mb="4"
-        isLoading={isSubmitting}
-      >
+      <Button colorScheme="primary" type="submit" mb="4" isLoading={isSubmitting}>
         Update
       </Button>
     </Form>
