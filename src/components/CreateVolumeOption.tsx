@@ -23,8 +23,6 @@ const CreateVolumeOption: FC<Props> = ({ handleNewUnit }) => {
 
   const utils = api.useContext();
 
-  console.log(errors);
-
   const handleCreateVolumeOption = async (data: Unit) => {
     await createVolumeOption.mutateAsync(
       {

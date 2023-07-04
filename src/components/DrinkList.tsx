@@ -7,6 +7,7 @@ import { api } from '../utils/api';
 import {
   Box,
   Button,
+  Divider,
   Flex,
   HStack,
   Image,
@@ -109,8 +110,9 @@ export const DrinkList = (drink: DrinkWithUnits) => {
             </HStack>
           </VStack>
         </Flex>
+        <Divider />
         {isAdmin && (
-          <HStack w="full" border="1px" borderColor="primary.200" p="2" rounded="lg" justify="space-between">
+          <HStack w="full" p="2" rounded="lg" justify="space-between">
             <>
               <Button
                 leftIcon={<PencilSquareIcon className="h-4 w-4" />}

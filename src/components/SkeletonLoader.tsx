@@ -1,14 +1,17 @@
 import { Skeleton } from '@chakra-ui/react';
 
 interface Props {
-  height: string;
+  height?: string | number;
+  rounded?: string;
+  width?: string | number;
+  count?: number;
 }
 
-const SkeletonLoader = ({ height }: Props) => {
+const SkeletonLoader = ({ height, rounded = 'lg', width, count = 6 }: Props) => {
   return (
     <>
-      {[...Array(6).keys()].map(i => (
-        <Skeleton height={height} rounded="lg" key={i} />
+      {[...Array(count).keys()].map(i => (
+        <Skeleton height={height} rounded={rounded} key={i} width={width} />
       ))}
     </>
   );
