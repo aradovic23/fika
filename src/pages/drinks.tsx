@@ -1,9 +1,11 @@
 import {
+  Checkbox,
   Container,
   FormLabel,
   Grid,
   GridItem,
   Heading,
+  HStack,
   Input,
   InputGroup,
   InputLeftElement,
@@ -39,6 +41,8 @@ const Drinks: NextPage = () => {
 
   const [search, setSearch] = useState('');
 
+  const [showHiddenProducts, setShowHiddenProducts] = useState(true);
+
   const { data, isLoading } = api.categories.getCategories.useQuery();
 
   const defaultCategory = data?.find(category => category.isDefault);
@@ -52,7 +56,8 @@ const Drinks: NextPage = () => {
   const filteredDrinks = (drinks.data ?? [])
     .filter(drink => (selectedCategory === 0 ? true : drink.categoryId === selectedCategory))
     .filter(drink => (search != '' ? drink.title?.toLowerCase().includes(search.toLowerCase()) : true))
-    .filter(drink => (drink.isHidden && isAdmin ? true : !drink.isHidden ? true : false));
+    .filter(drink => (drink.isHidden && isAdmin ? true : !drink.isHidden ? true : false))
+    .filter(drink => (drink.isHidden && isAdmin && showHiddenProducts ? true : !drink.isHidden ? true : false));
 
   const recommendedDrinks = (drinks.data ?? [])
     .filter(drink => drink.isRecommended && !drink.isHidden)
@@ -80,7 +85,7 @@ const Drinks: NextPage = () => {
             colSpan={{ base: 6, md: 3, lg: 2 }}
             as="aside"
             mr={{ base: '0', md: '3' }}
-            mb={{ base: '3', md: '0' }}
+            mb={{ base: '10', md: '0' }}
             bg="blackAlpha.50"
             h={{ base: '10rem', md: 'calc(100%)' }}
             p={{ base: '3', md: '5' }}
@@ -121,6 +126,13 @@ const Drinks: NextPage = () => {
                 })}
               </Select>
             </Stack>
+            {isAdmin && (
+              <HStack mt="4">
+                <Checkbox onChange={() => setShowHiddenProducts(!showHiddenProducts)} defaultChecked>
+                  View hidden products (admin view)
+                </Checkbox>
+              </HStack>
+            )}
           </GridItem>
 
           <GridItem colSpan={{ base: 6, md: 3, lg: 4 }} as="main" mb={{ base: '6rem', md: 0 }}>
@@ -130,7 +142,7 @@ const Drinks: NextPage = () => {
 
             <SimpleGrid spacing="5" minChildWidth="20rem">
               {isLoading ? (
-                <SkeletonLoader height="5rem" />
+                <SkeletonLoader height="10rem" />
               ) : filteredDrinks.length === 0 ? (
                 <ScaleFade initialScale={0.8} in unmountOnExit>
                   <NoResults />
