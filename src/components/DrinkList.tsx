@@ -49,14 +49,13 @@ export const DrinkList = (drink: DrinkWithUnits) => {
   const hasTypes = category?.addTypes;
   const isAdmin = sessionData?.user?.role === 'ADMIN';
 
-  const bg = useColorModeValue('whiteAlpha.800', 'blackAlpha.400');
-  const color = useColorModeValue('gray.900', 'gray.100');
+  const bg = useColorModeValue('mantle.100', 'mantle.200');
 
   const showHiddenProduct = drink.isHidden && sessionData?.user?.role === 'ADMIN';
 
   return (
     <>
-      <VStack gap={3} shadow="md" rounded="lg" bg={bg} color={color} p={2}>
+      <VStack gap={3} shadow="sm" rounded="lg" bg={bg} p={2}>
         <Flex w="full" gap="3">
           <Box boxSize="5rem" position="relative" minW="5rem">
             <Image
@@ -110,34 +109,35 @@ export const DrinkList = (drink: DrinkWithUnits) => {
             </HStack>
           </VStack>
         </Flex>
-        <Divider />
         {isAdmin && (
-          <HStack w="full" p="2" rounded="lg" justify="space-between">
-            <>
-              <Button
-                leftIcon={<PencilSquareIcon className="h-4 w-4" />}
-                size="sm"
-                colorScheme="facebook"
-                aria-label="edit"
-                as={Link}
-                href={`/drink/${drink.id}`}
-              >
-                Edit
-              </Button>
-              <Button
-                leftIcon={<TrashIcon className="h-4 w-4" />}
-                colorScheme="red"
-                variant="ghost"
-                size="sm"
-                aria-label="delete"
-                onClick={() => {
-                  onDeleteHandler(drink.id);
-                }}
-              >
-                Delete
-              </Button>
-            </>
-          </HStack>
+          <>
+            <Divider variant="brand" />
+            <HStack w="full" p="2" rounded="lg" justify="space-between">
+              <>
+                <Button
+                  leftIcon={<PencilSquareIcon className="h-4 w-4" />}
+                  size="sm"
+                  aria-label="edit"
+                  as={Link}
+                  href={`/drink/${drink.id}`}
+                >
+                  Edit
+                </Button>
+                <Button
+                  leftIcon={<TrashIcon className="h-4 w-4" />}
+                  colorScheme="red"
+                  variant="ghost"
+                  size="sm"
+                  aria-label="delete"
+                  onClick={() => {
+                    onDeleteHandler(drink.id);
+                  }}
+                >
+                  Delete
+                </Button>
+              </>
+            </HStack>
+          </>
         )}
       </VStack>
 

@@ -57,7 +57,7 @@ const Home: NextPage = () => {
           )}
 
           <Link href={!storeData ? '/settings' : '/drinks'}>
-            <Button bg="primary.500">{buttonActions}</Button>
+            <Button variant="user">{buttonActions}</Button>
           </Link>
         </VStack>
       </Center>

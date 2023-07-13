@@ -6,7 +6,7 @@ const ColorModeSwitcher = () => {
 
   return (
     <header>
-      <Button onClick={toggleColorMode}>
+      <Button onClick={toggleColorMode} variant="ghost">
         {colorMode === 'light' ? <MoonIcon className="h-6 w-6 text-base" /> : <SunIcon className="h-6 w-6" />}
       </Button>
     </header>

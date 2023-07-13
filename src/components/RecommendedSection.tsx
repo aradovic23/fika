@@ -39,7 +39,6 @@ const RecommendedSection = ({ drinks, isAdmin }: Props) => {
               {isAdmin && (
                 <Button
                   aria-label="clear products"
-                  colorScheme="primary"
                   size="xs"
                   onClick={handleClearRecommended}
                   leftIcon={<XCircleIcon className="h-4 w-4" />}

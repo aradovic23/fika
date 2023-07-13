@@ -13,12 +13,14 @@ import {
   Select,
   SimpleGrid,
   Stack,
+  useColorModeValue,
 } from '@chakra-ui/react';
 import { MagnifyingGlassIcon } from '@heroicons/react/24/solid';
 import { type NextPage } from 'next';
 import { useSession } from 'next-auth/react';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import Head from 'next/head';
+import type { ChangeEvent } from 'react';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import nextI18nConfig from '../../next-i18next.config.mjs';
@@ -53,6 +55,8 @@ const Drinks: NextPage = () => {
 
   const isAdmin = sessionData?.user?.role === 'ADMIN';
 
+  const bg = useColorModeValue('mantle.100', 'mantle.200');
+
   const filteredDrinks = (drinks.data ?? [])
     .filter(drink => (selectedCategory === 0 ? true : drink.categoryId === selectedCategory))
     .filter(drink => (search != '' ? drink.title?.toLowerCase().includes(search.toLowerCase()) : true))
@@ -62,6 +66,11 @@ const Drinks: NextPage = () => {
   const recommendedDrinks = (drinks.data ?? [])
     .filter(drink => drink.isRecommended && !drink.isHidden)
     .sort((a, b) => Number(b.updatedAt) - Number(a.updatedAt));
+
+  const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setSearch(e.target.value);
+    setSelectedCategory(0);
+  };
 
   const { t } = useTranslation('common');
 
@@ -86,10 +95,11 @@ const Drinks: NextPage = () => {
             as="aside"
             mr={{ base: '0', md: '3' }}
             mb={{ base: '10', md: '0' }}
-            bg="blackAlpha.50"
+            bg={bg}
             h={{ base: '10rem', md: 'calc(100%)' }}
             p={{ base: '3', md: '5' }}
             rounded="md"
+            shadow="sm"
           >
             <InputGroup>
               <InputLeftElement pointerEvents="none">
@@ -98,7 +108,7 @@ const Drinks: NextPage = () => {
               <Input
                 id="search"
                 placeholder="Enter drink name..."
-                onChange={e => setSearch(e.target.value)}
+                onChange={handleSearchChange}
                 value={search}
                 variant="filled"
               />
@@ -136,7 +146,7 @@ const Drinks: NextPage = () => {
           </GridItem>
 
           <GridItem colSpan={{ base: 6, md: 3, lg: 4 }} as="main" mb={{ base: '6rem', md: 0 }}>
-            <SimpleGrid mb="4">
+            <SimpleGrid mb="10">
               {!!recommendedDrinks.length && <RecommendedSection drinks={recommendedDrinks} isAdmin={isAdmin} />}
             </SimpleGrid>
 

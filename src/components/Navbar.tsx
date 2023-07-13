@@ -59,7 +59,7 @@ const Navbar: FC = () => {
         {sessionData?.user?.role === 'ADMIN' ? (
           <>
             <Menu>
-              <MenuButton as={IconButton} icon={<Bars3Icon className="h-6 w-6" />}></MenuButton>
+              <MenuButton as={IconButton} variant="ghost" icon={<Bars3Icon className="h-6 w-6" />}></MenuButton>
               <Portal>
                 <MenuList>
                   {navigation.map(item => (

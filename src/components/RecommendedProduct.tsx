@@ -31,7 +31,7 @@ const RecommendedProduct = ({ drink, isAdmin }: Props) => {
     },
   });
   const utils = api.useContext();
-  const bgColor = useColorModeValue('gray.50', 'whiteAlpha.100');
+  const bgColor = useColorModeValue('crust.100', 'crust.200');
 
   const handleRemoveFromRecommended = (id: string) => {
     removeRecommendedProduct({ id });
@@ -43,15 +43,29 @@ const RecommendedProduct = ({ drink, isAdmin }: Props) => {
     });
   };
 
+  const bg = useColorModeValue('lavander.100', 'lavander.200');
+
   return (
     <>
       {isLoading ? (
         <SkeletonLoader width={150} height="full" rounded="md" count={1} />
       ) : (
-        <VStack bg={bgColor} minW={150} rounded="md" p={2} spacing={0} shadow="md">
+        <VStack
+          bg={bgColor}
+          minW={150}
+          minH={150}
+          align="center"
+          justify="center"
+          rounded="md"
+          p={3}
+          spacing={0}
+          shadow="md"
+          border="1px"
+          borderColor={bg}
+        >
           <TruncatedText>{drink.title}</TruncatedText>
           <Text fontSize="2xl" fontWeight="bold">
-            {drink.price}
+            {drink.price} RSD
           </Text>
 
           {isAdmin && (
