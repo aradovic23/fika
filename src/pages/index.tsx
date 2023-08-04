@@ -1,14 +1,12 @@
+import { Alert, AlertDescription, AlertIcon, AlertTitle, Box, Container, Flex, VStack } from '@chakra-ui/react';
 import { type NextPage } from 'next';
-import Head from 'next/head';
-import Link from 'next/link';
-import { Alert, AlertDescription, AlertIcon, AlertTitle, Button, Container, VStack } from '@chakra-ui/react';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import Head from 'next/head';
 import nextI18nConfig from '../../next-i18next.config.mjs';
-import { useTranslation } from 'next-i18next';
-import { api } from '../utils/api';
+import type { DrinkWithCategory } from '../components/ImageCard';
 import { PageSpinner } from '../components/LoaderSpinner';
-import { HomePageProduct } from '../components/HomePageProduct';
-import HomePageCard from '../components/HomePageCard';
+import ScrollableRow from '../components/sections/ScrollableRow';
+import { api } from '../utils/api';
 
 export const getServerSideProps = async ({ locale }: { locale: string }) => ({
   props: {
@@ -17,11 +15,12 @@ export const getServerSideProps = async ({ locale }: { locale: string }) => ({
 });
 
 const Home: NextPage = () => {
-  const { t } = useTranslation('common');
+  //const { t } = useTranslation('common');
   const { data: storeData, isLoading } = api.settings.getStore.useQuery();
-  const { data } = api.drinks.getRecommendedProducts.useQuery();
+  const { data: drinks } = api.drinks.getRecommendedProducts.useQuery();
+  const { data: categories } = api.categories.getCategories.useQuery();
 
-  const buttonActions = !storeData ? 'Visit Settings' : t('elements.button.view_all');
+  //  const buttonActions = !storeData ? 'Visit Settings' : t('elements.button.view_all');
 
   if (isLoading) {
     return <PageSpinner />;
@@ -34,11 +33,10 @@ const Home: NextPage = () => {
       </Head>
 
       <Container maxW="4xl">
-        <HomePageCard heading="Recommendation! 🌼">
-          {data?.map(prod => (
-            <HomePageProduct product={prod} key={prod.id} />
-          ))}
-        </HomePageCard>
+        <Flex direction="column" gap="5" mt="5">
+          <ScrollableRow heading="Recommendations! 🌼" type="drinks" data={drinks as DrinkWithCategory[]} />
+          <ScrollableRow heading="Categories ☕️" type="categories" data={categories ?? []} />
+        </Flex>
         {!storeData && (
           <Alert status="warning" rounded="md">
             <AlertIcon />

@@ -1,13 +1,25 @@
 import { Badge, Box, Heading, Text, VStack } from '@chakra-ui/react';
-import type { Drink } from '@prisma/client';
-import { useGetCategory } from '../hooks/useGetCategory';
+import type { Category, Drink } from '@prisma/client';
 import ChakraImage from './ui/ChakraImage';
 
-export const HomePageProduct = ({ product }: { product: Drink }) => {
-  const { category } = useGetCategory(product.categoryId ?? 1) ?? '';
-  const hasDescription = category?.addDescription;
+export type DrinkWithCategory = Drink & {
+  category: Category;
+};
+
+type Props = {
+  type: 'drinks' | 'categories';
+  data: DrinkWithCategory | Category;
+};
+
+export const ImageCard = ({ type, data }: Props) => {
+  const isDrink = (data: Drink | Category): data is Drink => {
+    return type === 'drinks';
+  };
+
+  const drinkImage = isDrink(data) ? ((data.category?.addDescription && data.image) || data.category?.url) ?? '' : '';
+
   return (
-    <VStack rounded="md" shadow="md" userSelect="none">
+    <VStack rounded="md" shadow="md" userSelect="none" scrollSnapAlign="start">
       <Box
         pos="relative"
         boxSize="sm"
@@ -19,7 +31,7 @@ export const HomePageProduct = ({ product }: { product: Drink }) => {
         draggable="false"
       >
         <ChakraImage
-          src={((hasDescription && product.image) || category?.url) ?? ''}
+          src={type === 'drinks' ? drinkImage ?? '' : (data as Category).url ?? ''}
           alt="image"
           objectFit="cover"
           sizes="100vw"
@@ -38,13 +50,15 @@ export const HomePageProduct = ({ product }: { product: Drink }) => {
           textAlign="center"
           bgGradient="linear(to-t, crust.200 0%, transparent 60%)"
         >
-          <Badge variant="subtle" rounded="md" pos="absolute" top={5} right={5}>
-            {category?.categoryName}
-          </Badge>
+          {type === 'drinks' && (
+            <Badge variant="subtle" rounded="md" pos="absolute" top={5} right={5}>
+              {(data as DrinkWithCategory).category.categoryName}
+            </Badge>
+          )}
           <VStack pos="absolute" bottom={5}>
-            <Text>{product.price} RSD</Text>
+            {type === 'drinks' && <Text>{(data as Drink).price} RSD</Text>}
             <Heading fontSize="2xl" fontWeight="bold" mt="0 !important" noOfLines={[1, 2]}>
-              {product.title}
+              {type === 'drinks' ? (data as Drink).title : (data as Category).categoryName}
             </Heading>
           </VStack>
         </Box>

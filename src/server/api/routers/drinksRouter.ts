@@ -67,8 +67,11 @@ export const drinksRouter = createTRPCRouter({
         isRecommended: true,
         isHidden: false,
       },
+      include: {
+        category: true,
+      },
     });
-    return drinks;
+    return drinks as Prisma.DrinkInclude;
   }),
 
   getDrinkById: publicProcedure.input(z.object({ id: z.string() })).query(async ({ ctx, input }) => {
