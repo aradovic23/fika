@@ -1,50 +1,54 @@
 {
   "welcome_page_title": "Drinks App početna stranica",
-  "all_products_title": "Sva pića",
-  "create_new_product": "Napravi novi proizvod",
-  "edit_category": "Izmeni kategoriju",
-  "edit_drink": "Izmeni proizvod",
-  "create_new_category": "Napravi novu kategoriju",
+  "home": {
+    "recommendations": "Препоручујемо!",
+    "categories": "Категорије"
+  },
+  "all_products_title": "Сви производи",
+  "create_new_product": "Направи нови производ",
+  "edit_category": "Измени категорију",
+  "edit_drink": "Измени производ",
+  "create_new_category": "Направи нову категорију",
   "elements": {
     "button": {
-      "submit": "Napravi proizvod",
-      "save": "Sačuvaj izmene",
-      "delete": "Obriši",
-      "view_all": "Pogledaj sve",
-      "create_new": "Napravi novo",
-      "submit_category": "Napravi kategoriju",
-      "select": "Izaberi"
+      "submit": "Направи",
+      "save": "Сачувај измене",
+      "delete": "Избриши",
+      "view_all": "Погледај све",
+      "create_new": "Ново",
+      "submit_category": "Направи категорију",
+      "select": "Изабери"
     },
     "label": {
-      "title": "Naziv",
-      "price": "Cena",
-      "tag": "Tag",
-      "volume": "Zapremina",
-      "type": "Vrsta",
-      "description": "Opis",
-      "image": "Fotografija",
-      "hidden": "Sakriveno"
+      "title": "Назив",
+      "price": "Цена",
+      "tag": "Таг",
+      "volume": "Запремина",
+      "type": "Врста",
+      "description": "Опис",
+      "image": "Фотографија",
+      "hidden": "Сакривено"
     },
     "placeholder": {
-      "title": "Unesi naziv proizvoda",
-      "price": "Unesi cenu proizvoda",
-      "volume": "Izaberi zapreminu",
-      "type": "Izaberi vrsta",
-      "tag": "Unesi dodatno obeležje",
-      "description": "Unesi opis proizvoda",
-      "category": "Odaberi kategoriju",
-      "category_title": "Unesi naziv kategorije",
-      "image_search": "Pretraži slike"
+      "title": "Унеси назив производа",
+      "price": "Унеси цену производа",
+      "volume": "Изабери запремину",
+      "type": "Изабери врсту",
+      "tag": "Унеси дотатно обележје",
+      "description": "Унеси опис производа",
+      "category": "Одабери категорију",
+      "category_title": "Унеси назив категорије",
+      "image_search": "Претражи фотографије"
     },
     "additional_field": {
-      "add_tag": "Dodaj dodatno obeležje?",
-      "add_volume": "Dodaj zapreminu proizvodu?",
-      "allow_type": "Dozvoli dodavanje vrsta?",
-      "allow_description": "Dozvoli dodavanje opisa?",
-      "delete_category": "Obriši celu kategoriju i sve njene proizvode?",
-      "add_image": "Dodaj fotografiju za proizvod?",
-      "last_edit": "Poslednja izmena",
-      "hide_product": "Da li želite da sakrijete proizvod?"
+      "add_tag": "Додај додатно обележје?",
+      "add_volume": "Додај запремину производу?",
+      "allow_type": "Дозволи додавање врста?",
+      "allow_description": "Дозволи додавање описа?",
+      "delete_category": "Обриши категорију и све производе које садржи?",
+      "add_image": "Додај фотографију за производ?",
+      "last_edit": "Последња измена",
+      "hide_product": "Сакриј производ?"
     }
   }
 }

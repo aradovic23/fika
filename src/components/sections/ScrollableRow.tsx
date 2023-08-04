@@ -9,6 +9,7 @@ type Props = {
   heading: string;
   data: (DrinkWithCategory | Category)[];
   type: 'drinks' | 'categories';
+  showModal?: boolean;
 };
 
 const sideScroll = (element: HTMLDivElement, speed: number, distance: number, step: number) => {
@@ -22,7 +23,7 @@ const sideScroll = (element: HTMLDivElement, speed: number, distance: number, st
   }, speed);
 };
 
-const ScrollableRow = ({ heading, data, type }: Props) => {
+const ScrollableRow = ({ heading, data, type, showModal }: Props) => {
   const contentWrapper = useRef<HTMLDivElement>(null);
   const [snapEnabled, setSnapEnabled] = useState(true);
 
@@ -68,7 +69,7 @@ const ScrollableRow = ({ heading, data, type }: Props) => {
         scrollSnapStop={snapEnabled ? 'always' : undefined}
       >
         {data?.map(item => (
-          <ImageCard key={item.id} type={type} data={item} />
+          <ImageCard key={item.id} type={type} data={item} showModal={showModal} />
         ))}
       </HStack>
     </VStack>

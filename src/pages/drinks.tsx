@@ -14,7 +14,6 @@ import {
   SimpleGrid,
   Stack,
   Text,
-  useColorModeValue,
 } from '@chakra-ui/react';
 import { MagnifyingGlassCircleIcon, XCircleIcon } from '@heroicons/react/24/solid';
 import type { Category, Drink, Unit } from '@prisma/client';

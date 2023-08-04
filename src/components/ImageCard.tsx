@@ -1,7 +1,8 @@
-import { Badge, Box, Heading, Text, VStack } from '@chakra-ui/react';
+import { Badge, Box, Heading, Hide, Text, VStack } from '@chakra-ui/react';
 import type { Category, Drink } from '@prisma/client';
 import Link from 'next/link';
 import ChakraImage from './ui/ChakraImage';
+import { SlideInModal } from './ui/SlideInModal';
 
 export type DrinkWithCategory = Drink & {
   category: Category;
@@ -10,13 +11,13 @@ export type DrinkWithCategory = Drink & {
 type Props = {
   type: 'drinks' | 'categories';
   data: DrinkWithCategory | Category;
+  showModal?: boolean;
 };
 
-export const ImageCard = ({ type, data }: Props) => {
+export const ImageCard = ({ type, data, showModal }: Props) => {
   const isDrink = (data: Drink | Category): data is Drink => {
     return type === 'drinks';
   };
-
   const drinkImage = isDrink(data) ? ((data.category?.addDescription && data.image) || data.category?.url) ?? '' : '';
 
   return (
@@ -31,6 +32,16 @@ export const ImageCard = ({ type, data }: Props) => {
         draggable="false"
         userSelect="none"
       >
+        {showModal && (
+          <Hide above="md">
+            <Box zIndex={10} position="absolute" w="full" h="full">
+              <SlideInModal
+                title={(data as Drink).title || (data as Category).categoryName}
+                description={(data as Drink).description}
+              />
+            </Box>
+          </Hide>
+        )}
         {type === 'categories' && (
           <Link
             href={`/drinks?category=${(data as Category).id}`}

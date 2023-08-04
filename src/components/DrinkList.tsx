@@ -1,16 +1,12 @@
-import { PencilSquareIcon, TrashIcon } from '@heroicons/react/24/outline';
-import type { Prisma } from '@prisma/client';
-import { useSession } from 'next-auth/react';
-import Link from 'next/link';
-import { useGetCategory } from '../hooks/useGetCategory';
-import { api } from '../utils/api';
 import {
   Box,
   Button,
   Divider,
   Flex,
+  Hide,
   HStack,
   Image,
+  Show,
   Tag,
   TagLabel,
   TagLeftIcon,
@@ -19,8 +15,15 @@ import {
   useDisclosure,
   VStack,
 } from '@chakra-ui/react';
+import { PencilSquareIcon, TrashIcon } from '@heroicons/react/24/outline';
 import { BeakerIcon, EyeSlashIcon, Squares2X2Icon, TagIcon } from '@heroicons/react/24/solid';
+import type { Prisma } from '@prisma/client';
+import { useSession } from 'next-auth/react';
+import Link from 'next/link';
+import { useGetCategory } from '../hooks/useGetCategory';
+import { api } from '../utils/api';
 import Dialog from './Dialog';
+import { SlideInModal } from './ui/SlideInModal';
 
 type DrinkWithUnits = Prisma.DrinkGetPayload<{ include: { unit: true } }>;
 
@@ -73,7 +76,7 @@ export const DrinkList = (drink: DrinkWithUnits) => {
               </Tag>
             )}
           </Box>
-          <VStack w="full" overflow="hidden">
+          <VStack w="full" overflow="hidden" position="relative">
             <HStack justify="space-between" w="full" align="baseline">
               <Box>
                 <Text lineHeight={1} fontWeight="bold" fontSize="xl">
@@ -107,6 +110,11 @@ export const DrinkList = (drink: DrinkWithUnits) => {
                 </Tag>
               )}
             </HStack>
+            <Hide above="md">
+              {drink.description?.length !== 0 && (
+                <SlideInModal title={drink.title} description={drink.description} image={drink.image} />
+              )}
+            </Hide>
           </VStack>
         </Flex>
         {isAdmin && (
@@ -140,14 +148,17 @@ export const DrinkList = (drink: DrinkWithUnits) => {
           </>
         )}
       </VStack>
-
-      <Dialog
-        isOpen={isOpen}
-        onClose={onClose}
-        title={drink.title}
-        description={drink.description}
-        image={drink.image}
-      />
+      <Show above="md">
+        {drink.description?.length !== 0 && (
+          <Dialog
+            isOpen={isOpen}
+            onClose={onClose}
+            title={drink.title}
+            description={drink.description}
+            image={drink.image}
+          />
+        )}
+      </Show>
     </>
   );
 };
