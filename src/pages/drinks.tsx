@@ -4,11 +4,11 @@ import {
   FormLabel,
   Grid,
   GridItem,
-  Heading,
   HStack,
   Input,
   InputGroup,
   InputLeftElement,
+  InputRightElement,
   ScaleFade,
   Select,
   SimpleGrid,
@@ -16,7 +16,7 @@ import {
   Text,
   useColorModeValue,
 } from '@chakra-ui/react';
-import { MagnifyingGlassCircleIcon } from '@heroicons/react/24/solid';
+import { MagnifyingGlassCircleIcon, XCircleIcon } from '@heroicons/react/24/solid';
 import type { Category, Drink, Unit } from '@prisma/client';
 import { type NextPage } from 'next';
 import { useSession } from 'next-auth/react';
@@ -73,8 +73,6 @@ const Drinks: NextPage = () => {
 
   const isAdmin = sessionData?.user?.role === 'ADMIN';
 
-  const bg = useColorModeValue('mantle.100', 'mantle.200');
-
   const filteredDrinks = (drinks.data ?? [])
     .filter(drink => (selectedCategory === 0 ? true : drink.categoryId === selectedCategory))
     .filter(drink => (search != '' ? drink.title?.toLowerCase().includes(search.toLowerCase()) : true))
@@ -105,7 +103,7 @@ const Drinks: NextPage = () => {
             colSpan={{ base: 6, md: 3, lg: 2 }}
             as="aside"
             mr={{ base: '0', md: '3' }}
-            mb={{ base: '10', md: '0' }}
+            mb={{ base: '5', md: '0' }}
             p={{ base: '3', md: '5' }}
             rounded="md"
             shadow="xs"
@@ -118,7 +116,7 @@ const Drinks: NextPage = () => {
             </Text>
             <InputGroup>
               <InputLeftElement pointerEvents="none">
-                <MagnifyingGlassCircleIcon className="h-6 w-6" color="gray.300" />
+                <MagnifyingGlassCircleIcon className="h-6 w-6 text-slate-900" />
               </InputLeftElement>
               <Input
                 id="search"
@@ -127,6 +125,9 @@ const Drinks: NextPage = () => {
                 value={search}
                 variant="flushed"
               />
+              <InputRightElement cursor="pointer">
+                <XCircleIcon className="h-4 w-4 text-slate-300" onClick={() => setSearch('')} />
+              </InputRightElement>
             </InputGroup>
 
             <Stack mt="4">

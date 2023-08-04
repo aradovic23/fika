@@ -4,7 +4,7 @@ import { styles } from './styles';
 import { extendTheme, type ThemeConfig, theme as base } from '@chakra-ui/react';
 
 const config: ThemeConfig = {
-  initialColorMode: 'system',
+  initialColorMode: 'light',
   useSystemColorMode: false,
   cssVarPrefix: 'drinksapp',
 };

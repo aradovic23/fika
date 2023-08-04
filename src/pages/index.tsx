@@ -37,8 +37,8 @@ const Home: NextPage = () => {
 
       <Container maxW="6xl">
         <Flex direction="column" gap="5" mt="5">
-          <ScrollableRow heading="Recommendations! 🌼" type="drinks" data={drinks as DrinkWithCategory[]} />
-          <ScrollableRow heading="Categories ☕️" type="categories" data={categories ?? []} />
+          <ScrollableRow heading="Recommendations! 🤩" type="drinks" data={drinks as DrinkWithCategory[]} />
+          <ScrollableRow heading="Categories ☕️🥂" type="categories" data={categories ?? []} />
         </Flex>
         {!storeData && (
           <Alert status="warning" rounded="md">
