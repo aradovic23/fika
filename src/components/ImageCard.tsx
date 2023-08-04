@@ -1,5 +1,6 @@
 import { Badge, Box, Heading, Text, VStack } from '@chakra-ui/react';
 import type { Category, Drink } from '@prisma/client';
+import Link from 'next/link';
 import ChakraImage from './ui/ChakraImage';
 
 export type DrinkWithCategory = Drink & {
@@ -19,7 +20,7 @@ export const ImageCard = ({ type, data }: Props) => {
   const drinkImage = isDrink(data) ? ((data.category?.addDescription && data.image) || data.category?.url) ?? '' : '';
 
   return (
-    <VStack rounded="md" shadow="md" userSelect="none" scrollSnapAlign="start">
+    <VStack rounded="md" shadow="md" scrollSnapAlign="start">
       <Box
         pos="relative"
         boxSize="sm"
@@ -27,9 +28,15 @@ export const ImageCard = ({ type, data }: Props) => {
         height="150px"
         rounded="md"
         overflow="hidden"
-        userSelect="none"
         draggable="false"
+        userSelect="none"
       >
+        {type === 'categories' && (
+          <Link
+            href={`/drinks?category=${(data as Category).id}`}
+            className="h-150px w-150px absolute inset-0 z-50"
+          ></Link>
+        )}
         <ChakraImage
           src={type === 'drinks' ? drinkImage ?? '' : (data as Category).url ?? ''}
           alt="image"

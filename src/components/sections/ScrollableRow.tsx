@@ -32,33 +32,35 @@ const ScrollableRow = ({ heading, data, type }: Props) => {
   };
 
   return (
-    <VStack spacing={2}>
+    <VStack spacing={4}>
       <HStack justify="space-between" w="full">
         <Heading fontSize="xl">{heading}</Heading>
 
-        <Show above="md">
-          <HStack>
-            <IconButton
-              variant="ghost"
-              aria-label="scroll-left"
-              icon={<ChevronLeftIcon className="h-6 w-6" />}
-              onClick={() => {
-                contentWrapper.current && handleScrollButtonClick(contentWrapper.current, -10);
-              }}
-            />
-            <IconButton
-              variant="ghost"
-              aria-label="scroll-right"
-              icon={<ChevronRightIcon className="h-6 w-6" />}
-              onClick={() => {
-                contentWrapper.current && handleScrollButtonClick(contentWrapper.current, 10);
-              }}
-            />
-          </HStack>
-        </Show>
+        {data?.length > 4 && (
+          <Show above="md">
+            <HStack>
+              <IconButton
+                variant="ghost"
+                aria-label="scroll-left"
+                icon={<ChevronLeftIcon className="h-6 w-6" />}
+                onClick={() => {
+                  contentWrapper.current && handleScrollButtonClick(contentWrapper.current, -10);
+                }}
+              />
+              <IconButton
+                variant="ghost"
+                aria-label="scroll-right"
+                icon={<ChevronRightIcon className="h-6 w-6" />}
+                onClick={() => {
+                  contentWrapper.current && handleScrollButtonClick(contentWrapper.current, 10);
+                }}
+              />
+            </HStack>
+          </Show>
+        )}
       </HStack>
       <HStack
-        gap={3}
+        spacing={4}
         overflowX="scroll"
         w="full"
         ref={contentWrapper}

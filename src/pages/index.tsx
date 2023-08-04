@@ -1,7 +1,10 @@
-import { Alert, AlertDescription, AlertIcon, AlertTitle, Box, Container, Flex, VStack } from '@chakra-ui/react';
+import { Alert, AlertDescription, AlertIcon, AlertTitle, Button, Container, Flex } from '@chakra-ui/react';
+import { ChevronRightIcon } from '@heroicons/react/24/solid';
 import { type NextPage } from 'next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import Head from 'next/head';
+import Link from 'next/link.js';
+import { useTranslation } from 'react-i18next';
 import nextI18nConfig from '../../next-i18next.config.mjs';
 import type { DrinkWithCategory } from '../components/ImageCard';
 import { PageSpinner } from '../components/LoaderSpinner';
@@ -15,12 +18,12 @@ export const getServerSideProps = async ({ locale }: { locale: string }) => ({
 });
 
 const Home: NextPage = () => {
-  //const { t } = useTranslation('common');
+  const { t } = useTranslation('common');
   const { data: storeData, isLoading } = api.settings.getStore.useQuery();
   const { data: drinks } = api.drinks.getRecommendedProducts.useQuery();
   const { data: categories } = api.categories.getCategories.useQuery();
 
-  //  const buttonActions = !storeData ? 'Visit Settings' : t('elements.button.view_all');
+  const buttonActions = !storeData ? 'Visit Settings' : t('elements.button.view_all');
 
   if (isLoading) {
     return <PageSpinner />;
@@ -32,7 +35,7 @@ const Home: NextPage = () => {
         <title>{storeData ? storeData.name : 'Drinks App'} Digital Menu</title>
       </Head>
 
-      <Container maxW="4xl">
+      <Container maxW="6xl">
         <Flex direction="column" gap="5" mt="5">
           <ScrollableRow heading="Recommendations! 🌼" type="drinks" data={drinks as DrinkWithCategory[]} />
           <ScrollableRow heading="Categories ☕️" type="categories" data={categories ?? []} />
@@ -46,9 +49,11 @@ const Home: NextPage = () => {
             </AlertDescription>
           </Alert>
         )}
-        {/* <Link href={!storeData ? '/settings' : '/drinks'}>
-          <Button variant="user">{buttonActions}</Button>
-        </Link> */}
+        <Link href={!storeData ? '/settings' : '/drinks'}>
+          <Button pl="0" mt="5" variant="ghost" rightIcon={<ChevronRightIcon className="h-4 w-4" />}>
+            {buttonActions}
+          </Button>
+        </Link>
       </Container>
     </>
   );
