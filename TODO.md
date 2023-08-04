@@ -8,4 +8,4 @@
 
 ## bugs
 
-- fix typescript for drinks unit undefined null type error
+- fix typescript for drinks.tsx file

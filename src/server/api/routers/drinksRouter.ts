@@ -1,7 +1,8 @@
-import type { Prisma } from "@prisma/client";
-import { z } from "zod";
+import type { Prisma } from '@prisma/client';
+import { TRPCError } from '@trpc/server';
+import { z } from 'zod';
 
-import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
+import { createTRPCRouter, protectedProcedure, publicProcedure } from '../trpc';
 
 export const drinksRouter = createTRPCRouter({
   createDrink: protectedProcedure
@@ -54,40 +55,45 @@ export const drinksRouter = createTRPCRouter({
     };
     const drinks = await ctx.prisma.drink.findMany({
       orderBy: {
-        title: "asc",
+        title: 'asc',
       },
       include: drinkIncludes,
     });
     return drinks;
   }),
+  getRecommendedProducts: publicProcedure.query(async ({ ctx }) => {
+    const drinks = await ctx.prisma.drink.findMany({
+      where: {
+        isRecommended: true,
+        isHidden: false,
+      },
+    });
+    return drinks;
+  }),
 
-  getDrinkById: publicProcedure
-    .input(z.object({ id: z.string() }))
-    .query(async ({ ctx, input }) => {
-      const singleDrink = await ctx.prisma.drink.findFirst({
+  getDrinkById: publicProcedure.input(z.object({ id: z.string() })).query(async ({ ctx, input }) => {
+    const singleDrink = await ctx.prisma.drink.findFirst({
+      where: {
+        id: input.id,
+      },
+      include: {
+        unit: true,
+      },
+    });
+    if (singleDrink) return singleDrink;
+  }),
+  deleteDrink: protectedProcedure.input(z.object({ id: z.string() })).mutation(async ({ ctx, input }) => {
+    const { id } = input;
+    try {
+      return await ctx.prisma.drink.delete({
         where: {
-          id: input.id,
-        },
-        include: {
-          unit: true,
+          id,
         },
       });
-      if (singleDrink) return singleDrink;
-    }),
-  deleteDrink: protectedProcedure
-    .input(z.object({ id: z.string() }))
-    .mutation(async ({ ctx, input }) => {
-      const { id } = input;
-      try {
-        return await ctx.prisma.drink.delete({
-          where: {
-            id,
-          },
-        });
-      } catch (err) {
-        console.warn(err);
-      }
-    }),
+    } catch (err) {
+      throw new TRPCError({ code: 'NOT_FOUND', message: 'An unexpected error occurred, please try again later.' });
+    }
+  }),
   getAllDrinks: publicProcedure.query(async ({ ctx }) => {
     const drinks = await ctx.prisma.drink.findMany();
     return drinks;

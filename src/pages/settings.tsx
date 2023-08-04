@@ -65,7 +65,7 @@ const Settings: NextPage = () => {
           <>
             <Grid templateColumns="repeat(2, 1fr)" gap={5}>
               <GridItem>
-                <Image src={storeData.fileUrl ?? ''} alt="image" rounded="lg" boxSize="xs" objectFit="cover" />
+                <Image src={storeData.fileUrl ?? ''} alt="image" height="2rem" />
               </GridItem>
               <GridItem>
                 <EditStoreForm {...storeData} />

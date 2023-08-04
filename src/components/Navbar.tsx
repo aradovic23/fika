@@ -8,7 +8,6 @@ import {
   Avatar,
   ButtonGroup,
   Flex,
-  Heading,
   IconButton,
   Menu,
   MenuButton,
@@ -29,33 +28,18 @@ const navigation = [
   { name: 'Settings', path: '/settings' },
 ];
 
-const COMPANY_NAME = 'Drinks App';
-
 const Navbar: FC = () => {
   const { data: sessionData } = useSession();
   const { data: storeData } = api.settings.getStore.useQuery();
 
   return (
-    <Flex
-      justifyContent="space-between"
-      alignItems="center"
-      px="10"
-      py="2"
-      shadow="md"
-      gap="5"
-      top="0"
-      width="100%"
-      maxH="64px"
-    >
+    <Flex justifyContent="space-between" alignItems="center" px="10" py="2" gap="5" top="0" width="100%" maxH="64px">
       <HStack as={NextLink} href="/">
-        {storeData?.fileUrl && (
-          <Image alt="logo" src={storeData?.fileUrl} boxSize="30px" rounded="full" objectFit="cover" />
-        )}
-        <Heading size="md">{storeData?.name ?? COMPANY_NAME}</Heading>
+        {storeData?.fileUrl && <Image alt="logo" src={storeData?.fileUrl} height="2rem" />}
       </HStack>
 
       <ButtonGroup gap="2" alignItems="center">
-        <ColorModeSwitcher />
+        {/* <ColorModeSwitcher /> */}
         {sessionData?.user?.role === 'ADMIN' ? (
           <>
             <Menu>

@@ -7,5 +7,7 @@
   "editor.formatOnSave": true,
   "[typescriptreact]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
-  }
+  },
+  "terminal.integrated.defaultProfile.osx": "zsh",
+  "terminal.integrated.fontFamily": "JetBrainsMono Nerd Font Mono"
 }
