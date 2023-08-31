@@ -50,5 +50,23 @@
       "last_edit": "Last edited",
       "hide_product": "Do you want to hide the product?"
     }
-  }
+  },
+  "all_drinks": {
+    "viewing": "Currently viewing",
+    "categories": "Categories",
+    "hidden_products": "View hidden products"
+  },
+  "drink": {
+    "currency": "RSD",
+    "edit": "Edit",
+    "delete": "Delete",
+    "delete_title": "Delete product",
+    "delete_message": "Are you sure? The product will be deleted from database."
+  },
+  "dialog": {
+    "close": "Close",
+    "cancel": "Cancel",
+    "delete": "Delete"
+  },
+  "search": "Start typing to search..."
 }

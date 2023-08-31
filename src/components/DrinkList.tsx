@@ -1,11 +1,15 @@
 import {
   Box,
-  Button,
-  Divider,
   Flex,
   Hide,
   HStack,
+  IconButton,
   Image,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
+  Portal,
   Show,
   Tag,
   TagLabel,
@@ -16,13 +20,15 @@ import {
   VStack,
 } from '@chakra-ui/react';
 import { PencilSquareIcon, TrashIcon } from '@heroicons/react/24/outline';
-import { BeakerIcon, EyeSlashIcon, Squares2X2Icon, TagIcon } from '@heroicons/react/24/solid';
+import { BeakerIcon, EllipsisVerticalIcon, EyeSlashIcon, Squares2X2Icon, TagIcon } from '@heroicons/react/24/solid';
 import type { Prisma } from '@prisma/client';
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';
+import { useTranslation } from 'react-i18next';
 import { useGetCategory } from '../hooks/useGetCategory';
 import { api } from '../utils/api';
 import Dialog from './Dialog';
+import { AlertDialogModal } from './ui/AlertDialog';
 import { SlideInModal } from './ui/SlideInModal';
 
 type DrinkWithUnits = Prisma.DrinkGetPayload<{ include: { unit: true } }>;
@@ -30,20 +36,16 @@ type DrinkWithUnits = Prisma.DrinkGetPayload<{ include: { unit: true } }>;
 export const DrinkList = (drink: DrinkWithUnits) => {
   const utils = api.useContext();
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const { isOpen: isAlertOpen, onOpen: onAlertOpen, onClose: onAlertClose } = useDisclosure();
 
-  const { mutate: deleteDrink } = api.drinks.deleteDrink.useMutation({
+  const { mutate: deleteDrink, isLoading } = api.drinks.deleteDrink.useMutation({
     async onSuccess() {
       await utils.drinks.getDrinks.invalidate();
-    },
-    onError(error) {
-      console.warn(error);
     },
   });
 
   const onDeleteHandler = (id: string) => {
-    if (window.confirm('Are you sure you want to delete?')) {
-      deleteDrink({ id });
-    }
+    deleteDrink({ id });
   };
 
   const { category } = useGetCategory(drink.categoryId ?? 1) ?? '';
@@ -51,6 +53,7 @@ export const DrinkList = (drink: DrinkWithUnits) => {
   const hasDescription = category?.addDescription;
   const hasTypes = category?.addTypes;
   const isAdmin = sessionData?.user?.role === 'ADMIN';
+  const { t } = useTranslation('common');
 
   const bg = useColorModeValue('mantle.100', 'mantle.200');
 
@@ -70,6 +73,11 @@ export const DrinkList = (drink: DrinkWithUnits) => {
               src={((hasDescription && drink.image) || category?.url) ?? ''}
               filter={showHiddenProduct ? 'grayscale(100%)' : undefined}
             />
+            <Hide above="md">
+              {drink.description?.length !== 0 && !showHiddenProduct && (
+                <SlideInModal title={drink.title} description={drink.description} image={drink.image} />
+              )}
+            </Hide>
             {showHiddenProduct && (
               <Tag pos="absolute" inset={0} m="auto" colorScheme="red" w="50%" h="50%" variant="solid">
                 <EyeSlashIcon className="absolute inset-0 m-auto h-4 w-4" />
@@ -83,14 +91,34 @@ export const DrinkList = (drink: DrinkWithUnits) => {
                   {drink.title}
                 </Text>
               </Box>
-              <Box>
+              <HStack>
                 <Text fontSize="xl">
                   {drink.price}
                   <Text ml="1" as="span" fontSize="sm">
-                    RSD
+                    {t('drink.currency')}
                   </Text>
                 </Text>
-              </Box>
+                {isAdmin && (
+                  <Menu>
+                    <MenuButton
+                      as={IconButton}
+                      variant="ghost"
+                      aria-label="Admin options"
+                      icon={<EllipsisVerticalIcon className="h-5 w-5" />}
+                    />
+                    <Portal>
+                      <MenuList>
+                        <MenuItem icon={<PencilSquareIcon className="h-4 w-4" />} as={Link} href={`/drink/${drink.id}`}>
+                          {t('drink.edit')}
+                        </MenuItem>
+                        <MenuItem icon={<TrashIcon className="h-4 w-4" />} color="red" onClick={onAlertOpen}>
+                          {t('drink.delete')}
+                        </MenuItem>
+                      </MenuList>
+                    </Portal>
+                  </Menu>
+                )}
+              </HStack>
             </HStack>
             <HStack w="full" opacity={0.5} overflow="hidden">
               {drink.unitId && drink.unit && (
@@ -110,43 +138,8 @@ export const DrinkList = (drink: DrinkWithUnits) => {
                 </Tag>
               )}
             </HStack>
-            <Hide above="md">
-              {drink.description?.length !== 0 && (
-                <SlideInModal title={drink.title} description={drink.description} image={drink.image} />
-              )}
-            </Hide>
           </VStack>
         </Flex>
-        {isAdmin && (
-          <>
-            <Divider variant="brand" />
-            <HStack w="full" p="2" rounded="lg" justify="space-between">
-              <>
-                <Button
-                  leftIcon={<PencilSquareIcon className="h-4 w-4" />}
-                  size="sm"
-                  aria-label="edit"
-                  as={Link}
-                  href={`/drink/${drink.id}`}
-                >
-                  Edit
-                </Button>
-                <Button
-                  leftIcon={<TrashIcon className="h-4 w-4" />}
-                  colorScheme="red"
-                  variant="ghost"
-                  size="sm"
-                  aria-label="delete"
-                  onClick={() => {
-                    onDeleteHandler(drink.id);
-                  }}
-                >
-                  Delete
-                </Button>
-              </>
-            </HStack>
-          </>
-        )}
       </VStack>
       <Show above="md">
         {drink.description?.length !== 0 && (
@@ -159,6 +152,14 @@ export const DrinkList = (drink: DrinkWithUnits) => {
           />
         )}
       </Show>
+      <AlertDialogModal
+        title={t('drink.delete_title')}
+        message={t('drink.delete_message')}
+        isOpen={isAlertOpen}
+        onClose={onAlertClose}
+        onDialogDelete={() => onDeleteHandler(drink.id)}
+        isLoading={isLoading}
+      />
     </>
   );
 };

@@ -37,7 +37,7 @@ const Navbar: FC = () => {
   return (
     <Flex justifyContent="space-between" alignItems="center" px="10" py="2" gap="5" top="0" width="100%" maxH="64px">
       <HStack as={NextLink} href="/">
-        {storeData?.fileUrl && <Image alt="logo" src={storeData?.fileUrl} height="2rem" />}
+        {storeData?.fileUrl && <Image alt="logo" src={storeData?.fileUrl} height="1rem" />}
       </HStack>
 
       <ButtonGroup gap="2" alignItems="center">
@@ -66,7 +66,11 @@ const Navbar: FC = () => {
               ></MenuButton>
               <Portal>
                 <MenuList>
-                  <MenuItem>
+                  <MenuItem
+                    _hover={{
+                      background: 'transparent',
+                    }}
+                  >
                     <AdminInfo sessionData={sessionData} />
                   </MenuItem>
                 </MenuList>

@@ -108,7 +108,7 @@ const Drinks: NextPage = () => {
             shadow="xs"
           >
             <Text fontWeight="medium" my="2" pl="2">
-              Currently viewing{' '}
+              {t('all_drinks.viewing')}{' '}
               <Text as="span" fontWeight="semibold">
                 {current?.categoryName ?? 'All'}
               </Text>
@@ -119,7 +119,7 @@ const Drinks: NextPage = () => {
               </InputLeftElement>
               <Input
                 id="search"
-                placeholder="Start typing to search..."
+                placeholder={t('search') ?? 'Type to search...'}
                 onChange={handleSearchChange}
                 value={search}
                 variant="flushed"
@@ -131,7 +131,7 @@ const Drinks: NextPage = () => {
 
             <Stack mt="4">
               <FormLabel htmlFor="select-category" pl="2">
-                Categories
+                {t('all_drinks.categories')}
               </FormLabel>
               <Select
                 variant="filled"
@@ -156,7 +156,7 @@ const Drinks: NextPage = () => {
             {isAdmin && (
               <HStack mt="4">
                 <Checkbox onChange={() => setShowHiddenProducts(!showHiddenProducts)} defaultChecked>
-                  View hidden products (admin view)
+                  {t('all_drinks.hidden_products')}
                 </Checkbox>
               </HStack>
             )}

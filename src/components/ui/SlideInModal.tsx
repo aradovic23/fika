@@ -1,4 +1,5 @@
-import { Text } from '@chakra-ui/react';
+import { Button, IconButton, Text } from '@chakra-ui/react';
+import { ArrowsPointingOutIcon } from '@heroicons/react/24/outline';
 import Image from 'next/image';
 import { Drawer } from 'vaul';
 
@@ -12,11 +13,20 @@ export const SlideInModal = ({ title, description, image }: Props) => {
   return (
     <Drawer.Root shouldScaleBackground>
       <Drawer.Trigger asChild>
-        <button
-          style={{ WebkitTapHighlightColor: 'rgba(0,0,0,0)' }}
+        <Button
+          as={IconButton}
+          icon={<ArrowsPointingOutIcon className="h-5 w-5" />}
           type="button"
-          className="active:bg-red absolute inset-0"
-        ></button>
+          variant="ghost"
+          bg="whiteAlpha.100"
+          color="whiteAlpha.900"
+          pos="absolute"
+          h="full"
+          inset={0}
+          _hover={{
+            backgroundColor: 'transparent',
+          }}
+        ></Button>
       </Drawer.Trigger>
       <Drawer.Overlay className="fixed inset-0 bg-black/40" />
       <Drawer.Portal>

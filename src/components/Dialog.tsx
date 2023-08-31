@@ -11,6 +11,7 @@ import {
   Text,
   VStack,
 } from '@chakra-ui/react';
+import { useTranslation } from 'react-i18next';
 
 interface Props {
   isOpen: boolean;
@@ -21,6 +22,8 @@ interface Props {
 }
 
 const Dialog = ({ isOpen, onClose, title, description, image }: Props) => {
+  const { t } = useTranslation('common');
+
   return (
     <Modal isOpen={isOpen} onClose={onClose} isCentered>
       <ModalOverlay />
@@ -35,7 +38,7 @@ const Dialog = ({ isOpen, onClose, title, description, image }: Props) => {
         </ModalBody>
         <ModalFooter>
           <Button colorScheme="primary" onClick={onClose}>
-            Close
+            {t('dialog.close')}
           </Button>
         </ModalFooter>
       </ModalContent>
