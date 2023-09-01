@@ -22,10 +22,10 @@ import AdminInfo from './AdminInfo';
 import LanguageSwitcher from './LanguageSwitcher';
 
 const navigation = [
-  { name: 'All Drinks', path: '/drinks' },
-  { name: 'Submit Drink', path: '/submit-drink' },
-  { name: 'Edit Category', path: '/edit-category' },
-  { name: 'Settings', path: '/settings' },
+  { name: 'All Drinks', path: '/drinks', isAdmin: true },
+  { name: 'Submit Drink', path: '/submit-drink', isAdmin: true },
+  { name: 'Edit Category', path: '/edit-category', isAdmin: true },
+  { name: 'Settings', path: '/settings', isAdmin: true },
 ];
 
 const Navbar: FC = () => {
@@ -48,7 +48,12 @@ const Navbar: FC = () => {
               <Portal>
                 <MenuList>
                   {navigation.map(item => (
-                    <MenuItem as={NextLink} href={item.path} key={item.name}>
+                    <MenuItem
+                      as={NextLink}
+                      href={item.path}
+                      key={item.name}
+                      color={isAdmin ? 'magenta.100' : undefined}
+                    >
                       {item.name}
                     </MenuItem>
                   ))}

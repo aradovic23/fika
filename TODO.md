@@ -5,7 +5,3 @@
 - add back to top btn
 - add cart - zustand
 - separate forms to components
-
-## bugs
-
-- fix typescript for drinks.tsx file

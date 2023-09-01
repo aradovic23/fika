@@ -26,6 +26,7 @@ import type { ChangeEvent } from 'react';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import nextI18nConfig from '../../next-i18next.config.mjs';
+import type { DrinkWithUnits } from '../components/DrinkList';
 import { DrinkList } from '../components/DrinkList';
 import { NoResults } from '../components/NoResults';
 import SkeletonLoader from '../components/SkeletonLoader';
@@ -155,7 +156,11 @@ const Drinks: NextPage = () => {
             </Stack>
             {isAdmin && (
               <HStack mt="4">
-                <Checkbox onChange={() => setShowHiddenProducts(!showHiddenProducts)} defaultChecked>
+                <Checkbox
+                  onChange={() => setShowHiddenProducts(!showHiddenProducts)}
+                  defaultChecked
+                  color="magenta.100"
+                >
                   {t('all_drinks.hidden_products')}
                 </Checkbox>
               </HStack>
@@ -171,7 +176,7 @@ const Drinks: NextPage = () => {
                   <NoResults />
                 </ScaleFade>
               ) : (
-                filteredDrinks.map(drink => <DrinkList key={drink.id} {...drink} />)
+                filteredDrinks.map(drink => <DrinkList key={drink.id} {...(drink as DrinkWithUnits)} />)
               )}
             </SimpleGrid>
           </GridItem>

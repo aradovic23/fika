@@ -113,6 +113,14 @@ const mauve = {
   400: '#ca9ee6',
 };
 
+const magenta = {
+  100: '#FD2974',
+  80: '#FD5490',
+  60: '#FE7FAC',
+  40: '#FEA9C7',
+  20: '#FFD4E3',
+};
+
 export const colors = {
   primary,
   text,
@@ -133,4 +141,5 @@ export const colors = {
   red,
   maroon,
   offRed,
+  magenta,
 } as const;

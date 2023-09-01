@@ -15,13 +15,13 @@ import {
   TagLabel,
   TagLeftIcon,
   Text,
-  useColorModeValue,
   useDisclosure,
   VStack,
 } from '@chakra-ui/react';
 import { PencilSquareIcon, TrashIcon } from '@heroicons/react/24/outline';
 import { BeakerIcon, EllipsisVerticalIcon, EyeSlashIcon, Squares2X2Icon, TagIcon } from '@heroicons/react/24/solid';
 import type { Prisma } from '@prisma/client';
+import { usePalette } from 'color-thief-react';
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { useTranslation } from 'react-i18next';
@@ -31,7 +31,7 @@ import Dialog from './Dialog';
 import { AlertDialogModal } from './ui/AlertDialog';
 import { SlideInModal } from './ui/SlideInModal';
 
-type DrinkWithUnits = Prisma.DrinkGetPayload<{ include: { unit: true } }>;
+export type DrinkWithUnits = Prisma.DrinkGetPayload<{ include: { unit: true; category: true } }>;
 
 export const DrinkList = (drink: DrinkWithUnits) => {
   const utils = api.useContext();
@@ -55,13 +55,23 @@ export const DrinkList = (drink: DrinkWithUnits) => {
   const isAdmin = sessionData?.user?.role === 'ADMIN';
   const { t } = useTranslation('common');
 
-  const bg = useColorModeValue('mantle.100', 'mantle.200');
+  const { data: dominantColor } = usePalette(drink.category?.url ?? '', 2, 'hex', {
+    crossOrigin: 'Anonymous',
+    quality: 100,
+  });
 
   const showHiddenProduct = drink.isHidden && sessionData?.user?.role === 'ADMIN';
 
   return (
     <>
-      <VStack gap={3} shadow="sm" rounded="lg" bg={bg} p={2}>
+      <VStack
+        gap={3}
+        shadow="sm"
+        rounded="lg"
+        bg={dominantColor ? dominantColor[0] : 'mantle.100'}
+        p={2}
+        color={dominantColor ? dominantColor[1] : 'mantle.200'}
+      >
         <Flex w="full" gap="3">
           <Box boxSize="5rem" position="relative" minW="5rem">
             <Image
@@ -86,8 +96,8 @@ export const DrinkList = (drink: DrinkWithUnits) => {
           </Box>
           <VStack w="full" overflow="hidden" position="relative">
             <HStack justify="space-between" w="full" align="baseline">
-              <Box>
-                <Text lineHeight={1} fontWeight="bold" fontSize="xl">
+              <Box maxW="150px">
+                <Text lineHeight={1} fontWeight="bold" fontSize="xl" isTruncated>
                   {drink.title}
                 </Text>
               </Box>
@@ -104,6 +114,7 @@ export const DrinkList = (drink: DrinkWithUnits) => {
                       as={IconButton}
                       variant="ghost"
                       aria-label="Admin options"
+                      color="magenta.100"
                       icon={<EllipsisVerticalIcon className="h-5 w-5" />}
                     />
                     <Portal>
