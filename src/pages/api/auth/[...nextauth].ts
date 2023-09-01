@@ -1,12 +1,12 @@
-import NextAuth, { type NextAuthOptions } from "next-auth";
-import GoogleProvider from "next-auth/providers/google";
-import GitHubProvider from "next-auth/providers/github";
+import NextAuth, { type NextAuthOptions } from 'next-auth';
+import GoogleProvider from 'next-auth/providers/google';
+import GitHubProvider from 'next-auth/providers/github';
 
 // Prisma adapter for NextAuth, optional and can be removed
-import { PrismaAdapter } from "@next-auth/prisma-adapter";
+import { PrismaAdapter } from '@next-auth/prisma-adapter';
 
-import { env } from "../../../env/server.mjs";
-import { prisma } from "../../../server/db";
+import { env } from '../../../env/server.mjs';
+import { prisma } from '../../../server/db';
 
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
@@ -24,13 +24,13 @@ export const authOptions: NextAuthOptions = {
     session({ session, user }) {
       if (session.user) {
         session.user.id = user.id;
-        session.user.role = user.role;
+        session.user.role = user.role ?? 'NO ROLE';
       }
       return session;
     },
   },
   pages: {
-    signIn: "/signin",
+    signIn: '/signin',
   },
 };
 
