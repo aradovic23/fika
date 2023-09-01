@@ -111,7 +111,7 @@ const Drinks: NextPage = () => {
             <Text fontWeight="medium" my="2" pl="2">
               {t('all_drinks.viewing')}{' '}
               <Text as="span" fontWeight="semibold">
-                {current?.categoryName ?? 'All'}
+                {current?.categoryName ?? 'All'} ✨
               </Text>
             </Text>
             <InputGroup>

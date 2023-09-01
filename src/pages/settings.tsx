@@ -1,6 +1,6 @@
 import { type NextPage } from 'next';
 import Head from 'next/head';
-import { Button, Container, Grid, GridItem, Heading, HStack, Image, VStack } from '@chakra-ui/react';
+import { Button, Container, Grid, GridItem, Heading, HStack, Image, Text, VStack } from '@chakra-ui/react';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import nextI18nConfig from '../../next-i18next.config.mjs';
 import { useSession } from 'next-auth/react';
@@ -80,7 +80,16 @@ const Settings: NextPage = () => {
                 <EditStoreForm {...storeData} />
               </GridItem>
             </Grid>
-            <HStack>
+            <HStack
+              w="full"
+              border="1px solid"
+              borderColor="offRed.200"
+              rounded="lg"
+              p="5"
+              justify="space-between"
+              align="baseline"
+            >
+              <Text>{t('settings.delete_description')}</Text>
               <Button variant="ghost" colorScheme="red" onClick={() => handleDeleteStore(storeData?.id ?? 1)}>
                 {t('settings.delete_store')}
               </Button>

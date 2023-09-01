@@ -80,7 +80,8 @@
     "image_ready": "Image ready for upload",
     "create_store": "Create your store!",
     "no_store_title": "No store yet..",
-    "no_store_description": "Create new store to customize the experience for your customers!"
+    "no_store_description": "Create new store to customize the experience for your customers!",
+    "delete_description": "Delete store? This action will remove all the store info, products and categories from the database."
   },
   "search": "Start typing to search..."
 }

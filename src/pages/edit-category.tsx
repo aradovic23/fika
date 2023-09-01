@@ -191,7 +191,7 @@ const EditCategory: NextPage = () => {
                         />
                         <FormErrorMessage>{errors.categoryName && errors.categoryName.message}</FormErrorMessage>
                       </FormControl>
-                      <FormControl>
+                      <FormControl w="full">
                         <FormLabel htmlFor="url">{t('elements.label.image')}</FormLabel>
                         <ImageSearch handleSelectedImage={handleSelectedImage} />
                         <Input id="url" placeholder="Image url" {...register('url')} hidden />
@@ -273,8 +273,8 @@ const EditCategory: NextPage = () => {
                         {t('elements.button.save')}
                       </Button>
                     </Form>
-                    <HStack bg="blackAlpha.400" p="5" rounded="lg">
-                      <Text>{t('elements.additional_field.delete_category')}</Text>
+                    <HStack p="5" rounded="lg" border="1px solid" borderColor="offRed.500">
+                      <Text color="offRed.500">{t('elements.additional_field.delete_category')}</Text>
                       <Button
                         onClick={() => deleteCategoryHandler(categoryId)}
                         disabled={updateCategory.isLoading || !productCategory}
@@ -307,9 +307,9 @@ const EditCategory: NextPage = () => {
                         boxSize="sm"
                         position="absolute"
                         inset={0}
-                        filter="blur(18px)"
+                        filter="blur(15px)"
                         zIndex={0}
-                        transform="scale(1.05, 1.05)"
+                        transform="scale(1)"
                       />
                       <Image
                         src={hasSearchedImage ? imageFromSearch : productCategory?.url}

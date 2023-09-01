@@ -1,13 +1,13 @@
-import path from "path";
+import path from 'path';
 
 /** @type {import("next-i18next").UserConfig} */
 const config = {
-  debug: process.env.NODE_ENV === "development",
-  reloadOnPrerender: process.env.NODE_ENV === "development",
+  debug: process.env.NODE_ENV === 'development',
+  reloadOnPrerender: process.env.NODE_ENV === 'development',
   i18n: {
-    locales: ["en", "sr"],
-    defaultLocale: "en",
+    locales: ['en', 'sr'],
+    defaultLocale: 'sr',
   },
-  localePath: path.resolve("./public/locales"),
+  localePath: path.resolve('./public/locales'),
 };
 export default config;

@@ -67,7 +67,7 @@ const ImageSearch = ({ handleSelectedImage }: Props) => {
       {isLoading && <Spinner thickness="4px" speed="0.65s" emptyColor="gray.200" color="blue.500" size="xl" />}
       {isError && <Text>Error fetching data</Text>}
       {showResults && (
-        <SimpleGrid spacing="2" minChildWidth="200px" mt="4" p="5" rounded="lg" maxH="30rem" overflowY="auto" w="full">
+        <SimpleGrid spacing="2" minChildWidth="150px" mt="4" p="5" rounded="lg" maxH="30rem" overflowY="auto" w="full">
           {data?.map(image => (
             <Box key={image.id} position="relative">
               {selectedImage.id === image.id && (
