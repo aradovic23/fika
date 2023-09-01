@@ -3,6 +3,7 @@ import type { Store } from '@prisma/client';
 import { UploadButton } from '@uploadthing/react';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 import type { OurFileRouter } from '../server/uploadthing';
 import { api } from '../utils/api';
 import { Form } from './Form';
@@ -28,6 +29,8 @@ const CreateStoreForm = () => {
 
   const toast = useToast();
 
+  const { t } = useTranslation('common');
+
   const handleCreateNewStore = async (data: Store) => {
     try {
       await createStore.mutateAsync({
@@ -51,12 +54,12 @@ const CreateStoreForm = () => {
   return (
     <Form onSubmit={handleSubmit(handleCreateNewStore)}>
       <FormControl>
-        <FormLabel>Your Store Name</FormLabel>
-        <Input {...register('name')} placeholder="Enter store name" />
+        <FormLabel>{t('settings.name')}</FormLabel>
+        <Input {...register('name')} placeholder={t('settings.name') ?? 'Enter store name'} />
       </FormControl>
       {!file && (
         <FormControl>
-          <FormLabel>Your Store Logo</FormLabel>
+          <FormLabel>{t('settings.upload_logo')}</FormLabel>
           <Box border="1px" borderColor="chakra-placeholder-color" rounded="lg" p="5">
             <UploadButton<OurFileRouter>
               endpoint="imageUploader"
@@ -72,11 +75,11 @@ const CreateStoreForm = () => {
       {file && (
         <VStack bg="green.300" p="1" rounded="lg">
           <Image alt="logo" src={file.fileUrl} boxSize="200px" rounded="lg" objectFit="cover" />
-          <Text color="black">Image ready!</Text>
+          <Text color="black">{t('settings.image_ready')}</Text>
         </VStack>
       )}
       <Button isLoading={isSubmitting} type="submit" colorScheme="primary">
-        Create new Store
+        {t('settings.create_store')}
       </Button>
     </Form>
   );

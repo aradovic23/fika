@@ -3,7 +3,7 @@ import { env } from '../env/client.mjs';
 import type { Result, UnsplashImage } from '../../typings';
 import { useQuery } from '@tanstack/react-query';
 import { Box, Button, HStack, IconButton, Image, Input, SimpleGrid, Spinner, Text } from '@chakra-ui/react';
-import { MagnifyingGlassIcon } from '@heroicons/react/24/solid';
+import { CloudIcon, MagnifyingGlassIcon } from '@heroicons/react/24/solid';
 import { useTranslation } from 'react-i18next';
 
 interface Props {
@@ -61,13 +61,13 @@ const ImageSearch = ({ handleSelectedImage }: Props) => {
           icon={<MagnifyingGlassIcon className="h-6 w-6" />}
           onClick={onSubmitHandler}
           colorScheme="primary"
-          variant="solid"
+          variant="outline"
         />
       </HStack>
       {isLoading && <Spinner thickness="4px" speed="0.65s" emptyColor="gray.200" color="blue.500" size="xl" />}
       {isError && <Text>Error fetching data</Text>}
       {showResults && (
-        <SimpleGrid spacing="5" columns={2} mt="4" bg="blackAlpha.300" p="5" rounded="lg" maxH="30rem" overflowY="auto">
+        <SimpleGrid spacing="2" minChildWidth="200px" mt="4" p="5" rounded="lg" maxH="30rem" overflowY="auto" w="full">
           {data?.map(image => (
             <Box key={image.id} position="relative">
               {selectedImage.id === image.id && (
@@ -78,8 +78,9 @@ const ImageSearch = ({ handleSelectedImage }: Props) => {
                   width="full"
                   zIndex={5}
                   size="sm"
-                  colorScheme="whatsapp"
+                  colorScheme="primary"
                   variant="solid"
+                  leftIcon={<CloudIcon className="h-5 w-5" />}
                 >
                   {t('elements.button.select')}
                 </Button>
@@ -110,7 +111,7 @@ const ImageSearch = ({ handleSelectedImage }: Props) => {
                     inset={0}
                     filter="blur(5px)"
                     zIndex={0}
-                    transform="scale(1.1)"
+                    transform="scale(1.05)"
                     objectFit="cover"
                     boxSize="200px"
                   />

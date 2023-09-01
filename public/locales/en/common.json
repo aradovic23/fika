@@ -16,8 +16,8 @@
       "delete": "Delete",
       "view_all": "View All Drinks",
       "create_new": "Create new",
-      "submit_category": "Submit category",
-      "select": "Select"
+      "submit_category": "Submit new category",
+      "select": "Select this image"
     },
     "label": {
       "title": "Title",
@@ -38,7 +38,7 @@
       "description": "Enter product description",
       "category": "Choose a category",
       "category_title": "Enter category name",
-      "image_search": "Search for an image"
+      "image_search": "Search for an image (Unsplash)"
     },
     "additional_field": {
       "add_tag": "Add extra tag?",
@@ -67,6 +67,20 @@
     "close": "Close",
     "cancel": "Cancel",
     "delete": "Delete"
+  },
+  "new_category": {
+    "options": "Additional Category Options"
+  },
+  "settings": {
+    "title": "Settings",
+    "name": "Store name",
+    "upload_logo": "Upload logo",
+    "update": "Update",
+    "delete_store": "Delete store",
+    "image_ready": "Image ready for upload",
+    "create_store": "Create your store!",
+    "no_store_title": "No store yet..",
+    "no_store_description": "Create new store to customize the experience for your customers!"
   },
   "search": "Start typing to search..."
 }

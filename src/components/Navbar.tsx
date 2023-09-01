@@ -1,6 +1,7 @@
 import {
   Avatar,
   ButtonGroup,
+  Container,
   Flex,
   HStack,
   IconButton,
@@ -35,20 +36,21 @@ const Navbar: FC = () => {
   const isAdmin = useIsAdmin();
 
   return (
-    <Flex justifyContent="space-between" alignItems="center" px="10" py="2" gap="5" top="0" width="100%" maxH="64px">
-      <HStack as={NextLink} href="/">
-        {storeData?.fileUrl && <Image alt="logo" src={storeData?.fileUrl} height="1rem" />}
-      </HStack>
+    <Container maxW="6xl">
+      <HStack justifyContent="space-between" alignItems="center" py="2" gap="5" top="0" width="100%" maxH="64px">
+        <HStack as={NextLink} href="/">
+          {storeData?.fileUrl && <Image alt="logo" src={storeData?.fileUrl} minH="30px" maxH="40px" />}
+        </HStack>
 
-      <ButtonGroup gap="2" alignItems="center">
-        {isAdmin ? (
-          <>
-            <Menu>
-              <MenuButton as={IconButton} variant="ghost" icon={<Bars3Icon className="h-6 w-6" />}></MenuButton>
-              <Portal>
+        <ButtonGroup gap="2" alignItems="center">
+          {isAdmin ? (
+            <>
+              <Menu>
+                <MenuButton as={IconButton} variant="ghost" icon={<Bars3Icon className="h-6 w-6" />}></MenuButton>
                 <MenuList>
                   {navigation.map(item => (
                     <MenuItem
+                      zIndex={99999}
                       as={NextLink}
                       href={item.path}
                       key={item.name}
@@ -58,46 +60,46 @@ const Navbar: FC = () => {
                     </MenuItem>
                   ))}
                 </MenuList>
-              </Portal>
-            </Menu>
-            <Menu>
-              <MenuButton
-                as={Avatar}
-                size="sm"
-                src={sessionData?.user?.image}
-                name={sessionData?.user?.name ?? 'Admin'}
-                height="9"
-                width="9"
-              ></MenuButton>
-              <Portal>
+              </Menu>
+              <Menu>
+                <MenuButton
+                  as={Avatar}
+                  size="sm"
+                  src={sessionData?.user?.image}
+                  name={sessionData?.user?.name ?? 'Admin'}
+                  height="9"
+                  width="9"
+                ></MenuButton>
+                <Portal>
+                  <MenuList>
+                    <MenuItem
+                      _hover={{
+                        background: 'transparent',
+                      }}
+                    >
+                      <AdminInfo sessionData={sessionData} />
+                    </MenuItem>
+                  </MenuList>
+                </Portal>
+              </Menu>
+              <Menu>
+                <MenuButton as={IconButton} variant="ghost" icon={<LanguageIcon className="h-6 w-6" />} />
                 <MenuList>
-                  <MenuItem
-                    _hover={{
-                      background: 'transparent',
-                    }}
-                  >
-                    <AdminInfo sessionData={sessionData} />
-                  </MenuItem>
+                  <LanguageSwitcher />
                 </MenuList>
-              </Portal>
-            </Menu>
+              </Menu>
+            </>
+          ) : (
             <Menu>
               <MenuButton as={IconButton} variant="ghost" icon={<LanguageIcon className="h-6 w-6" />} />
               <MenuList>
                 <LanguageSwitcher />
               </MenuList>
             </Menu>
-          </>
-        ) : (
-          <Menu>
-            <MenuButton as={IconButton} variant="ghost" icon={<LanguageIcon className="h-6 w-6" />} />
-            <MenuList>
-              <LanguageSwitcher />
-            </MenuList>
-          </Menu>
-        )}
-      </ButtonGroup>
-    </Flex>
+          )}
+        </ButtonGroup>
+      </HStack>
+    </Container>
   );
 };
 

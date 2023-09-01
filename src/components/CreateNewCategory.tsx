@@ -6,13 +6,16 @@ import type { Category } from '@prisma/client';
 import {
   Button,
   Container,
+  Divider,
   Flex,
   FormControl,
   FormLabel,
   Heading,
+  HStack,
   Image,
   Input,
   Switch,
+  Text,
   useToast,
   VStack,
 } from '@chakra-ui/react';
@@ -76,49 +79,50 @@ const CreateNewCategory = ({ handleIsActive }: Props) => {
   };
 
   return (
-    <Container bg="blackAlpha.300" p="5" rounded="lg">
-      <VStack spacing="5">
-        <Heading size="md">{t('create_new_category')}</Heading>
-        <FormControl>
-          <Input
-            placeholder={t('elements.placeholder.category_title') ?? 'Category Name'}
-            {...register('categoryName', {
-              required: true,
-              minLength: {
-                value: 3,
-                message: 'Category should have at least 3 letters',
-              },
-            })}
-          />
-        </FormControl>
+    <VStack spacing="5" w="full" bg="whiteAlpha.900" p="5" rounded="md" shadow="sm">
+      <Heading size="md">{t('create_new_category')}</Heading>
+      <FormControl>
+        <Input
+          placeholder={t('elements.placeholder.category_title') ?? 'Category Name'}
+          {...register('categoryName', {
+            required: true,
+            minLength: {
+              value: 3,
+              message: 'Category should have at least 3 letters',
+            },
+          })}
+        />
+      </FormControl>
 
-        <ImageSearch handleSelectedImage={handleSelectedImage} />
+      <ImageSearch handleSelectedImage={handleSelectedImage} />
 
-        <Input hidden placeholder="Image url" {...register('url')} />
-        <VStack spacing="5">
-          <Flex w="full" justify="space-between" align="center">
-            <FormLabel htmlFor="addTypes">{t('elements.additional_field.allow_type')}</FormLabel>
-            <Switch id="addTypes" {...register('addTypes')} size="lg" />
-          </Flex>
-          <Flex w="full" justify="space-between" align="center">
-            <FormLabel htmlFor="addDescription">{t('elements.additional_field.allow_description')}</FormLabel>
-            <Switch id="addDescription" {...register('addDescription')} size="lg" />
-          </Flex>
-        </VStack>
-        <Switch id="isDefault" {...register('isDefault')} hidden />
-
-        {imageFromSearch && <Image boxSize="sm" alt="image" src={imageFromSearch} rounded="lg" objectFit="cover" />}
-
-        <Button
-          variant="solid"
-          onClick={handleSubmit(handleCreateNewCategory)}
-          colorScheme="primary"
-          isLoading={isSubmitting}
-        >
-          {t('elements.button.submit_category')}
-        </Button>
+      <Input hidden placeholder="Image url" {...register('url')} />
+      <Divider />
+      <VStack spacing="5" w="full">
+        <Text>Additional Category Options</Text>
+        <HStack w="full" justify="space-between">
+          <FormLabel htmlFor="addTypes">{t('elements.additional_field.allow_type')}</FormLabel>
+          <Switch id="addTypes" {...register('addTypes')} size="lg" />
+        </HStack>
+        <HStack w="full" justify="space-between">
+          <FormLabel htmlFor="addDescription">{t('elements.additional_field.allow_description')}</FormLabel>
+          <Switch id="addDescription" {...register('addDescription')} size="lg" />
+        </HStack>
       </VStack>
-    </Container>
+      <Switch id="isDefault" {...register('isDefault')} hidden />
+
+      {imageFromSearch && <Image boxSize="sm" alt="image" src={imageFromSearch} rounded="lg" objectFit="cover" />}
+
+      <Button
+        variant="outline"
+        onClick={handleSubmit(handleCreateNewCategory)}
+        colorScheme="primary"
+        isLoading={isSubmitting}
+        w="full"
+      >
+        {t('elements.button.submit_category')}
+      </Button>
+    </VStack>
   );
 };
 
