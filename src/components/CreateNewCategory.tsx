@@ -1,13 +1,6 @@
-import { useState } from 'react';
-import { api } from '../utils/api';
-import ImageSearch from './ImageSearch';
-import { useForm } from 'react-hook-form';
-import type { Category } from '@prisma/client';
 import {
   Button,
-  Container,
   Divider,
-  Flex,
   FormControl,
   FormLabel,
   Heading,
@@ -19,7 +12,12 @@ import {
   useToast,
   VStack,
 } from '@chakra-ui/react';
+import type { Category } from '@prisma/client';
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
+import { api } from '../utils/api';
+import ImageSearch from './ImageSearch';
 
 interface Props {
   handleIsActive: (state: boolean) => void;

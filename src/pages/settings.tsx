@@ -25,6 +25,8 @@ const Settings: NextPage = () => {
 
   const utils = api.useContext();
 
+  const { t } = useTranslation('common');
+
   const { mutate: deleteStore } = api.settings.deleteStore.useMutation({
     async onSuccess() {
       await utils.settings.getStore.invalidate();
@@ -48,8 +50,6 @@ const Settings: NextPage = () => {
   if (!isAdmin) {
     return <AccessDenied />;
   }
-
-  const { t } = useTranslation('common');
 
   return (
     <>
