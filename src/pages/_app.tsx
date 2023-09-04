@@ -9,16 +9,19 @@ import Layout from '../components/Layout';
 import '../styles/globals.css';
 import theme from '../theme/index';
 import { api } from '../utils/api';
+import { ClerkProvider } from '@clerk/nextjs';
 
 const MyApp: AppType<{ session: Session | null }> = ({ Component, pageProps: { session, ...pageProps } }) => {
   return (
-    <SessionProvider session={session}>
-      <ChakraProvider theme={theme}>
-        <Layout>
-          <Component {...pageProps} />
-        </Layout>
-      </ChakraProvider>
-    </SessionProvider>
+    <ClerkProvider {...pageProps}>
+      <SessionProvider session={session}>
+        <ChakraProvider theme={theme}>
+          <Layout>
+            <Component {...pageProps} />
+          </Layout>
+        </ChakraProvider>
+      </SessionProvider>
+    </ClerkProvider>
   );
 };
 

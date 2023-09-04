@@ -12,9 +12,6 @@ const AccessDenied = () => {
         <VStack spacing="3">
           <Heading>Access denied</Heading>
           <Text>You are not signed in or you don&apos;t have admin permissions</Text>
-          <Link href="/signin">
-            <Button colorScheme="red">Go to Sign in page</Button>
-          </Link>
         </VStack>
       </Center>
     </>

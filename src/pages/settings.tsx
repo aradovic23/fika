@@ -11,6 +11,7 @@ import EditStoreForm from '../components/EditStoreForm';
 import { PageSpinner } from '../components/LoaderSpinner';
 import Notice from '../components/Notice';
 import { useTranslation } from 'react-i18next';
+import { useIsAdmin } from '../hooks/useIsAdmin';
 
 export const getServerSideProps = async ({ locale }: { locale: string }) => ({
   props: {
@@ -22,6 +23,8 @@ const Settings: NextPage = () => {
   const { data: sessionData, status } = useSession();
 
   const { data: storeData, isLoading } = api.settings.getStore.useQuery();
+
+  const isAdmin = useIsAdmin();
 
   const utils = api.useContext();
 
@@ -45,7 +48,7 @@ const Settings: NextPage = () => {
     return <PageSpinner />;
   }
 
-  if (sessionData?.user?.role != 'ADMIN') {
+  if (!isAdmin) {
     return <AccessDenied />;
   }
 

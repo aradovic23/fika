@@ -1,7 +1,7 @@
-import { useSession } from 'next-auth/react';
+import { useOrganizationList } from '@clerk/nextjs';
 
-export function useIsAdmin() {
-  const { data: sessionData } = useSession();
-
-  return sessionData?.user?.role === 'ADMIN';
-}
+export const useIsAdmin = () => {
+  const { organizationList } = useOrganizationList();
+  const isAdmin = organizationList?.some(org => org.membership.role === 'admin');
+  return isAdmin;
+};

@@ -1,8 +1,6 @@
 import {
-  Avatar,
   ButtonGroup,
   Container,
-  Flex,
   HStack,
   IconButton,
   Image,
@@ -10,16 +8,14 @@ import {
   MenuButton,
   MenuItem,
   MenuList,
-  Portal,
 } from '@chakra-ui/react';
+import { UserButton, useUser } from '@clerk/nextjs';
 import { Bars3Icon } from '@heroicons/react/24/outline';
 import { LanguageIcon } from '@heroicons/react/24/solid';
-import { useSession } from 'next-auth/react';
 import NextLink from 'next/link';
 import type { FC } from 'react';
 import { useIsAdmin } from '../hooks/useIsAdmin';
 import { api } from '../utils/api';
-import AdminInfo from './AdminInfo';
 import LanguageSwitcher from './LanguageSwitcher';
 
 const navigation = [
@@ -30,9 +26,7 @@ const navigation = [
 ];
 
 const Navbar: FC = () => {
-  const { data: sessionData } = useSession();
   const { data: storeData } = api.settings.getStore.useQuery();
-
   const isAdmin = useIsAdmin();
 
   return (
@@ -61,33 +55,7 @@ const Navbar: FC = () => {
                   ))}
                 </MenuList>
               </Menu>
-              <Menu>
-                <MenuButton
-                  as={Avatar}
-                  size="sm"
-                  src={sessionData?.user?.image}
-                  name={sessionData?.user?.name ?? 'Admin'}
-                  height="9"
-                  width="9"
-                ></MenuButton>
-                <Portal>
-                  <MenuList>
-                    <MenuItem
-                      _hover={{
-                        background: 'transparent',
-                      }}
-                    >
-                      <AdminInfo sessionData={sessionData} />
-                    </MenuItem>
-                  </MenuList>
-                </Portal>
-              </Menu>
-              <Menu>
-                <MenuButton as={IconButton} variant="ghost" icon={<LanguageIcon className="h-6 w-6" />} />
-                <MenuList>
-                  <LanguageSwitcher />
-                </MenuList>
-              </Menu>
+              <UserButton />
             </>
           ) : (
             <Menu>
