@@ -91,7 +91,7 @@ const Drinks: NextPage = () => {
   return (
     <>
       <Head>
-        <title>{t('all_products_title')}</title>
+        <title>{t('all_products_title')} | Fika </title>
         <meta name="description" content="List of all products" />
         <link rel="icon" href="/favicon.ico" />
       </Head>

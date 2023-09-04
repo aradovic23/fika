@@ -4,19 +4,20 @@ import {
   Hide,
   HStack,
   IconButton,
-  Image,
   Menu,
   MenuButton,
   MenuItem,
   MenuList,
   Portal,
   Show,
+  Skeleton,
   Tag,
   TagLabel,
   TagLeftIcon,
   Text,
   useDisclosure,
   VStack,
+  chakra,
 } from '@chakra-ui/react';
 import { PencilSquareIcon, TrashIcon } from '@heroicons/react/24/outline';
 import { BeakerIcon, EllipsisVerticalIcon, EyeSlashIcon, Squares2X2Icon, TagIcon } from '@heroicons/react/24/solid';
@@ -30,6 +31,7 @@ import { api } from '../utils/api';
 import Dialog from './Dialog';
 import { AlertDialogModal } from './ui/AlertDialog';
 import { SlideInModal } from './ui/SlideInModal';
+import Image from 'next/image';
 
 export type DrinkWithUnits = Prisma.DrinkGetPayload<{ include: { unit: true; category: true } }>;
 
@@ -54,12 +56,20 @@ export const DrinkList = (drink: DrinkWithUnits) => {
   const hasTypes = category?.addTypes;
   const { t } = useTranslation('common');
 
-  const { data: dominantColor } = usePalette(drink.category?.url ?? '', 2, 'hex', {
+  const { data: dominantColor, loading } = usePalette(drink.category?.url ?? '', 2, 'hex', {
     crossOrigin: 'Anonymous',
     quality: 100,
   });
 
   const showHiddenProduct = drink.isHidden && isAdmin;
+
+  const NextImage = chakra(Image, {
+    shouldForwardProp: prop => ['width', 'height', 'src', 'alt'].includes(prop),
+  });
+
+  if (loading) {
+    return <Skeleton rounded="lg" />;
+  }
 
   return (
     <>
@@ -73,7 +83,9 @@ export const DrinkList = (drink: DrinkWithUnits) => {
       >
         <Flex w="full" gap="3">
           <Box boxSize="5rem" position="relative" minW="5rem">
-            <Image
+            <NextImage
+              height="200"
+              width="200"
               onClick={onOpen}
               boxSize="5rem"
               rounded="md"

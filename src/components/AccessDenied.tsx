@@ -5,7 +5,7 @@ const AccessDenied = () => {
   return (
     <>
       <Head>
-        <title>Access Denied</title>
+        <title>Access Denied | Fika</title>
       </Head>
       <Center h="calc(100vh)">
         <VStack spacing="3">
