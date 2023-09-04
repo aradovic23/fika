@@ -53,11 +53,13 @@ const Home: NextPage = () => {
             </AlertDescription>
           </Alert>
         )}
-        <Link href={!storeData ? '/settings' : '/drinks'}>
-          <Button pl="0" mt="5" variant="ghost" rightIcon={<ChevronRightIcon className="h-4 w-4" />}>
-            {buttonActions}
-          </Button>
-        </Link>
+        {(!isCategoriesLoading || !isDrinksLoading) && (
+          <Link href={!storeData ? '/settings' : '/drinks'}>
+            <Button pl="0" mt="5" variant="ghost" rightIcon={<ChevronRightIcon className="h-4 w-4" />}>
+              {buttonActions}
+            </Button>
+          </Link>
+        )}
       </Container>
     </>
   );

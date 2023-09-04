@@ -168,8 +168,8 @@ const Drinks: NextPage = () => {
           <GridItem colSpan={{ base: 6, md: 3, lg: 4 }} as="main" mb={{ base: '6rem', md: 0 }}>
             <SimpleGrid spacing="5" minChildWidth="20rem">
               {isLoading ? (
-                <SkeletonLoader height="10rem" />
-              ) : filteredDrinks.length === 0 ? (
+                <SkeletonLoader height="5rem" count={10} />
+              ) : filteredDrinks.length === 0 && !isLoading ? (
                 <ScaleFade initialScale={0.8} in unmountOnExit>
                   <NoResults />
                 </ScaleFade>
