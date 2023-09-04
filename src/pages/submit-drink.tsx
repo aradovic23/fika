@@ -32,7 +32,7 @@ import CreateVolumeOption from '../components/CreateVolumeOption';
 import { Form } from '../components/Form';
 import ImageSearch from '../components/ImageSearch';
 import { useGetCategory } from '../hooks/useGetCategory';
-import { useIsAdmin } from '../hooks/useIsAdmin.js';
+import { useIsAdmin } from '../hooks/useIsAdmin';
 import { api } from '../utils/api';
 
 export const getServerSideProps = async ({ locale }: { locale: string }) => ({

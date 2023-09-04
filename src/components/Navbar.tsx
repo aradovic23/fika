@@ -9,7 +9,7 @@ import {
   MenuItem,
   MenuList,
 } from '@chakra-ui/react';
-import { UserButton, useUser } from '@clerk/nextjs';
+import { UserButton } from '@clerk/nextjs';
 import { Bars3Icon } from '@heroicons/react/24/outline';
 import { LanguageIcon } from '@heroicons/react/24/solid';
 import NextLink from 'next/link';
