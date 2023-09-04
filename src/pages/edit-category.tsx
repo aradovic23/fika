@@ -1,11 +1,3 @@
-import { type NextPage } from 'next';
-import { useSession } from 'next-auth/react';
-import Head from 'next/head';
-import { api } from '../utils/api';
-import { useEffect, useState } from 'react';
-import { useGetCategory } from '../hooks/useGetCategory';
-import AccessDenied from '../components/AccessDenied';
-import { Form } from '../components/Form';
 import {
   Alert,
   AlertDescription,
@@ -25,20 +17,27 @@ import {
   Image,
   Input,
   Select,
-  Spinner,
   Stack,
   Switch,
   Text,
   useToast,
   VStack,
 } from '@chakra-ui/react';
-import { Controller, useForm } from 'react-hook-form';
 import type { Category } from '@prisma/client';
-import ImageSearch from '../components/ImageSearch';
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import nextI18nConfig from '../../next-i18next.config.mjs';
+import { type NextPage } from 'next';
 import { useTranslation } from 'next-i18next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import Head from 'next/head';
+import { useEffect, useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
+import nextI18nConfig from '../../next-i18next.config.mjs';
+import AccessDenied from '../components/AccessDenied';
+import { Form } from '../components/Form';
+import ImageSearch from '../components/ImageSearch';
 import { PageSpinner } from '../components/LoaderSpinner';
+import { useGetCategory } from '../hooks/useGetCategory';
+import { useIsAdmin } from '../hooks/useIsAdmin';
+import { api } from '../utils/api';
 
 export const getServerSideProps = async ({ locale }: { locale: string }) => ({
   props: {
@@ -48,13 +47,14 @@ export const getServerSideProps = async ({ locale }: { locale: string }) => ({
 
 const EditCategory: NextPage = () => {
   const { t } = useTranslation();
-  const { data: sessionData, status } = useSession();
   const { data: categories, isLoading } = api.categories.getCategories.useQuery();
   const [categoryId, setCategoryId] = useState(0);
   const [imageFromSearch, setImageFromSearch] = useState('');
   const { category: productCategory } = useGetCategory(categoryId);
   const updateCategory = api.categories.updateCategory.useMutation();
   const deleteSingleCategory = api.categories.deleteCategory.useMutation();
+
+  const isAdmin = useIsAdmin();
 
   const hasSearchedImage = imageFromSearch !== '';
 
@@ -134,11 +134,11 @@ const EditCategory: NextPage = () => {
     setImageFromSearch(image);
   };
 
-  if (status === 'loading' || isLoading) {
+  if (isLoading) {
     return <PageSpinner />;
   }
 
-  if (sessionData?.user?.role != 'ADMIN') {
+  if (!isAdmin) {
     return <AccessDenied />;
   }
 

@@ -22,10 +22,10 @@ import { PencilSquareIcon, TrashIcon } from '@heroicons/react/24/outline';
 import { BeakerIcon, EllipsisVerticalIcon, EyeSlashIcon, Squares2X2Icon, TagIcon } from '@heroicons/react/24/solid';
 import type { Prisma } from '@prisma/client';
 import { usePalette } from 'color-thief-react';
-import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { useTranslation } from 'react-i18next';
 import { useGetCategory } from '../hooks/useGetCategory';
+import { useIsAdmin } from '../hooks/useIsAdmin';
 import { api } from '../utils/api';
 import Dialog from './Dialog';
 import { AlertDialogModal } from './ui/AlertDialog';
@@ -49,10 +49,9 @@ export const DrinkList = (drink: DrinkWithUnits) => {
   };
 
   const { category } = useGetCategory(drink.categoryId ?? 1) ?? '';
-  const { data: sessionData } = useSession();
+  const isAdmin = useIsAdmin();
   const hasDescription = category?.addDescription;
   const hasTypes = category?.addTypes;
-  const isAdmin = sessionData?.user?.role === 'ADMIN';
   const { t } = useTranslation('common');
 
   const { data: dominantColor } = usePalette(drink.category?.url ?? '', 2, 'hex', {
@@ -60,7 +59,7 @@ export const DrinkList = (drink: DrinkWithUnits) => {
     quality: 100,
   });
 
-  const showHiddenProduct = drink.isHidden && sessionData?.user?.role === 'ADMIN';
+  const showHiddenProduct = drink.isHidden && isAdmin;
 
   return (
     <>

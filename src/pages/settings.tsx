@@ -1,17 +1,16 @@
-import { type NextPage } from 'next';
-import Head from 'next/head';
 import { Button, Container, Grid, GridItem, Heading, HStack, Image, Text, VStack } from '@chakra-ui/react';
+import { type NextPage } from 'next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import Head from 'next/head';
+import { useTranslation } from 'react-i18next';
 import nextI18nConfig from '../../next-i18next.config.mjs';
-import { useSession } from 'next-auth/react';
 import AccessDenied from '../components/AccessDenied';
 import CreateStoreForm from '../components/CreateStoreForm';
-import { api } from '../utils/api';
 import EditStoreForm from '../components/EditStoreForm';
 import { PageSpinner } from '../components/LoaderSpinner';
 import Notice from '../components/Notice';
-import { useTranslation } from 'react-i18next';
 import { useIsAdmin } from '../hooks/useIsAdmin';
+import { api } from '../utils/api';
 
 export const getServerSideProps = async ({ locale }: { locale: string }) => ({
   props: {
@@ -20,8 +19,6 @@ export const getServerSideProps = async ({ locale }: { locale: string }) => ({
 });
 
 const Settings: NextPage = () => {
-  const { data: sessionData, status } = useSession();
-
   const { data: storeData, isLoading } = api.settings.getStore.useQuery();
 
   const isAdmin = useIsAdmin();
@@ -44,7 +41,7 @@ const Settings: NextPage = () => {
     deleteStore({ id });
   };
 
-  if (status === 'loading' || isLoading) {
+  if (isLoading) {
     return <PageSpinner />;
   }
 

@@ -1,19 +1,19 @@
-import { type NextPage } from 'next';
-import { useRouter } from 'next/router';
-import { api } from '../../utils/api';
-import EditDrinkForm from '../../components/EditDrinkForm';
-import Head from 'next/head';
-import { useSession } from 'next-auth/react';
-import AccessDenied from '../../components/AccessDenied';
-import { useGetCategory } from '../../hooks/useGetCategory';
 import { Container, Heading, ScaleFade, Stack, Text, useToast } from '@chakra-ui/react';
 import type { Drink } from '@prisma/client';
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import nextI18nConfig from '../../../next-i18next.config.mjs';
-import { useTranslation } from 'next-i18next';
 import moment from 'moment';
 import 'moment/locale/sr';
+import { type NextPage } from 'next';
+import { useTranslation } from 'next-i18next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import Head from 'next/head';
+import { useRouter } from 'next/router';
+import nextI18nConfig from '../../../next-i18next.config.mjs';
+import AccessDenied from '../../components/AccessDenied';
+import EditDrinkForm from '../../components/EditDrinkForm';
 import { PageSpinner } from '../../components/LoaderSpinner';
+import { useGetCategory } from '../../hooks/useGetCategory';
+import { useIsAdmin } from '../../hooks/useIsAdmin';
+import { api } from '../../utils/api';
 
 export const getServerSideProps = async ({ locale }: { locale: string }) => ({
   props: {
@@ -25,16 +25,11 @@ const EditDrinkPage: NextPage = () => {
   const { t } = useTranslation();
   const toast = useToast();
 
-  const { data: sessionData, status } = useSession();
-
   const router = useRouter();
   const { id } = router.query as {
     id: string;
   };
-  const { data, isLoading } = api.drinks.getDrinkById.useQuery<{
-    id: number;
-    categoryId: number;
-  }>(
+  const { data, isLoading } = api.drinks.getDrinkById.useQuery(
     { id },
     {
       refetchOnWindowFocus: false,
@@ -47,7 +42,7 @@ const EditDrinkPage: NextPage = () => {
   const addDescription = category?.addDescription ?? false;
   const addTypes = category?.addTypes ?? false;
   const { data: units } = api.volume.getVolumeOptions.useQuery();
-
+  const isAdmin = useIsAdmin();
   const setMomentLocale = (locale: string) => moment.locale(locale);
   const currentLang: string = router.locale ?? 'en';
   setMomentLocale(currentLang);
@@ -85,11 +80,11 @@ const EditDrinkPage: NextPage = () => {
     );
   };
 
-  if (status === 'loading' || isLoading) {
+  if (isLoading) {
     return <PageSpinner />;
   }
 
-  if (sessionData?.user?.role !== 'ADMIN') {
+  if (!isAdmin) {
     return <AccessDenied />;
   }
 

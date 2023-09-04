@@ -1,6 +1,5 @@
-import { Button, Center, Heading, Text, VStack } from '@chakra-ui/react';
+import { Center, Heading, Text, VStack } from '@chakra-ui/react';
 import Head from 'next/head';
-import Link from 'next/link';
 
 const AccessDenied = () => {
   return (

@@ -20,7 +20,6 @@ import {
 import { PlusCircleIcon } from '@heroicons/react/24/outline';
 import type { Drink } from '@prisma/client';
 import { type NextPage } from 'next';
-import { useSession } from 'next-auth/react';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import Head from 'next/head';
@@ -32,8 +31,8 @@ import CreateNewCategory from '../components/CreateNewCategory';
 import CreateVolumeOption from '../components/CreateVolumeOption';
 import { Form } from '../components/Form';
 import ImageSearch from '../components/ImageSearch';
-import { PageSpinner } from '../components/LoaderSpinner';
 import { useGetCategory } from '../hooks/useGetCategory';
+import { useIsAdmin } from '../hooks/useIsAdmin.js';
 import { api } from '../utils/api';
 
 export const getServerSideProps = async ({ locale }: { locale: string }) => ({
@@ -53,7 +52,6 @@ const SubmitDrink: NextPage = () => {
   const [blurHash, setBlurHash] = useState('');
   const [isCreateNewCategoryChecked, setIsCreateNewCategoryChecked] = useState(false);
   const [createNewUnit, setCreateNewUnit] = useState(false);
-  const { data: sessionData, status } = useSession();
   const toast = useToast();
 
   const { t } = useTranslation('common');
@@ -73,11 +71,9 @@ const SubmitDrink: NextPage = () => {
   const addDescription = currentCategory?.addDescription;
   const addTypes = currentCategory?.addTypes;
 
-  if (status === 'loading') {
-    return <PageSpinner />;
-  }
+  const isAdmin = useIsAdmin();
 
-  if (sessionData?.user?.role != 'ADMIN') {
+  if (!isAdmin) {
     return <AccessDenied />;
   }
 

@@ -18,7 +18,6 @@ import {
 import { MagnifyingGlassCircleIcon, XCircleIcon } from '@heroicons/react/24/solid';
 import type { Category, Drink, Unit } from '@prisma/client';
 import { type NextPage } from 'next';
-import { useSession } from 'next-auth/react';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import Head from 'next/head';
 import { useRouter } from 'next/router.js';
@@ -31,6 +30,7 @@ import { DrinkList } from '../components/DrinkList';
 import { NoResults } from '../components/NoResults';
 import SkeletonLoader from '../components/SkeletonLoader';
 import { useGetCategory } from '../hooks/useGetCategory';
+import { useIsAdmin } from '../hooks/useIsAdmin';
 import { api } from '../utils/api';
 
 export const getServerSideProps = async ({ locale }: { locale: string }) => ({
@@ -45,8 +45,6 @@ export type DrinkWithCategory = Drink & {
 };
 
 const Drinks: NextPage = () => {
-  const { data: sessionData } = useSession();
-
   const drinks = api.drinks.getDrinks.useQuery();
 
   const [search, setSearch] = useState('');
@@ -71,7 +69,7 @@ const Drinks: NextPage = () => {
 
   const { category: current } = useGetCategory(selectedCategory);
 
-  const isAdmin = sessionData?.user?.role === 'ADMIN';
+  const isAdmin = useIsAdmin();
 
   const filteredDrinks = (drinks.data ?? [])
     .filter(drink => (selectedCategory === 0 ? true : drink.categoryId === selectedCategory))
