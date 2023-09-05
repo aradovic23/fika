@@ -15,7 +15,7 @@ import {
   Stack,
   Text,
 } from '@chakra-ui/react';
-import { XCircleIcon, MagnifyingGlassIcon } from '@heroicons/react/24/solid';
+import { MagnifyingGlassIcon, XCircleIcon } from '@heroicons/react/24/solid';
 import type { Category, Drink, Unit } from '@prisma/client';
 import { type NextPage } from 'next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
@@ -45,7 +45,7 @@ export type DrinkWithCategory = Drink & {
 };
 
 const Drinks: NextPage = () => {
-  const drinks = api.drinks.getDrinks.useQuery();
+  const { data: drinks, isLoading: isDrinksLoading } = api.drinks.getDrinks.useQuery();
 
   const [search, setSearch] = useState('');
 
@@ -71,7 +71,7 @@ const Drinks: NextPage = () => {
 
   const isAdmin = useIsAdmin();
 
-  const filteredDrinks = (drinks.data ?? [])
+  const filteredDrinks = (drinks ?? [])
     .filter(drink => (selectedCategory === 0 ? true : drink.categoryId === selectedCategory))
     .filter(drink => (search != '' ? drink.title?.toLowerCase().includes(search.toLowerCase()) : true))
     .filter(drink => (drink.isHidden && isAdmin ? true : !drink.isHidden ? true : false))
@@ -87,6 +87,23 @@ const Drinks: NextPage = () => {
   useEffect(() => {
     setSelectedCategory(initialSelectedCategoryId);
   }, [initialSelectedCategoryId]);
+
+  if (isLoading && isDrinksLoading) {
+    return (
+      <Container maxW="6xl" mt="10">
+        <Grid templateColumns="repeat(6, 1fr)">
+          <GridItem colSpan={{ base: 6, md: 3, lg: 2 }} mr={{ base: '0', md: '3' }} mb={{ base: '5', md: '0' }}>
+            <SkeletonLoader height="100vh" count={1} />
+          </GridItem>
+          <GridItem colSpan={{ base: 6, md: 3, lg: 4 }} as="main" mb={{ base: '6rem', md: 0 }}>
+            <SimpleGrid spacing="5" minChildWidth="20rem">
+              <SkeletonLoader height="5rem" count={18} />
+            </SimpleGrid>
+          </GridItem>
+        </Grid>
+      </Container>
+    );
+  }
 
   return (
     <>
@@ -167,9 +184,7 @@ const Drinks: NextPage = () => {
 
           <GridItem colSpan={{ base: 6, md: 3, lg: 4 }} as="main" mb={{ base: '6rem', md: 0 }}>
             <SimpleGrid spacing="5" minChildWidth="20rem">
-              {isLoading ? (
-                <SkeletonLoader height="5rem" count={10} />
-              ) : filteredDrinks.length === 0 && !isLoading ? (
+              {filteredDrinks.length === 0 && !isLoading && !isDrinksLoading ? (
                 <ScaleFade initialScale={0.8} in unmountOnExit>
                   <NoResults />
                 </ScaleFade>

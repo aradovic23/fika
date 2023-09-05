@@ -1,4 +1,5 @@
 import {
+  Box,
   ButtonGroup,
   Container,
   HStack,
@@ -32,9 +33,9 @@ const Navbar: FC = () => {
   return (
     <Container maxW="6xl">
       <HStack justifyContent="space-between" alignItems="center" py="2" gap="5" top="0" width="100%" maxH="64px">
-        <HStack as={NextLink} href="/">
+        <Box as={NextLink} href="/">
           {storeData?.fileUrl && <Image alt="logo" src={storeData?.fileUrl} minH="30px" maxH="40px" />}
-        </HStack>
+        </Box>
 
         <ButtonGroup gap="2" alignItems="center">
           {isAdmin ? (

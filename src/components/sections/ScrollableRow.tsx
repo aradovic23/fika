@@ -32,6 +32,10 @@ const ScrollableRow = ({ heading, data, type, showModal }: Props) => {
     sideScroll(wrapper, 15, 900, step);
   };
 
+  if (!data || data.length < 1) {
+    return null;
+  }
+
   return (
     <VStack spacing={4}>
       <HStack justify="space-between" w="full">

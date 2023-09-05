@@ -38,6 +38,7 @@ export const ImageCard = ({ type, data, showModal }: Props) => {
               <SlideInModal
                 title={(data as Drink).title || (data as Category).categoryName}
                 description={(data as Drink).description}
+                image={(data as Drink).image}
               />
             </Box>
           </Hide>
