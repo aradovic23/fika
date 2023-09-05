@@ -102,8 +102,8 @@ export const DrinkList = (drink: DrinkWithUnits) => {
           </Box>
           <VStack w="full" overflow="hidden" position="relative">
             <HStack justify="space-between" w="full" align="baseline">
-              <Box maxW="150px">
-                <Text lineHeight={1} fontWeight="bold" fontSize="xl" isTruncated>
+              <Box maxW="190px">
+                <Text fontWeight="bold" fontSize="xl" isTruncated>
                   {drink.title}
                 </Text>
               </Box>
