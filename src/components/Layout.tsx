@@ -24,8 +24,12 @@ const Layout = ({ children }: LayoutProps) => {
   });
 
   const volumesKey = getQueryKey(api.volume.getVolumeOptions, undefined, 'query');
-
   queryClient.setQueryDefaults(volumesKey, {
+    refetchOnWindowFocus: false,
+  });
+
+  const recommendedProducts = getQueryKey(api.drinks.getRecommendedProducts, undefined, 'query');
+  queryClient.setQueryDefaults(recommendedProducts, {
     refetchOnWindowFocus: false,
   });
 

@@ -15,7 +15,7 @@ import {
   Stack,
   Text,
 } from '@chakra-ui/react';
-import { MagnifyingGlassCircleIcon, XCircleIcon } from '@heroicons/react/24/solid';
+import { XCircleIcon, MagnifyingGlassIcon } from '@heroicons/react/24/solid';
 import type { Category, Drink, Unit } from '@prisma/client';
 import { type NextPage } from 'next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
@@ -114,7 +114,7 @@ const Drinks: NextPage = () => {
             </Text>
             <InputGroup>
               <InputLeftElement pointerEvents="none">
-                <MagnifyingGlassCircleIcon className="h-6 w-6 text-slate-900" />
+                <MagnifyingGlassIcon className="h-5 w-5 text-martinique-600" />
               </InputLeftElement>
               <Input
                 id="search"
@@ -124,7 +124,7 @@ const Drinks: NextPage = () => {
                 variant="flushed"
               />
               <InputRightElement cursor="pointer">
-                <XCircleIcon className="h-4 w-4 text-slate-300" onClick={() => setSearch('')} />
+                <XCircleIcon className="h-4 w-4 text-martinique-300" onClick={() => setSearch('')} />
               </InputRightElement>
             </InputGroup>
 

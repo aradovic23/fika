@@ -10,6 +10,10 @@ type Props = {
 };
 
 export const SlideInModal = ({ title, description, image }: Props) => {
+  if (description?.length === 0 || !description) {
+    return null;
+  }
+
   return (
     <Drawer.Root shouldScaleBackground>
       <Drawer.Trigger asChild>
@@ -19,7 +23,7 @@ export const SlideInModal = ({ title, description, image }: Props) => {
           type="button"
           variant="ghost"
           bg="whiteAlpha.100"
-          color="whiteAlpha.900"
+          color="whiteAlpha.100"
           pos="absolute"
           h="full"
           inset={0}
