@@ -58,12 +58,15 @@ const Navbar: FC = () => {
               <UserButton />
             </>
           ) : (
-            <Menu>
-              <MenuButton as={IconButton} variant="ghost" icon={<LanguageIcon className="h-6 w-6" />} />
-              <MenuList>
-                <LanguageSwitcher />
-              </MenuList>
-            </Menu>
+            <HStack>
+              <Menu>
+                <MenuButton as={IconButton} variant="ghost" icon={<LanguageIcon className="h-6 w-6" />} />
+                <MenuList>
+                  <LanguageSwitcher />
+                </MenuList>
+              </Menu>
+              <UserButton />
+            </HStack>
           )}
         </ButtonGroup>
       </HStack>
