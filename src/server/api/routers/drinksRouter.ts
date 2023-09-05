@@ -2,10 +2,10 @@ import type { Prisma } from '@prisma/client';
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 
-import { createTRPCRouter, protectedProcedure, publicProcedure } from '../trpc';
+import { createTRPCRouter, publicProcedure } from '../trpc';
 
 export const drinksRouter = createTRPCRouter({
-  createDrink: protectedProcedure
+  createDrink: publicProcedure
     .input(
       z.object({
         title: z.string(),
@@ -85,7 +85,7 @@ export const drinksRouter = createTRPCRouter({
     });
     if (singleDrink) return singleDrink;
   }),
-  deleteDrink: protectedProcedure.input(z.object({ id: z.string() })).mutation(async ({ ctx, input }) => {
+  deleteDrink: publicProcedure.input(z.object({ id: z.string() })).mutation(async ({ ctx, input }) => {
     const { id } = input;
     try {
       return await ctx.prisma.drink.delete({
@@ -101,7 +101,7 @@ export const drinksRouter = createTRPCRouter({
     const drinks = await ctx.prisma.drink.findMany();
     return drinks;
   }),
-  updateDrink: protectedProcedure
+  updateDrink: publicProcedure
     .input(
       z.object({
         id: z.string(),
@@ -143,7 +143,7 @@ export const drinksRouter = createTRPCRouter({
       });
       return drink;
     }),
-  removeProductImage: protectedProcedure
+  removeProductImage: publicProcedure
     .input(
       z.object({
         id: z.string(),
@@ -164,7 +164,7 @@ export const drinksRouter = createTRPCRouter({
       });
       return drink;
     }),
-  clearRecommendedProducts: protectedProcedure.mutation(async ({ ctx }) => {
+  clearRecommendedProducts: publicProcedure.mutation(async ({ ctx }) => {
     return await ctx.prisma.drink.updateMany({
       where: {
         isRecommended: true,
@@ -175,7 +175,7 @@ export const drinksRouter = createTRPCRouter({
       },
     });
   }),
-  removeRecommendedProduct: protectedProcedure
+  removeRecommendedProduct: publicProcedure
     .input(
       z.object({
         id: z.string(),
