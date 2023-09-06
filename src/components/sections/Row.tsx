@@ -31,7 +31,7 @@ export function Row<T>({
   };
 
   return (
-    <VStack spacing={4}>
+    <VStack spacing={2}>
       <HStack justify="space-between" w="full">
         <Heading fontSize="xl">{heading}</Heading>
 

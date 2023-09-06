@@ -44,7 +44,7 @@ const Home: NextPage = () => {
       </Head>
 
       <Container maxW="6xl">
-        <Flex direction="column" gap="10" mt="5">
+        <Flex direction="column" gap={4} mt="5">
           <Skeleton isLoaded={!isDrinksLoading} rounded="lg" h="200">
             <Row
               items={sortedDrinks ?? []}
@@ -71,13 +71,7 @@ const Home: NextPage = () => {
         )}
         {(!isCategoriesLoading || !isDrinksLoading) && (
           <Link href={!storeData ? '/settings' : '/drinks'}>
-            <Button
-              pl="0"
-              mt="5"
-              variant="ghost"
-              colorScheme="primary"
-              rightIcon={<ChevronRightIcon className="h-4 w-4" />}
-            >
+            <Button mt="5" variant="outline" colorScheme="primary" rightIcon={<ChevronRightIcon className="h-4 w-4" />}>
               {buttonActions}
             </Button>
           </Link>

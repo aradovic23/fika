@@ -59,11 +59,7 @@ const Drinks: NextPage = () => {
 
   const defaultCategory = categories?.find(category => category.isDefault);
 
-  const initialSelectedCategoryId = redirectedCategoryId
-    ? redirectedCategoryId
-    : defaultCategory
-    ? defaultCategory.id
-    : 0;
+  const initialSelectedCategoryId = redirectedCategoryId ? redirectedCategoryId : 0;
 
   const [selectedCategory, setSelectedCategory] = useState(initialSelectedCategoryId);
 
