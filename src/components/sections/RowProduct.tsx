@@ -1,25 +1,14 @@
 import { Badge, Box, Heading, Hide, Text, VStack } from '@chakra-ui/react';
 import type { Category, Drink } from '@prisma/client';
 import Link from 'next/link';
-import ChakraImage from './ui/ChakraImage';
-import { SlideInModal } from './ui/SlideInModal';
+import ChakraImage from '../ui/ChakraImage';
+import { SlideInModal } from '../ui/SlideInModal';
 
 export type DrinkWithCategory = Drink & {
   category: Category;
 };
 
-type Props = {
-  type: 'drinks' | 'categories';
-  data: DrinkWithCategory | Category;
-  showModal?: boolean;
-};
-
-export const ImageCard = ({ type, data, showModal }: Props) => {
-  const isDrink = (data: Drink | Category): data is Drink => {
-    return type === 'drinks';
-  };
-  const drinkImage = isDrink(data) ? ((data.category?.addDescription && data.image) || data.category?.url) ?? '' : '';
-
+export function RowProduct<T>({ type, data, showModal }: { type: string; data: T; showModal?: boolean }) {
   return (
     <VStack rounded="md" shadow="md" scrollSnapAlign="start">
       <Box
@@ -50,7 +39,11 @@ export const ImageCard = ({ type, data, showModal }: Props) => {
           ></Link>
         )}
         <ChakraImage
-          src={type === 'drinks' ? drinkImage ?? '' : (data as Category).url ?? ''}
+          src={
+            type === 'categories'
+              ? (data as Category).url ?? ''
+              : ((data as Drink).image || (data as DrinkWithCategory).category.url) ?? ''
+          }
           alt="image"
           objectFit="cover"
           sizes="100vw"
@@ -84,4 +77,4 @@ export const ImageCard = ({ type, data, showModal }: Props) => {
       </Box>
     </VStack>
   );
-};
+}

@@ -33,6 +33,11 @@ const Layout = ({ children }: LayoutProps) => {
     refetchOnWindowFocus: false,
   });
 
+  const conciseCategories = getQueryKey(api.categories.getCategoriesConcise, undefined, 'query');
+  queryClient.setQueryDefaults(conciseCategories, {
+    refetchOnWindowFocus: false,
+  });
+
   const allDrinks = getQueryKey(api.drinks.getDrinks, undefined, 'query');
   queryClient.setQueryDefaults(allDrinks, {
     refetchOnWindowFocus: false,

@@ -1,16 +1,6 @@
-import { Heading, HStack, IconButton, Show, VStack } from '@chakra-ui/react';
+import { Box, Heading, HStack, IconButton, Show, VStack } from '@chakra-ui/react';
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/solid';
-import type { Category } from '@prisma/client';
 import { useRef, useState } from 'react';
-import type { DrinkWithCategory } from '../ImageCard';
-import { ImageCard } from '../ImageCard';
-
-type Props = {
-  heading: string;
-  data: (DrinkWithCategory | Category)[];
-  type: 'drinks' | 'categories';
-  showModal?: boolean;
-};
 
 const sideScroll = (element: HTMLDivElement, speed: number, distance: number, step: number) => {
   let scrollAmount = 0;
@@ -23,7 +13,15 @@ const sideScroll = (element: HTMLDivElement, speed: number, distance: number, st
   }, speed);
 };
 
-const ScrollableRow = ({ heading, data, type, showModal }: Props) => {
+export function Row<T>({
+  items,
+  heading,
+  render,
+}: {
+  items: T[];
+  heading: string;
+  render: (item: T) => React.ReactNode;
+}) {
   const contentWrapper = useRef<HTMLDivElement>(null);
   const [snapEnabled, setSnapEnabled] = useState(true);
 
@@ -32,16 +30,12 @@ const ScrollableRow = ({ heading, data, type, showModal }: Props) => {
     sideScroll(wrapper, 15, 900, step);
   };
 
-  if (!data || data.length < 1) {
-    return null;
-  }
-
   return (
     <VStack spacing={4}>
       <HStack justify="space-between" w="full">
         <Heading fontSize="xl">{heading}</Heading>
 
-        {data?.length > 4 && (
+        {items?.length > 4 && (
           <Show above="md">
             <HStack>
               <IconButton
@@ -72,12 +66,10 @@ const ScrollableRow = ({ heading, data, type, showModal }: Props) => {
         scrollSnapType={snapEnabled ? 'x proximity' : undefined}
         scrollSnapStop={snapEnabled ? 'always' : undefined}
       >
-        {data?.map(item => (
-          <ImageCard key={item.id} type={type} data={item} showModal={showModal} />
+        {items?.map((item, idx) => (
+          <Box key={idx}>{render(item)}</Box>
         ))}
       </HStack>
     </VStack>
   );
-};
-
-export default ScrollableRow;
+}

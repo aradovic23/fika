@@ -1,6 +1,6 @@
-import { z } from "zod";
+import { z } from 'zod';
 
-import { createTRPCRouter, publicProcedure } from "../trpc";
+import { createTRPCRouter, publicProcedure } from '../trpc';
 
 export const categoryRouter = createTRPCRouter({
   createCategory: publicProcedure
@@ -27,7 +27,7 @@ export const categoryRouter = createTRPCRouter({
     }),
   getCategories: publicProcedure.query(async ({ ctx }) => {
     const category = await ctx.prisma.category.findMany({
-      orderBy: { categoryName: "asc" },
+      orderBy: { categoryName: 'asc' },
     });
     return category;
   }),
@@ -51,7 +51,7 @@ export const categoryRouter = createTRPCRouter({
         });
         if (defaultCategories.length > 0) {
           await ctx.prisma.category.updateMany({
-            where: { id: { in: defaultCategories.map((c) => c.id) } },
+            where: { id: { in: defaultCategories.map(c => c.id) } },
             data: { isDefault: false },
           });
         }
@@ -70,18 +70,28 @@ export const categoryRouter = createTRPCRouter({
       });
       return category;
     }),
-  deleteCategory: publicProcedure
-    .input(z.object({ id: z.number() }))
-    .mutation(async ({ ctx, input }) => {
-      const { id } = input;
-      try {
-        return await ctx.prisma.category.delete({
-          where: {
-            id,
-          },
-        });
-      } catch (err) {
-        console.warn(err);
-      }
-    }),
+  deleteCategory: publicProcedure.input(z.object({ id: z.number() })).mutation(async ({ ctx, input }) => {
+    const { id } = input;
+    try {
+      return await ctx.prisma.category.delete({
+        where: {
+          id,
+        },
+      });
+    } catch (err) {
+      console.warn(err);
+    }
+  }),
+  getCategoriesConcise: publicProcedure.query(async ({ ctx }) => {
+    const category = await ctx.prisma.category.findMany({
+      orderBy: { categoryName: 'asc' },
+      select: {
+        categoryName: true,
+        id: true,
+        url: true,
+        isDefault: true,
+      },
+    });
+    return category;
+  }),
 });

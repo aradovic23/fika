@@ -67,13 +67,24 @@ export const drinksRouter = createTRPCRouter({
         isRecommended: true,
         isHidden: false,
       },
-      include: {
-        category: true,
+      select: {
+        title: true,
+        image: true,
+        description: true,
+        id: true,
+        price: true,
+        updatedAt: true,
+        category: {
+          select: {
+            categoryName: true,
+            url: true,
+            id: true,
+          },
+        },
       },
     });
-    return drinks as Prisma.DrinkInclude;
+    return drinks;
   }),
-
   getDrinkById: publicProcedure.input(z.object({ id: z.string() })).query(async ({ ctx, input }) => {
     const singleDrink = await ctx.prisma.drink.findFirst({
       where: {
