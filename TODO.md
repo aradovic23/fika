@@ -1,11 +1,17 @@
-## features
+## features todo
 
-- Recommended Section empty state
-- Next Chakra Image Component
-- Navbar use Next Image
-- generic scrollable row component with renderer
+- implement Update Modal to handle single updates from buttons
+- add star/unstar hide/unhide
+- upload images for categories and drinks && update `uploadthing` dependency
+- remove previous image when changes from upload thing with their endpoint
+- add and remove stared products in Bulk from homepage
+- add and remove hidden products in Bulk from homepage/drinks page
+- look into displaying admin in navbar next to avatar
 - continue with translations
 - add back to top btn
 - add cart - zustand
 - separate forms to components
-- make ImageCard.tsx generic
+
+## optimizations
+
+- refactor `DrinkList.tsx` component

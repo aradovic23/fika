@@ -1,15 +1,11 @@
 import {
   Box,
+  Button,
   chakra,
+  Divider,
   Flex,
   Hide,
   HStack,
-  IconButton,
-  Menu,
-  MenuButton,
-  MenuItem,
-  MenuList,
-  Portal,
   Show,
   Tag,
   TagLabel,
@@ -19,11 +15,11 @@ import {
   VStack,
 } from '@chakra-ui/react';
 import { PencilSquareIcon, TrashIcon } from '@heroicons/react/24/outline';
-import { BeakerIcon, EllipsisVerticalIcon, EyeSlashIcon, Squares2X2Icon, TagIcon } from '@heroicons/react/24/solid';
+import { BeakerIcon, EyeSlashIcon, Squares2X2Icon, TagIcon } from '@heroicons/react/24/solid';
 import type { Prisma } from '@prisma/client';
 import { usePalette } from 'color-thief-react';
 import Image from 'next/image';
-import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { useTranslation } from 'react-i18next';
 import { useGetCategory } from '../hooks/useGetCategory';
 import { useIsAdmin } from '../hooks/useIsAdmin';
@@ -62,9 +58,37 @@ export const DrinkList = (drink: DrinkWithUnits) => {
 
   const showHiddenProduct = drink.isHidden && isAdmin;
 
+  const router = useRouter();
+
   const NextImage = chakra(Image, {
     shouldForwardProp: prop => ['width', 'height', 'src', 'alt'].includes(prop),
   });
+
+  const ICON_SIZE = 'h-4 w-4';
+
+  const adminOnlyButtons = [
+    {
+      label: 'Edit',
+      icon: <PencilSquareIcon className={ICON_SIZE} />,
+      action: () => router.push(`/drink/${drink.id}`),
+    },
+    // TODO: Implement Info Modal to handle these requests!
+    // {
+    //   label: drink.isHidden ? 'Unhide' : 'Hide',
+    //   icon: drink.isHidden ? <EyeIcon className={ICON_SIZE} /> : <EyeSlashIcon className={ICON_SIZE} />,
+    //   action: () => console.log('action'),
+    // },
+    // {
+    //   label: drink.isRecommended ? 'Unstar' : 'Star',
+    //   icon: drink.isRecommended ? <SolidStarIcon className={ICON_SIZE} /> : <StarIcon className={ICON_SIZE} />,
+    //   action: () => console.log('action'),
+    // },
+    {
+      label: 'Delete',
+      icon: <TrashIcon className={ICON_SIZE} />,
+      action: onAlertOpen,
+    },
+  ];
 
   return (
     <>
@@ -102,11 +126,9 @@ export const DrinkList = (drink: DrinkWithUnits) => {
           </Box>
           <VStack w="full" overflow="hidden" position="relative">
             <HStack justify="space-between" w="full" align="baseline">
-              <Box maxW="190px">
-                <Text fontWeight="bold" fontSize="xl" isTruncated>
-                  {drink.title}
-                </Text>
-              </Box>
+              <Text fontWeight="bold" fontSize="xl">
+                {drink.title}
+              </Text>
               <HStack>
                 <Text fontSize="xl">
                   {drink.price}
@@ -114,27 +136,6 @@ export const DrinkList = (drink: DrinkWithUnits) => {
                     {t('drink.currency')}
                   </Text>
                 </Text>
-                {isAdmin && (
-                  <Menu>
-                    <MenuButton
-                      as={IconButton}
-                      variant="ghost"
-                      aria-label="Admin options"
-                      color="magenta.100"
-                      icon={<EllipsisVerticalIcon className="h-5 w-5" />}
-                    />
-                    <Portal>
-                      <MenuList>
-                        <MenuItem icon={<PencilSquareIcon className="h-4 w-4" />} as={Link} href={`/drink/${drink.id}`}>
-                          {t('drink.edit')}
-                        </MenuItem>
-                        <MenuItem icon={<TrashIcon className="h-4 w-4" />} color="red" onClick={onAlertOpen}>
-                          {t('drink.delete')}
-                        </MenuItem>
-                      </MenuList>
-                    </Portal>
-                  </Menu>
-                )}
               </HStack>
             </HStack>
             <HStack w="full" opacity={0.5} overflow="hidden">
@@ -157,6 +158,31 @@ export const DrinkList = (drink: DrinkWithUnits) => {
             </HStack>
           </VStack>
         </Flex>
+        {isAdmin && (
+          <>
+            <Divider borderColor="magenta.100" />
+            <VStack spacing={2} w="full">
+              <Text fontSize="sm" fontWeight="bold" color="magenta.100">
+                Admin Options
+              </Text>
+              <HStack justify="space-between" w="full">
+                {adminOnlyButtons.map(btn => (
+                  <Button
+                    key={btn.label}
+                    leftIcon={btn.icon}
+                    onClick={btn.action}
+                    size="sm"
+                    iconSpacing="1"
+                    bg={btn.label === 'Delete' ? 'offRed.500' : undefined}
+                    color={btn.label === 'Delete' ? 'white' : undefined}
+                  >
+                    {btn.label}
+                  </Button>
+                ))}
+              </HStack>
+            </VStack>
+          </>
+        )}
       </VStack>
       <Show above="md">
         {drink.description?.length !== 0 && (
