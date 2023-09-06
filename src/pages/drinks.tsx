@@ -55,9 +55,9 @@ const Drinks: NextPage = () => {
 
   const redirectedCategoryId = Number(router.query.category);
 
-  const { data, isLoading } = api.categories.getCategories.useQuery();
+  const { data: category, isLoading } = api.categories.getCategoriesConcise.useQuery();
 
-  const defaultCategory = data?.find(category => category.isDefault);
+  const defaultCategory = category?.find(category => category.isDefault);
 
   const initialSelectedCategoryId = redirectedCategoryId
     ? redirectedCategoryId
@@ -157,7 +157,7 @@ const Drinks: NextPage = () => {
               >
                 {defaultCategory && <option value={defaultCategory.id}>{defaultCategory.categoryName}</option>}
                 <option value={0}>All</option>
-                {(data || []).map(category => {
+                {(category || []).map(category => {
                   if (defaultCategory && category.id === defaultCategory.id) {
                     return null;
                   }
