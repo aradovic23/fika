@@ -38,8 +38,8 @@ const Navbar: FC = () => {
         </Box>
 
         <ButtonGroup gap="2" alignItems="center">
-          {isAdmin ? (
-            <>
+          <>
+            {isAdmin && (
               <Menu>
                 <MenuButton as={IconButton} variant="ghost" icon={<Bars3Icon className="h-6 w-6" />}></MenuButton>
                 <MenuList>
@@ -56,19 +56,15 @@ const Navbar: FC = () => {
                   ))}
                 </MenuList>
               </Menu>
-              <UserButton />
-            </>
-          ) : (
-            <HStack>
-              <Menu>
-                <MenuButton as={IconButton} variant="ghost" icon={<LanguageIcon className="h-6 w-6" />} />
-                <MenuList>
-                  <LanguageSwitcher />
-                </MenuList>
-              </Menu>
-              <UserButton />
-            </HStack>
-          )}
+            )}
+            <Menu>
+              <MenuButton as={IconButton} variant="ghost" icon={<LanguageIcon className="h-6 w-6" />} />
+              <MenuList>
+                <LanguageSwitcher />
+              </MenuList>
+            </Menu>
+            <UserButton />
+          </>
         </ButtonGroup>
       </HStack>
     </Container>

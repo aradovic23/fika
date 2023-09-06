@@ -170,7 +170,9 @@ const Drinks: NextPage = () => {
                 <Checkbox
                   onChange={() => setShowHiddenProducts(!showHiddenProducts)}
                   defaultChecked
+                  colorScheme="red"
                   color="magenta.100"
+                  fontWeight="bold"
                 >
                   {t('all_drinks.hidden_products')}
                 </Checkbox>

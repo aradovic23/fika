@@ -17,6 +17,7 @@ import {
 import { PencilSquareIcon, TrashIcon } from '@heroicons/react/24/outline';
 import { BeakerIcon, EyeSlashIcon, Squares2X2Icon, TagIcon } from '@heroicons/react/24/solid';
 import type { Prisma } from '@prisma/client';
+import { transformDocument } from '@prisma/client/runtime';
 import { usePalette } from 'color-thief-react';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
@@ -68,7 +69,7 @@ export const DrinkList = (drink: DrinkWithUnits) => {
 
   const adminOnlyButtons = [
     {
-      label: 'Edit',
+      label: t('drink.edit'),
       icon: <PencilSquareIcon className={ICON_SIZE} />,
       action: () => router.push(`/drink/${drink.id}`),
     },
@@ -84,9 +85,10 @@ export const DrinkList = (drink: DrinkWithUnits) => {
     //   action: () => console.log('action'),
     // },
     {
-      label: 'Delete',
+      label: t('drink.delete'),
       icon: <TrashIcon className={ICON_SIZE} />,
       action: onAlertOpen,
+      destructive: true,
     },
   ];
 
@@ -163,7 +165,7 @@ export const DrinkList = (drink: DrinkWithUnits) => {
             <Divider borderColor="magenta.100" />
             <VStack spacing={2} w="full">
               <Text fontSize="sm" fontWeight="bold" color="magenta.100">
-                Admin Options
+                {t('all_drinks.admin_options')}
               </Text>
               <HStack justify="space-between" w="full">
                 {adminOnlyButtons.map(btn => (
@@ -173,8 +175,8 @@ export const DrinkList = (drink: DrinkWithUnits) => {
                     onClick={btn.action}
                     size="sm"
                     iconSpacing="1"
-                    bg={btn.label === 'Delete' ? 'offRed.500' : undefined}
-                    color={btn.label === 'Delete' ? 'white' : undefined}
+                    bg={btn.destructive ? 'offRed.500' : undefined}
+                    color={btn.destructive ? 'white' : undefined}
                   >
                     {btn.label}
                   </Button>

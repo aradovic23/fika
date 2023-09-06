@@ -54,7 +54,8 @@
   "all_drinks": {
     "viewing": "Тренутна категорија",
     "categories": "Категорије",
-    "hidden_products": "Укључи сакривене производе"
+    "hidden_products": "Укључи сакривене производе",
+    "admin_options": "Админске опције"
   },
   "drink": {
     "currency": "РСД",

@@ -54,7 +54,8 @@
   "all_drinks": {
     "viewing": "Currently viewing",
     "categories": "Categories",
-    "hidden_products": "View hidden products"
+    "hidden_products": "Show/Hide Hidden Products",
+    "admin_options": "Admin Options"
   },
   "drink": {
     "currency": "RSD",
