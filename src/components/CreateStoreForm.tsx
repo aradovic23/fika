@@ -1,4 +1,5 @@
-import { Button, Input, useToast, FormLabel, FormControl, Box, VStack, Image, Text } from '@chakra-ui/react';
+import { Button, Input, useToast, FormLabel, FormControl, Box, VStack, Image, Text, HStack } from '@chakra-ui/react';
+import { CheckBadgeIcon } from '@heroicons/react/24/solid';
 import type { Store } from '@prisma/client';
 import { UploadButton } from '@uploadthing/react';
 import { useState } from 'react';
@@ -73,9 +74,14 @@ const CreateStoreForm = () => {
         </FormControl>
       )}
       {file && (
-        <VStack bg="green.300" p="1" rounded="lg">
-          <Image alt="logo" src={file.fileUrl} boxSize="200px" rounded="lg" objectFit="cover" />
-          <Text color="black">{t('settings.image_ready')}</Text>
+        <VStack bg="green.300" p="10" rounded="lg" gap="5">
+          <Image alt="logo" src={file.fileUrl} rounded="lg" />
+          <HStack>
+            <Text color="green.900" fontWeight="bold">
+              {t('settings.image_ready')}
+            </Text>
+            <CheckBadgeIcon className="text-green-900 h-6 w-6" />
+          </HStack>
         </VStack>
       )}
       <Button isLoading={isSubmitting} type="submit" colorScheme="primary">
