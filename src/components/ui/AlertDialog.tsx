@@ -15,11 +15,11 @@ interface Props {
   onClose: () => void;
   title: string;
   message: string;
-  onDialogDelete: () => void;
+  onAction: () => void;
   isLoading?: boolean;
 }
 
-export const AlertDialogModal = ({ isOpen, onClose, title, message, onDialogDelete, isLoading }: Props) => {
+export const AlertDialogModal = ({ isOpen, onClose, title, message, onAction, isLoading }: Props) => {
   const cancelRef = useRef(null);
   const { t } = useTranslation('common');
 
@@ -37,7 +37,7 @@ export const AlertDialogModal = ({ isOpen, onClose, title, message, onDialogDele
             <Button ref={cancelRef} onClick={onClose} isLoading={isLoading}>
               {t('dialog.cancel')}
             </Button>
-            <Button isLoading={isLoading} colorScheme="red" onClick={onDialogDelete} ml={3}>
+            <Button isLoading={isLoading} colorScheme="red" onClick={onAction} ml={3}>
               {t('dialog.delete')}
             </Button>
           </AlertDialogFooter>
