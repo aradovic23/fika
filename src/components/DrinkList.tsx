@@ -17,7 +17,6 @@ import {
 import { PencilSquareIcon, TrashIcon } from '@heroicons/react/24/outline';
 import { BeakerIcon, EyeSlashIcon, Squares2X2Icon, TagIcon } from '@heroicons/react/24/solid';
 import type { Prisma } from '@prisma/client';
-import { transformDocument } from '@prisma/client/runtime';
 import { usePalette } from 'color-thief-react';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
@@ -202,7 +201,7 @@ export const DrinkList = (drink: DrinkWithUnits) => {
         message={t('drink.delete_message')}
         isOpen={isAlertOpen}
         onClose={onAlertClose}
-        onDialogDelete={() => onDeleteHandler(drink.id)}
+        onAction={() => onDeleteHandler(drink.id)}
         isLoading={isLoading}
       />
     </>
