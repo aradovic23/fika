@@ -154,6 +154,7 @@ export const drinksRouter = createTRPCRouter({
       });
       return drink;
     }),
+
   removeProductImage: publicProcedure
     .input(
       z.object({
@@ -200,6 +201,42 @@ export const drinksRouter = createTRPCRouter({
         data: {
           updatedAt: new Date(),
           isRecommended: false,
+        },
+      });
+      return drink;
+    }),
+  addProductToRecommended: publicProcedure
+    .input(
+      z.object({
+        id: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const drink = await ctx.prisma.drink.update({
+        where: {
+          id: input.id,
+        },
+        data: {
+          updatedAt: new Date(),
+          isRecommended: true,
+        },
+      });
+      return drink;
+    }),
+  hideProduct: publicProcedure
+    .input(
+      z.object({
+        id: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const drink = await ctx.prisma.drink.update({
+        where: {
+          id: input.id,
+        },
+        data: {
+          updatedAt: new Date(),
+          isHidden: true,
         },
       });
       return drink;

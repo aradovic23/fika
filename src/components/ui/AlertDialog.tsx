@@ -17,9 +17,20 @@ interface Props {
   message: string;
   onAction: () => void;
   isLoading?: boolean;
+  isDestructive?: boolean;
+  actionBtnText: string;
 }
 
-export const AlertDialogModal = ({ isOpen, onClose, title, message, onAction, isLoading }: Props) => {
+export const AlertDialogModal = ({
+  isOpen,
+  onClose,
+  title,
+  message,
+  onAction,
+  isLoading,
+  isDestructive,
+  actionBtnText,
+}: Props) => {
   const cancelRef = useRef(null);
   const { t } = useTranslation('common');
 
@@ -37,8 +48,8 @@ export const AlertDialogModal = ({ isOpen, onClose, title, message, onAction, is
             <Button ref={cancelRef} onClick={onClose} isLoading={isLoading}>
               {t('dialog.cancel')}
             </Button>
-            <Button isLoading={isLoading} colorScheme="red" onClick={onAction} ml={3}>
-              {t('dialog.delete')}
+            <Button isLoading={isLoading} colorScheme={isDestructive ? 'red' : 'primary'} onClick={onAction} ml={3}>
+              {actionBtnText}
             </Button>
           </AlertDialogFooter>
         </AlertDialogContent>

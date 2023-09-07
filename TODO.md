@@ -1,7 +1,5 @@
 ## features todo
 
-- implement Update Modal to handle single updates from buttons
-- add star/unstar hide/unhide
 - upload images for categories and drinks && update `uploadthing` dependency
 - remove previous image when changes from upload thing with their endpoint
 - add and remove stared products in Bulk from homepage

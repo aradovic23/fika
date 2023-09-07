@@ -49,6 +49,7 @@ export function RowProduct<T>({ type, data, showModal }: { type: string; data: T
           sizes="100vw"
           width={300}
           height={300}
+          objectPosition="bottom"
         />
         <Box
           pos="absolute"

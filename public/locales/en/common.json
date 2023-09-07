@@ -67,7 +67,16 @@
   "dialog": {
     "close": "Close",
     "cancel": "Cancel",
-    "delete": "Delete"
+    "delete": "Delete",
+    "star": "Star",
+    "hide": "Hide",
+    "yes": "Yes",
+    "hidden": "Hidden",
+    "starred": "Starred",
+    "hide_title": "Hide product ",
+    "hide_message": " will be hidden for all users except admins. To un-hide the product, go to the Edit Product page and un-hide it.",
+    "star_title": "Add to recommendations?",
+    "star_message": " will be shown in the image gallery on the home page"
   },
   "new_category": {
     "options": "Additional Category Options"
