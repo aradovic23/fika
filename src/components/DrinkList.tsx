@@ -12,6 +12,7 @@ import {
   TagLeftIcon,
   Text,
   useDisclosure,
+  useToast,
   VStack,
 } from '@chakra-ui/react';
 import { PencilSquareIcon, TrashIcon, StarIcon, EyeIcon } from '@heroicons/react/24/outline';
@@ -38,6 +39,8 @@ import { iconSize } from '../constants';
 export type DrinkWithUnits = Prisma.DrinkGetPayload<{ include: { unit: true; category: true } }>;
 
 export const DrinkList = (drink: DrinkWithUnits) => {
+  const toast = useToast();
+
   const utils = api.useContext();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { isOpen: isAlertOpen, onOpen: onAlertOpen, onClose: onAlertClose } = useDisclosure();
@@ -47,6 +50,13 @@ export const DrinkList = (drink: DrinkWithUnits) => {
   const { mutate: deleteDrink, isLoading } = api.drinks.deleteDrink.useMutation({
     async onSuccess() {
       await utils.drinks.getDrinks.invalidate();
+      onAlertClose();
+      toast({
+        title: `${drink.title ?? 'Product'} ${t('toast.delete_title')}!`,
+        status: 'success',
+        isClosable: true,
+        position: 'top',
+      });
     },
   });
 
@@ -55,6 +65,21 @@ export const DrinkList = (drink: DrinkWithUnits) => {
       async onSuccess() {
         await utils.drinks.getDrinks.invalidate();
         onStarAlertClose();
+        toast({
+          title: `${drink.title ?? 'Product'} ${t('toast.star_title')}`,
+          status: 'success',
+          isClosable: true,
+          position: 'top',
+        });
+      },
+      onError(error) {
+        onStarAlertClose();
+        toast({
+          title: error.message,
+          status: 'error',
+          isClosable: true,
+          position: 'top',
+        });
       },
     });
 
@@ -62,6 +87,21 @@ export const DrinkList = (drink: DrinkWithUnits) => {
     async onSuccess() {
       await utils.drinks.getDrinks.invalidate();
       onHideAlertClose();
+      toast({
+        title: `${drink.title ?? 'Product'} ${t('toast.hide_title')}!`,
+        status: 'success',
+        isClosable: true,
+        position: 'top',
+      });
+    },
+    onError(error) {
+      onHideAlertClose();
+      toast({
+        title: error.message,
+        status: 'error',
+        isClosable: true,
+        position: 'top',
+      });
     },
   });
 

@@ -93,5 +93,18 @@
     "no_store_description": "Create new store to customize the experience for your customers!",
     "delete_description": "Delete store? This action will remove all the store info, products and categories from the database."
   },
-  "search": "Start typing to search..."
+  "search": "Start typing to search...",
+  "toast": {
+    "delete_title": " successfully deleted",
+    "star_title": " added to recommended!",
+    "hide_title": " is now hidden"
+  },
+  "nav": {
+    "links": {
+      "all_drinks": "All products",
+      "edit_category": "Edit category",
+      "settings": "Settings",
+      "submit_product": "Create a product"
+    }
+  }
 }
