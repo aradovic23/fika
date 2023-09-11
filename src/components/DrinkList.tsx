@@ -168,11 +168,6 @@ export const DrinkList = (drink: DrinkWithUnits) => {
               src={((hasDescription && drink.image) || category?.url) ?? ''}
               filter={showHiddenProduct ? 'grayscale(100%)' : undefined}
             />
-            <Hide above="md">
-              {drink.description?.length !== 0 && !showHiddenProduct && (
-                <SlideInModal title={drink.title} description={drink.description} image={drink.image} />
-              )}
-            </Hide>
             {showHiddenProduct && (
               <Tag pos="absolute" inset={0} m="auto" colorScheme="red" w="50%" h="50%" variant="solid">
                 <EyeSlashIcon className="absolute inset-0 m-auto h-4 w-4" />
@@ -180,7 +175,12 @@ export const DrinkList = (drink: DrinkWithUnits) => {
             )}
           </Box>
           <VStack w="full" overflow="hidden" position="relative">
-            <HStack justify="space-between" w="full" align="baseline">
+            <Hide above="md">
+              {drink.description?.length !== 0 && !showHiddenProduct && (
+                <SlideInModal title={drink.title} description={drink.description} image={drink.image} />
+              )}
+            </Hide>
+            <HStack justify="space-between" w="full" align="baseline" userSelect="none">
               <Text fontWeight="bold" fontSize="xl">
                 {drink.title}
               </Text>
@@ -193,7 +193,7 @@ export const DrinkList = (drink: DrinkWithUnits) => {
                 </Text>
               </HStack>
             </HStack>
-            <HStack w="full" opacity={0.5} overflow="hidden">
+            <HStack w="full" opacity={0.5} overflow="hidden" userSelect="none">
               {drink.unitId && drink.unit && (
                 <Tag variant="subtle">
                   <TagLeftIcon boxSize="12px" as={BeakerIcon} />
