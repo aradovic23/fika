@@ -1,5 +1,4 @@
-import { Box, Button, Container, IconButton, Text, VStack } from '@chakra-ui/react';
-import { ArrowsPointingOutIcon } from '@heroicons/react/24/outline';
+import { Box, Button, Container, Text, VStack } from '@chakra-ui/react';
 import Image from 'next/image';
 import { Drawer } from 'vaul';
 
@@ -18,16 +17,16 @@ export const SlideInModal = ({ title, description, image }: Props) => {
     <Drawer.Root shouldScaleBackground>
       <Drawer.Trigger asChild>
         <Button
-          as={IconButton}
-          icon={<ArrowsPointingOutIcon className="h-5 w-5" />}
           type="button"
           variant="ghost"
-          bg="whiteAlpha.100"
-          color="whiteAlpha.100"
           pos="absolute"
           h="full"
           inset={0}
+          zIndex={99}
           _hover={{
+            backgroundColor: 'transparent',
+          }}
+          _active={{
             backgroundColor: 'transparent',
           }}
         ></Button>
