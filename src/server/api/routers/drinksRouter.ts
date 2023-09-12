@@ -61,30 +61,6 @@ export const drinksRouter = createTRPCRouter({
     });
     return drinks;
   }),
-  getRecommendedProducts: publicProcedure.query(async ({ ctx }) => {
-    const drinks = await ctx.prisma.drink.findMany({
-      where: {
-        isRecommended: true,
-        isHidden: false,
-      },
-      select: {
-        title: true,
-        image: true,
-        description: true,
-        id: true,
-        price: true,
-        updatedAt: true,
-        category: {
-          select: {
-            categoryName: true,
-            url: true,
-            id: true,
-          },
-        },
-      },
-    });
-    return drinks;
-  }),
   getDrinkById: publicProcedure.input(z.object({ id: z.string() })).query(async ({ ctx, input }) => {
     const singleDrink = await ctx.prisma.drink.findFirst({
       where: {
@@ -154,7 +130,6 @@ export const drinksRouter = createTRPCRouter({
       });
       return drink;
     }),
-
   removeProductImage: publicProcedure
     .input(
       z.object({
@@ -172,53 +147,6 @@ export const drinksRouter = createTRPCRouter({
         data: {
           updatedAt: new Date(),
           image: input.data.image,
-        },
-      });
-      return drink;
-    }),
-  clearRecommendedProducts: publicProcedure.mutation(async ({ ctx }) => {
-    return await ctx.prisma.drink.updateMany({
-      where: {
-        isRecommended: true,
-      },
-      data: {
-        updatedAt: new Date(),
-        isRecommended: false,
-      },
-    });
-  }),
-  removeRecommendedProduct: publicProcedure
-    .input(
-      z.object({
-        id: z.string(),
-      })
-    )
-    .mutation(async ({ ctx, input }) => {
-      const drink = await ctx.prisma.drink.update({
-        where: {
-          id: input.id,
-        },
-        data: {
-          updatedAt: new Date(),
-          isRecommended: false,
-        },
-      });
-      return drink;
-    }),
-  addProductToRecommended: publicProcedure
-    .input(
-      z.object({
-        id: z.string(),
-      })
-    )
-    .mutation(async ({ ctx, input }) => {
-      const drink = await ctx.prisma.drink.update({
-        where: {
-          id: input.id,
-        },
-        data: {
-          updatedAt: new Date(),
-          isRecommended: true,
         },
       });
       return drink;
