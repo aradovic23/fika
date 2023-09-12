@@ -19,7 +19,7 @@ export const getServerSideProps = async ({ locale }: { locale: string }) => ({
 const Home: NextPage = () => {
   const { t } = useTranslation('common');
   const { data: storeData } = api.settings.getStore.useQuery();
-  const { data: drinks, isLoading: isDrinksLoading } = api.drinks.getRecommendedProducts.useQuery();
+  const { data: drinks, isLoading: isDrinksLoading } = api.recommendations.getRecommendedProductsWithDetails.useQuery();
   const { data: categories, isLoading: isCategoriesLoading } = api.categories.getCategoriesConcise.useQuery();
 
   const sortedDrinks = drinks?.sort((a, b) => Number(b.updatedAt) - Number(a.updatedAt));

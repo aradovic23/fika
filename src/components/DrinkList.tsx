@@ -40,12 +40,22 @@ export type DrinkWithUnits = Prisma.DrinkGetPayload<{ include: { unit: true; cat
 
 export const DrinkList = (drink: DrinkWithUnits) => {
   const toast = useToast();
-
   const utils = api.useContext();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { isOpen: isAlertOpen, onOpen: onAlertOpen, onClose: onAlertClose } = useDisclosure();
   const { isOpen: isStarAlertOpen, onOpen: onStarAlertOpen, onClose: onStarAlertClose } = useDisclosure();
   const { isOpen: isHideAlertOpen, onOpen: onHideAlertOpen, onClose: onHideAlertClose } = useDisclosure();
+  const { category } = useGetCategory(drink.categoryId ?? 1) ?? '';
+  const isAdmin = useIsAdmin();
+  const hasDescription = category?.addDescription;
+  const hasTypes = category?.addTypes;
+  const { t } = useTranslation('common');
+  const { data: dominantColor } = usePalette(drink.category?.url ?? '', 2, 'hex', {
+    crossOrigin: 'Anonymous',
+    quality: 100,
+  });
+  const showHiddenProduct = drink.isHidden && isAdmin;
+  const router = useRouter();
 
   const { mutate: deleteDrink, isLoading } = api.drinks.deleteDrink.useMutation({
     async onSuccess() {
@@ -61,7 +71,7 @@ export const DrinkList = (drink: DrinkWithUnits) => {
   });
 
   const { mutate: recommendedProductMutation, isLoading: isRecommendedProductLoading } =
-    api.drinks.addProductToRecommended.useMutation({
+    api.recommendations.addProductToRecommended.useMutation({
       async onSuccess() {
         await utils.drinks.getDrinks.invalidate();
         onStarAlertClose();
@@ -108,21 +118,6 @@ export const DrinkList = (drink: DrinkWithUnits) => {
   const onDeleteHandler = (id: string) => {
     deleteDrink({ id });
   };
-
-  const { category } = useGetCategory(drink.categoryId ?? 1) ?? '';
-  const isAdmin = useIsAdmin();
-  const hasDescription = category?.addDescription;
-  const hasTypes = category?.addTypes;
-  const { t } = useTranslation('common');
-
-  const { data: dominantColor } = usePalette(drink.category?.url ?? '', 2, 'hex', {
-    crossOrigin: 'Anonymous',
-    quality: 100,
-  });
-
-  const showHiddenProduct = drink.isHidden && isAdmin;
-
-  const router = useRouter();
 
   const NextImage = chakra(Image, {
     shouldForwardProp: prop => ['width', 'height', 'src', 'alt'].includes(prop),

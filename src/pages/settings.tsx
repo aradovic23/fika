@@ -1,4 +1,19 @@
-import { Button, Container, Grid, GridItem, Heading, HStack, Image, Text, VStack } from '@chakra-ui/react';
+import {
+  Button,
+  Container,
+  Grid,
+  GridItem,
+  Heading,
+  HStack,
+  Image,
+  Text,
+  VStack,
+  Tabs,
+  TabList,
+  TabPanels,
+  Tab,
+  TabPanel,
+} from '@chakra-ui/react';
 import { type NextPage } from 'next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import Head from 'next/head';
@@ -9,6 +24,7 @@ import CreateStoreForm from '../components/CreateStoreForm';
 import EditStoreForm from '../components/EditStoreForm';
 import { PageSpinner } from '../components/LoaderSpinner';
 import Notice from '../components/Notice';
+import ProductSettings from '../components/sections/ProductSettings';
 import { useIsAdmin } from '../hooks/useIsAdmin';
 import { api } from '../utils/api';
 
@@ -57,44 +73,61 @@ const Settings: NextPage = () => {
         <title>{t('settings.title')} | Fika </title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <Container as="main" maxW="3xl" mt={5}>
-        <VStack spacing={5} mb={5}>
-          <Heading my="15">{t('settings.title')}</Heading>
-          {!storeData && (
-            <Notice
-              status="info"
-              title={t('settings.no_store_title') ?? 'No store yet'}
-              description={t('settings.no_store_description') ?? 'Please add new store'}
-            />
-          )}
-          {!storeData && <CreateStoreForm />}
-        </VStack>
-        {storeData && (
-          <>
-            <Grid templateColumns="repeat(2, 1fr)" gap={20}>
-              <GridItem>
-                <Image src={storeData.fileUrl ?? ''} alt="image" />
-              </GridItem>
-              <GridItem>
-                <EditStoreForm {...storeData} />
-              </GridItem>
-            </Grid>
-            <HStack
-              w="full"
-              border="1px solid"
-              borderColor="offRed.200"
-              rounded="lg"
-              p="5"
-              justify="space-between"
-              align="baseline"
-            >
-              <Text>{t('settings.delete_description')}</Text>
-              <Button variant="ghost" colorScheme="red" onClick={() => handleDeleteStore(storeData?.id ?? 1)}>
-                {t('settings.delete_store')}
-              </Button>
-            </HStack>
-          </>
-        )}
+      <Container as="main" maxW="6xl" mt={5}>
+        <Heading textAlign="center" my="15">
+          {t('settings.title')}
+        </Heading>
+
+        <Tabs variant="soft-rounded" colorScheme="primary">
+          <TabList>
+            <Tab>Store</Tab>
+            <Tab>Products</Tab>
+          </TabList>
+
+          <TabPanels>
+            <TabPanel>
+              <VStack spacing={5} mb={5}>
+                {!storeData && (
+                  <Notice
+                    status="info"
+                    title={t('settings.no_store_title') ?? 'No store yet'}
+                    description={t('settings.no_store_description') ?? 'Please add new store'}
+                  />
+                )}
+                {!storeData && <CreateStoreForm />}
+              </VStack>
+              {storeData && (
+                <>
+                  <Grid templateColumns="repeat(2, 1fr)" gap={20}>
+                    <GridItem>
+                      <Image src={storeData.fileUrl ?? ''} alt="image" />
+                    </GridItem>
+                    <GridItem>
+                      <EditStoreForm {...storeData} />
+                    </GridItem>
+                  </Grid>
+                  <HStack
+                    w="full"
+                    border="1px solid"
+                    borderColor="offRed.200"
+                    rounded="lg"
+                    p="5"
+                    justify="space-between"
+                    align="baseline"
+                  >
+                    <Text>{t('settings.delete_description')}</Text>
+                    <Button variant="ghost" colorScheme="red" onClick={() => handleDeleteStore(storeData?.id ?? 1)}>
+                      {t('settings.delete_store')}
+                    </Button>
+                  </HStack>
+                </>
+              )}
+            </TabPanel>
+            <TabPanel>
+              <ProductSettings />
+            </TabPanel>
+          </TabPanels>
+        </Tabs>
       </Container>
     </>
   );
