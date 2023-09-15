@@ -1,4 +1,4 @@
-import { Button, Icon, Stack, Text, useToast, VStack } from '@chakra-ui/react';
+import { Button, FormControl, FormErrorMessage, Icon, Stack, Text, useToast, VStack } from '@chakra-ui/react';
 import { PlusCircleIcon, MinusCircleIcon } from '@heroicons/react/24/outline';
 import { Select } from 'chakra-react-select';
 import { useState } from 'react';
@@ -28,29 +28,32 @@ export function BulkUpdateRecomendations({ addToRecommended, title }: Props) {
 
   const toast = useToast();
 
-  const { mutate: updateRecommendationsMutation, isLoading } = api.recommendations.bulkUpdateRecomendations.useMutation(
-    {
-      async onSuccess(data) {
-        toast({
-          title: `${data?.count ?? 'products'} ${addToRecommended ? 'added' : 'removed'}`,
-          status: 'success',
-          isClosable: true,
-          position: 'top',
-        });
-        setValues([]);
-        await utils.recommendations.getRecommendations.invalidate();
-      },
-      onError(error) {
-        toast({
-          title: error.message,
-          status: 'error',
-          isClosable: true,
-          position: 'top',
-          colorScheme: 'offRed',
-        });
-      },
-    }
-  );
+  const {
+    mutate: updateRecommendationsMutation,
+    isLoading,
+    isError,
+    error,
+  } = api.recommendations.bulkUpdateRecomendations.useMutation({
+    async onSuccess(data) {
+      toast({
+        title: `${data?.count ?? 'products'} ${addToRecommended ? 'added' : 'removed'}`,
+        status: 'success',
+        isClosable: true,
+        position: 'top',
+      });
+      setValues([]);
+      await utils.recommendations.getRecommendations.invalidate();
+    },
+    onError(error) {
+      toast({
+        title: error.message,
+        status: 'error',
+        isClosable: true,
+        position: 'top',
+        colorScheme: 'offRed',
+      });
+    },
+  });
 
   function handleUpdate() {
     const ids: string[] = values?.map(v => v.value);
@@ -70,15 +73,18 @@ export function BulkUpdateRecomendations({ addToRecommended, title }: Props) {
         </Text>
       </VStack>
       <Stack direction={['column', 'column', 'column', 'row']}>
-        <Select
-          options={options}
-          isMulti
-          onChange={setValues}
-          value={values}
-          placeholder="Select products"
-          closeMenuOnSelect={false}
-          isLoading={isLoading}
-        />
+        <FormControl isInvalid={isError}>
+          <Select
+            options={options}
+            isMulti
+            onChange={setValues}
+            value={values}
+            placeholder="Click here or type to select products"
+            closeMenuOnSelect={false}
+            isLoading={isLoading}
+          />
+          {isError && <FormErrorMessage>{error.message}</FormErrorMessage>}
+        </FormControl>
         <Button onClick={handleUpdate} colorScheme="primary" isLoading={isLoading} isDisabled={values.length < 1}>
           Update
         </Button>
