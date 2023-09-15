@@ -1,4 +1,4 @@
-import { Container, HStack, IconButton, Input, Text, useToast } from '@chakra-ui/react';
+import { Box, HStack, IconButton, Input, Text, useToast } from '@chakra-ui/react';
 import { PlusIcon } from '@heroicons/react/24/solid';
 import type { Unit } from '@prisma/client';
 import type { FC } from 'react';
@@ -55,14 +55,15 @@ const CreateVolumeOption: FC<Props> = ({ handleNewUnit }) => {
   };
 
   return (
-    <Container bg="blackAlpha.300" p="5" rounded="lg">
+    <Box w="full" border="1px solid" borderColor="primary.100" mt="3" bg="whiteAlpha.800" p="5" rounded="lg">
       <HStack spacing={5}>
         <Input
+          variant="filled"
           placeholder="Enter volume amount (For example 0.30 or 0.05)"
           {...register('amount', {
             required: true,
             pattern: {
-              value: /^\d{1,3}\.\d{2}$/,
+              value: /^\d{1,3}\.\d{2,3}$/,
               message: 'Volume unit should have at least 3 characters (e.g 0.30)',
             },
           })}
@@ -76,7 +77,7 @@ const CreateVolumeOption: FC<Props> = ({ handleNewUnit }) => {
         />
       </HStack>
       {errors.amount && <Text color="red.300">{errors.amount.message}</Text>}
-    </Container>
+    </Box>
   );
 };
 
