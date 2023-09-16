@@ -1,6 +1,6 @@
 ## features todo
 
-- change menu item from edit category to categories
+- change menu item from edit category to category
 - render `CreateNewCateogry` component on categories page
 - change route `edit-category` to `categories`
 - upload images for categories and drinks && update `uploadthing` dependency
