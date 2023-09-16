@@ -50,7 +50,10 @@ export const DrinkList = (drink: DrinkWithUnits) => {
   const hasDescription = category?.addDescription;
   const hasTypes = category?.addTypes;
   const { t } = useTranslation('common');
-  const { data: dominantColor } = usePalette(drink.category?.url ?? '', 2, 'hex', {
+
+  const bgImage = drink.image ? drink.image : drink.category?.url ?? '';
+
+  const { data: dominantColor } = usePalette(bgImage, 2, 'hex', {
     crossOrigin: 'Anonymous',
     quality: 100,
   });
