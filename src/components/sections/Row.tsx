@@ -1,6 +1,8 @@
-import { Box, Heading, HStack, IconButton, Show, VStack } from '@chakra-ui/react';
+import { Box, Button, Heading, Hide, HStack, IconButton, Show, VStack } from '@chakra-ui/react';
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/solid';
+import Link from 'next/link';
 import { useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 const sideScroll = (element: HTMLDivElement, speed: number, distance: number, step: number) => {
   let scrollAmount = 0;
@@ -30,6 +32,8 @@ export function Row<T>({
     sideScroll(wrapper, 15, 900, step);
   };
 
+  const { t } = useTranslation();
+
   return (
     <VStack spacing={2}>
       <HStack justify="space-between" w="full">
@@ -57,6 +61,18 @@ export function Row<T>({
             </HStack>
           </Show>
         )}
+        <Hide above="md">
+          <Button
+            colorScheme="primary"
+            variant="link"
+            rightIcon={<ChevronRightIcon className="h-3 w-3" />}
+            as={Link}
+            href="/drinks"
+            size="sm"
+          >
+            {t('home.view_all_btn')}
+          </Button>
+        </Hide>
       </HStack>
       <HStack
         spacing={4}

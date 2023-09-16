@@ -2,7 +2,8 @@
   "welcome_page_title": "Drinks App Landing Page",
   "home": {
     "recommendations": "Recommendations!",
-    "categories": "Categories"
+    "categories": "Categories",
+    "view_all_btn": "View all"
   },
   "all_products_title": "All drinks",
   "create_new_product": "Create new product",

@@ -2,7 +2,8 @@
   "welcome_page_title": "Drinks App početna stranica",
   "home": {
     "recommendations": "Препоручујемо!",
-    "categories": "Категорије"
+    "categories": "Категорије",
+    "view_all_btn": "Погледај све"
   },
   "all_products_title": "Сви производи",
   "create_new_product": "Направи нови производ",
