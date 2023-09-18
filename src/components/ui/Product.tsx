@@ -30,7 +30,6 @@ import type { LegacyRef } from 'react';
 import { forwardRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { iconSize } from '../../constants';
-import { useGetCategory } from '../../hooks/useGetCategory';
 import { useIsAdmin } from '../../hooks/useIsAdmin';
 import { api } from '../../utils/api';
 import Dialog from '../Dialog';
@@ -53,10 +52,9 @@ const Product = forwardRef(function Product(
   const { isOpen: isAlertOpen, onOpen: onAlertOpen, onClose: onAlertClose } = useDisclosure();
   const { isOpen: isStarAlertOpen, onOpen: onStarAlertOpen, onClose: onStarAlertClose } = useDisclosure();
   const { isOpen: isHideAlertOpen, onOpen: onHideAlertOpen, onClose: onHideAlertClose } = useDisclosure();
-  const { category } = useGetCategory(drink.categoryId ?? 1) ?? '';
   const isAdmin = useIsAdmin();
-  const hasDescription = category?.addDescription;
-  const hasTypes = category?.addTypes;
+  const hasDescription = drink.category?.addDescription;
+  const hasTypes = drink.category?.addTypes;
   const { t } = useTranslation('common');
 
   const bgImage = drink.image ? drink.image : drink.category?.url ?? '';
@@ -198,6 +196,7 @@ const Product = forwardRef(function Product(
   return (
     <>
       <VStack
+        w="full"
         ref={ref}
         gap={3}
         shadow="sm"
@@ -208,7 +207,7 @@ const Product = forwardRef(function Product(
       >
         <Flex w="full" gap="3">
           <Box boxSize="5rem" position="relative" minW="5rem">
-            {category?.url && (
+            {drink.category?.url && (
               <NextImage
                 height="100"
                 width="100"
@@ -217,7 +216,7 @@ const Product = forwardRef(function Product(
                 rounded="md"
                 alt={drink.title ?? 'Product'}
                 objectFit="cover"
-                src={((hasDescription && drink.image) || category?.url) ?? ''}
+                src={((hasDescription && drink.image) || drink.category?.url) ?? ''}
                 filter={showHiddenProduct ? 'grayscale(100%)' : undefined}
                 blurDataURL={drink.blurHash ? drink.blurHash : ''}
               />
@@ -256,7 +255,7 @@ const Product = forwardRef(function Product(
               )}
               <Tag variant="subtle">
                 <TagLeftIcon boxSize="12px" as={Squares2X2Icon} />
-                <TagLabel>{category?.categoryName}</TagLabel>
+                <TagLabel>{drink.category?.categoryName}</TagLabel>
               </Tag>
               {hasTypes && drink.type && (
                 <Tag variant="subtle">

@@ -83,6 +83,7 @@ export const categoryRouter = createTRPCRouter({
     }
   }),
   getCategoriesConcise: publicProcedure.query(async ({ ctx }) => {
+
     const category = await ctx.prisma.category.findMany({
       orderBy: { categoryName: 'asc' },
       select: {
@@ -90,6 +91,11 @@ export const categoryRouter = createTRPCRouter({
         id: true,
         url: true,
         isDefault: true,
+        _count: {
+          select: {
+            drinks: true,
+          },
+        },
       },
     });
     return category;
