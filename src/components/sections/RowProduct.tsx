@@ -34,7 +34,7 @@ export function RowProduct<T>({ type, data, showModal }: { type: string; data: T
         )}
         {type === 'categories' && (
           <Link
-            href={`/drinks?category=${(data as Category).id}`}
+            href={`/products?category=${(data as Category).id}`}
             className="h-150px w-150px absolute inset-0 z-50"
           ></Link>
         )}

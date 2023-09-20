@@ -14,10 +14,18 @@ import InputSearch from '../components/ui/Search';
 import { STALE_TIME } from '../constants';
 import { api } from '../utils/api';
 import CategorySkeleton from '../components/ui/CategorySkeleton';
+import { useRouter } from 'next/router';
 
 export default function Products() {
   const [search, setSearch] = useState<string | undefined>('');
-  const [selectedCategory, setSelectedCategory] = useState(0);
+
+  const { push, query } = useRouter();
+
+  const redirectedCategoryId = Number(query.category);
+
+  const initialCategoryId = redirectedCategoryId ? redirectedCategoryId : 0;
+
+  const [selectedCategory, setSelectedCategory] = useState(initialCategoryId);
 
   const {
     data: products,
@@ -43,6 +51,15 @@ export default function Products() {
   const _products = products?.pages.flatMap(page => page.items);
 
   const { t } = useTranslation('common');
+
+  const updateQueryParams = async (id: number) =>
+    await push({ query: { category: `${id}` } }, undefined, { shallow: true });
+
+  const onCategorySelect = async (id: number) => {
+    setSelectedCategory(id);
+    setSearch(undefined);
+    await updateQueryParams(id);
+  };
 
   const lastPostRef = useRef<HTMLElement>(null);
 
@@ -97,10 +114,7 @@ export default function Products() {
                     categoryId={0}
                     categoryName="All products"
                     count={drinksCount ?? 0}
-                    onSelect={id => {
-                      setSelectedCategory(id);
-                      setSearch(undefined);
-                    }}
+                    onSelect={onCategorySelect}
                     selectedCategoryId={selectedCategory}
                   />
                   {categories?.map(category => (
@@ -109,10 +123,7 @@ export default function Products() {
                       categoryId={category.id}
                       categoryName={category.categoryName}
                       count={category._count.drinks ?? 0}
-                      onSelect={id => {
-                        setSelectedCategory(id);
-                        setSearch(undefined);
-                      }}
+                      onSelect={onCategorySelect}
                       selectedCategoryId={selectedCategory}
                     />
                   ))}
