@@ -184,6 +184,8 @@ export const drinksRouter = createTRPCRouter({
       z.object({
         limit: z.number().min(1).max(100).nullish(),
         cursor: z.string().optional().nullable(),
+        id: z.number().optional(),
+        searchTerm: z.string().min(3).optional(),
       })
     )
     .query(async ({ ctx, input }) => {
@@ -197,6 +199,12 @@ export const drinksRouter = createTRPCRouter({
         cursor: cursor ? { id: cursor } : undefined,
         orderBy: {
           updatedAt: 'desc',
+        },
+        where: {
+          categoryId: input.id ? input.id : undefined,
+          title: {
+            search: input.searchTerm ? `${input.searchTerm}*` : undefined,
+          },
         },
       });
 

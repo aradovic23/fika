@@ -1,5 +1,6 @@
 generator client {
   provider = "prisma-client-js"
+  previewFeatures = ["fullTextSearch", "fullTextIndex"]
 }
 
 datasource db {
@@ -71,6 +72,8 @@ model Drink {
   unit          Unit?     @relation(fields: [unitId], references: [id])
   category      Category? @relation(fields: [categoryId], references: [id], onDelete: Cascade)
   isRecommended Boolean   @default(false)
+
+  @@fulltext([title])
 }
 
 model Unit {

@@ -1,31 +1,38 @@
-import { Container, Grid, GridItem, HStack, Heading, Icon, SimpleGrid, Stack, Text } from '@chakra-ui/react';
-import { useIntersection } from '@mantine/hooks';
+import { Container, Grid, GridItem, Heading, SimpleGrid, Stack } from '@chakra-ui/react';
+import { useDebouncedValue, useIntersection } from '@mantine/hooks';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import Head from 'next/head';
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import nextI18nConfig from '../../next-i18next.config.mjs';
 import type { DrinkWithUnits } from '../components/DrinkList';
-import { LoaderSpinner } from '../components/LoaderSpinner';
+import { NoResults } from '../components/NoResults';
+import Skeleton from '../components/Skeleton';
+import CategoryCard from '../components/sections/CategoryCard';
 import Product from '../components/ui/Product';
 import Search from '../components/ui/Search';
+import { STALE_TIME } from '../constants';
 import { api } from '../utils/api';
-import { ChevronRightIcon } from '@heroicons/react/24/solid';
 
 export default function Infinite() {
   const [search, setSearch] = useState('');
   const [selectedCategory, setSelectedCategory] = useState(0);
+  const [debouncedSearch] = useDebouncedValue(search, 1000);
 
   const {
     data: products,
     fetchNextPage,
     isFetchingNextPage,
+    isLoading,
   } = api.drinks.getPaginatedDrinks.useInfiniteQuery(
     {
-      limit: 20,
+      limit: 10,
+      id: selectedCategory,
+      searchTerm: debouncedSearch !== '' ? debouncedSearch : undefined,
     },
     {
       getNextPageParam: lastPage => lastPage.nextCursor,
+      staleTime: STALE_TIME,
     }
   );
 
@@ -70,75 +77,59 @@ export default function Infinite() {
       <Container maxW="6xl" mt="10">
         <Heading mb="10">New Products Page (Beta)</Heading>
 
-        <Grid h="100px" templateRows="repeat(2, 1fr)" templateColumns="repeat(6, 1fr)" gap={4}>
-          <GridItem rowSpan={2} colSpan={2} borderRight="1px solid" borderRightColor="gray.300" p="4">
-            <SimpleGrid columns={2} spacing="4">
-              <Stack
-                bg={selectedCategory === 0 ? 'orange' : 'gray.300'}
-                cursor="pointer"
-                p="3"
-                w="10rem"
-                h="10rem"
-                rounded="md"
-                userSelect="none"
-                onClick={() => setSelectedCategory(0)}
-                justifyContent="space-between"
-              >
-                <Text fontWeight="semibold">All products</Text>
-                <HStack justify="space-between">
-                  <Text fontSize="sm">{drinksCount} items</Text>
-                  {selectedCategory === 0 && (
-                    <Icon fontWeight="bold">
-                      <ChevronRightIcon />
-                    </Icon>
-                  )}
-                </HStack>
-              </Stack>
+        <Grid h="100px" templateColumns="repeat(6, 1fr)" gap={4}>
+          <GridItem
+            colSpan={{ base: 6, md: 2, lg: 2 }}
+            borderRight="1px solid"
+            borderRightColor="gray.300"
+            p="4"
+            as="aside"
+          >
+            <Heading fontWeight="semibold" mb="5" size="md">
+              Categories
+            </Heading>
+            <SimpleGrid
+              columns={[1, 2]}
+              minChildWidth="7rem"
+              spacing="5"
+              autoFlow={['column', 'column', 'row', 'row']}
+              overflowX="auto"
+              scrollSnapType="x proximity"
+              scrollSnapStop="always"
+            >
+              <CategoryCard
+                categoryId={0}
+                categoryName="All products"
+                count={drinksCount ?? 0}
+                onSelect={setSelectedCategory}
+                selectedCategoryId={selectedCategory}
+              />
               {categories?.map(category => (
-                <Stack
-                  bg={selectedCategory === category.id ? 'orange' : 'gray.300'}
-                  cursor="pointer"
+                <CategoryCard
                   key={category.id}
-                  p="3"
-                  w="10rem"
-                  h="10rem"
-                  rounded="lg"
-                  onClick={() => setSelectedCategory(category.id)}
-                  userSelect="none"
-                  justifyContent="space-between"
-                >
-                  <Text fontWeight="semibold">{category.categoryName}</Text>
-                  <HStack justify="space-between">
-                    <Text fontSize="sm">{category._count.drinks} items</Text>
-                    {selectedCategory === category.id && (
-                      <Icon fontWeight="bold">
-                        <ChevronRightIcon />
-                      </Icon>
-                    )}
-                  </HStack>
-                </Stack>
+                  categoryId={category.id}
+                  categoryName={category.categoryName}
+                  count={category._count.drinks ?? 0}
+                  onSelect={setSelectedCategory}
+                  selectedCategoryId={selectedCategory}
+                />
               ))}
             </SimpleGrid>
           </GridItem>
-          <GridItem colSpan={4}>
-            <Search handleSearchChange={handleSearchChange} clearSearch={clearSearch} />
-            <Text>{search}</Text>
-          </GridItem>
 
-          <GridItem colSpan={4}>
-            <Stack spacing={4}>
+          <GridItem colSpan={{ base: 6, md: 4, lg: 4 }} as="main" pos="relative">
+            <Search handleSearchChange={handleSearchChange} clearSearch={clearSearch} />
+
+            <Stack spacing={4} my="5">
               {_products?.map((drink, i) => {
                 if (i === _products.length - 1)
                   return <Product key={drink.id} drink={drink as DrinkWithUnits} ref={ref} />;
                 return <Product key={drink.id} drink={drink} />;
               })}
-              {isFetchingNextPage ? (
-                <LoaderSpinner />
-              ) : (products?.pages.length ?? 0) < (products?.pages.length ?? 0) ? (
-                'Load more'
-              ) : (
-                <Text>All data loaded</Text>
-              )}
+
+              {_products && _products?.length < 1 && <NoResults />}
+              {isLoading && <Skeleton />}
+              {isFetchingNextPage && <Skeleton />}
             </Stack>
           </GridItem>
         </Grid>
