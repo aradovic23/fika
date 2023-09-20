@@ -15,14 +15,6 @@ import {
   useToast,
   VStack,
 } from '@chakra-ui/react';
-import { PencilSquareIcon, TrashIcon, StarIcon, EyeIcon } from '@heroicons/react/24/outline';
-import {
-  BeakerIcon,
-  EyeSlashIcon,
-  Squares2X2Icon,
-  TagIcon,
-  StarIcon as SolidStarIcon,
-} from '@heroicons/react/24/solid';
 import type { Prisma } from '@prisma/client';
 import { usePalette } from 'color-thief-react';
 import Image from 'next/image';
@@ -35,6 +27,7 @@ import Dialog from './Dialog';
 import { AlertDialogModal } from './ui/AlertDialog';
 import { SlideInModal } from './ui/SlideInModal';
 import { iconSize } from '../constants';
+import { Edit, Eye, EyeOff, LayoutGrid, Milk, Star, StarOff, Tag as TagIcon, Trash2 } from 'lucide-react';
 
 export type DrinkWithUnits = Prisma.DrinkGetPayload<{ include: { unit: true; category: true } }>;
 
@@ -129,24 +122,24 @@ export const DrinkList = (drink: DrinkWithUnits) => {
   const adminOnlyButtons = [
     {
       label: t('drink.edit'),
-      icon: <PencilSquareIcon className={iconSize} />,
+      icon: <Edit size={iconSize} />,
       action: () => router.push(`/drink/${drink.id}`),
     },
     {
       label: drink.isHidden ? t('dialog.hidden') : t('dialog.hide'),
-      icon: drink.isHidden ? <EyeIcon className={iconSize} /> : <EyeSlashIcon className={iconSize} />,
+      icon: drink.isHidden ? <Eye size={iconSize} /> : <EyeOff size={iconSize} />,
       action: onHideAlertOpen,
       isDisabled: drink.isHidden,
     },
     {
       label: drink.isRecommended ? t('dialog.starred') : t('dialog.star'),
-      icon: drink.isRecommended ? <SolidStarIcon className={iconSize} /> : <StarIcon className={iconSize} />,
+      icon: drink.isRecommended ? <StarOff size={iconSize} /> : <Star size={iconSize} />,
       action: onStarAlertOpen,
       isDisabled: drink.isRecommended,
     },
     {
       label: t('drink.delete'),
-      icon: <TrashIcon className={iconSize} />,
+      icon: <Trash2 size={iconSize} />,
       action: onAlertOpen,
       destructive: true,
     },
@@ -208,7 +201,7 @@ export const DrinkList = (drink: DrinkWithUnits) => {
             />
             {showHiddenProduct && (
               <Tag pos="absolute" inset={0} m="auto" colorScheme="red" w="50%" h="50%" variant="solid">
-                <EyeSlashIcon className="absolute inset-0 m-auto h-4 w-4" />
+                <EyeOff />
               </Tag>
             )}
           </Box>
@@ -234,12 +227,12 @@ export const DrinkList = (drink: DrinkWithUnits) => {
             <HStack w="full" opacity={0.5} overflow="hidden" userSelect="none">
               {drink.unitId && drink.unit && (
                 <Tag variant="subtle">
-                  <TagLeftIcon boxSize="12px" as={BeakerIcon} />
+                  <TagLeftIcon boxSize="12px" as={Milk} />
                   <TagLabel>{drink.unit.amount}</TagLabel>
                 </Tag>
               )}
               <Tag variant="subtle">
-                <TagLeftIcon boxSize="12px" as={Squares2X2Icon} />
+                <TagLeftIcon boxSize="12px" as={LayoutGrid} />
                 <TagLabel>{category?.categoryName}</TagLabel>
               </Tag>
               {hasTypes && drink.type && (
