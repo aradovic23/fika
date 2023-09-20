@@ -7,8 +7,7 @@ import {
   InputGroup,
   InputRightElement,
 } from '@chakra-ui/react';
-import { MagnifyingGlassIcon } from '@heroicons/react/24/outline';
-import { XCircleIcon } from '@heroicons/react/24/solid';
+import { Search, XCircleIcon } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
@@ -44,7 +43,8 @@ export default function InputSearch({ handleSearchChange, isLoading }: Props) {
           />
           <InputRightElement cursor="pointer">
             <XCircleIcon
-              className="h-4 w-4 text-martinique-300"
+              size="16"
+              color="gray"
               onClick={() => {
                 handleSearchChange(undefined);
                 reset();
@@ -54,13 +54,7 @@ export default function InputSearch({ handleSearchChange, isLoading }: Props) {
         </InputGroup>
         {errors.search && <FormErrorMessage>{errors.search?.message}</FormErrorMessage>}
       </FormControl>
-      <IconButton
-        type="submit"
-        isLoading={isLoading}
-        aria-label="search"
-        icon={<MagnifyingGlassIcon className="h-5 w-5 text-martinique-100" />}
-        colorScheme="primary"
-      />
+      <IconButton type="submit" isLoading={isLoading} aria-label="search" icon={<Search />} colorScheme="primary" />
     </HStack>
   );
 }

@@ -11,14 +11,14 @@ import {
   MenuList,
 } from '@chakra-ui/react';
 import { UserButton } from '@clerk/nextjs';
-import { Bars3Icon } from '@heroicons/react/24/outline';
-import { LanguageIcon } from '@heroicons/react/24/solid';
+import { Globe2, Menu as MenuIcon } from 'lucide-react';
 import NextLink from 'next/link';
 import type { FC } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useIsAdmin } from '../hooks/useIsAdmin';
 import { api } from '../utils/api';
 import LanguageSwitcher from './LanguageSwitcher';
+import { STALE_TIME } from '../constants';
 
 const Navbar: FC = () => {
   const { t } = useTranslation('common');
@@ -30,7 +30,7 @@ const Navbar: FC = () => {
     { name: t('nav.links.settings'), path: '/settings', isAdmin: true },
   ];
 
-  const { data: storeData } = api.settings.getStore.useQuery();
+  const { data: storeData } = api.settings.getStore.useQuery(undefined, { staleTime: STALE_TIME });
   const isAdmin = useIsAdmin();
 
   return (
@@ -44,7 +44,7 @@ const Navbar: FC = () => {
           <>
             {isAdmin && (
               <Menu>
-                <MenuButton as={IconButton} variant="ghost" icon={<Bars3Icon className="h-6 w-6" />}></MenuButton>
+                <MenuButton as={IconButton} variant="ghost" icon={<MenuIcon />}></MenuButton>
                 <MenuList zIndex={99999}>
                   {navigationLinks.map(item => (
                     <MenuItem
@@ -60,7 +60,7 @@ const Navbar: FC = () => {
               </Menu>
             )}
             <Menu>
-              <MenuButton as={IconButton} variant="ghost" icon={<LanguageIcon className="h-6 w-6" />} />
+              <MenuButton as={IconButton} variant="ghost" icon={<Globe2 />} />
               <MenuList>
                 <LanguageSwitcher />
               </MenuList>

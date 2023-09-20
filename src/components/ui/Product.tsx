@@ -15,21 +15,13 @@ import {
   useDisclosure,
   useToast,
 } from '@chakra-ui/react';
-import { EyeIcon, PencilSquareIcon, StarIcon, TrashIcon } from '@heroicons/react/24/outline';
-import {
-  BeakerIcon,
-  EyeSlashIcon,
-  StarIcon as SolidStarIcon,
-  Squares2X2Icon,
-  TagIcon,
-} from '@heroicons/react/24/solid';
 import { usePalette } from 'color-thief-react';
+import { Edit, Eye, EyeOff, LayoutGrid, Milk, Star, StarOff, Tag as TagIcon, Trash2 } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import type { LegacyRef } from 'react';
 import { forwardRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { iconSize } from '../../constants';
 import { useIsAdmin } from '../../hooks/useIsAdmin';
 import { api } from '../../utils/api';
 import Dialog from '../Dialog';
@@ -37,6 +29,7 @@ import type { DrinkWithUnits } from '../DrinkList';
 import Skeleton from '../Skeleton';
 import { AlertDialogModal } from '../ui/AlertDialog';
 import { SlideInModal } from '../ui/SlideInModal';
+import { iconSize } from '../../constants';
 
 const Product = forwardRef(function Product(
   {
@@ -135,24 +128,24 @@ const Product = forwardRef(function Product(
   const adminOnlyButtons = [
     {
       label: t('drink.edit'),
-      icon: <PencilSquareIcon className={iconSize} />,
+      icon: <Edit size={iconSize} />,
       action: () => router.push(`/drink/${drink.id}`),
     },
     {
       label: drink.isHidden ? t('dialog.hidden') : t('dialog.hide'),
-      icon: drink.isHidden ? <EyeIcon className={iconSize} /> : <EyeSlashIcon className={iconSize} />,
+      icon: drink.isHidden ? <Eye size={iconSize} /> : <EyeOff size={iconSize} />,
       action: onHideAlertOpen,
       isDisabled: drink.isHidden,
     },
     {
       label: drink.isRecommended ? t('dialog.starred') : t('dialog.star'),
-      icon: drink.isRecommended ? <SolidStarIcon className={iconSize} /> : <StarIcon className={iconSize} />,
+      icon: drink.isRecommended ? <StarOff size={iconSize} /> : <Star size={iconSize} />,
       action: onStarAlertOpen,
       isDisabled: drink.isRecommended,
     },
     {
       label: t('drink.delete'),
-      icon: <TrashIcon className={iconSize} />,
+      icon: <Trash2 size={iconSize} />,
       action: onAlertOpen,
       destructive: true,
     },
@@ -222,8 +215,17 @@ const Product = forwardRef(function Product(
               />
             )}
             {showHiddenProduct && (
-              <Tag pos="absolute" inset={0} m="auto" colorScheme="red" w="50%" h="50%" variant="solid">
-                <EyeSlashIcon className="absolute inset-0 m-auto h-4 w-4" />
+              <Tag
+                pos="absolute"
+                inset={0}
+                m="auto"
+                colorScheme="offRed"
+                rounded="full"
+                w="50%"
+                h="50%"
+                variant="solid"
+              >
+                <EyeOff />
               </Tag>
             )}
           </Box>
@@ -249,12 +251,12 @@ const Product = forwardRef(function Product(
             <HStack w="full" opacity={0.5} overflow="hidden" userSelect="none">
               {drink.unitId && drink.unit && (
                 <Tag variant="subtle">
-                  <TagLeftIcon boxSize="12px" as={BeakerIcon} />
+                  <TagLeftIcon boxSize="12px" as={Milk} />
                   <TagLabel>{drink.unit.amount}</TagLabel>
                 </Tag>
               )}
               <Tag variant="subtle">
-                <TagLeftIcon boxSize="12px" as={Squares2X2Icon} />
+                <TagLeftIcon boxSize="12px" as={LayoutGrid} />
                 <TagLabel>{drink.category?.categoryName}</TagLabel>
               </Tag>
               {hasTypes && drink.type && (

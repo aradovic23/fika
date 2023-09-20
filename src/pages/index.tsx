@@ -1,4 +1,14 @@
-import { Alert, AlertDescription, AlertIcon, AlertTitle, Button, Container, Flex, Skeleton } from '@chakra-ui/react';
+import {
+  Alert,
+  AlertDescription,
+  AlertIcon,
+  AlertTitle,
+  Button,
+  Container,
+  Flex,
+  Skeleton,
+  VStack,
+} from '@chakra-ui/react';
 import { ChevronRightIcon } from '@heroicons/react/24/solid';
 import { type NextPage } from 'next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
@@ -9,6 +19,7 @@ import nextI18nConfig from '../../next-i18next.config.mjs';
 import { Row } from '../components/sections/Row';
 import { RowProduct } from '../components/sections/RowProduct';
 import { api } from '../utils/api';
+import { useIsAdmin } from '../hooks/useIsAdmin';
 
 export const getServerSideProps = async ({ locale }: { locale: string }) => ({
   props: {
@@ -36,6 +47,8 @@ const Home: NextPage = () => {
   });
 
   const buttonActions = !storeData ? 'Visit Settings' : t('elements.button.view_all');
+
+  const isAdmin = useIsAdmin();
 
   return (
     <>
@@ -69,13 +82,25 @@ const Home: NextPage = () => {
             </AlertDescription>
           </Alert>
         )}
-        {(!isCategoriesLoading || !isDrinksLoading) && (
-          <Link href={!storeData ? '/settings' : '/drinks'}>
-            <Button mt="5" variant="outline" colorScheme="primary" rightIcon={<ChevronRightIcon className="h-4 w-4" />}>
-              {buttonActions}
+        <VStack align="flex-start" spacing="5">
+          {(!isCategoriesLoading || !isDrinksLoading) && (
+            <Link href={!storeData ? '/settings' : '/drinks'}>
+              <Button
+                mt="5"
+                variant="outline"
+                colorScheme="primary"
+                rightIcon={<ChevronRightIcon className="h-4 w-4" />}
+              >
+                {buttonActions}
+              </Button>
+            </Link>
+          )}
+          {isAdmin && (
+            <Button color="magenta.100" href="/products" as={Link} variant="link">
+              New products page (Beta)
             </Button>
-          </Link>
-        )}
+          )}
+        </VStack>
       </Container>
     </>
   );

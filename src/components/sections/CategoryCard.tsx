@@ -1,5 +1,5 @@
 import { HStack, Icon, Stack, Text } from '@chakra-ui/react';
-import { ChevronRightIcon } from '@heroicons/react/24/solid';
+import { ChevronRight } from 'lucide-react';
 
 interface Props {
   selectedCategoryId: number;
@@ -13,21 +13,25 @@ function CategoryCard({ selectedCategoryId, onSelect, count, categoryName, categ
   return (
     <Stack
       direction={'column'}
-      bg={selectedCategoryId === categoryId ? 'orange' : 'gray.300'}
+      bg={selectedCategoryId === categoryId ? 'primary.500' : 'gray.300'}
+      color={selectedCategoryId === categoryId ? 'white' : undefined}
       cursor="pointer"
       p="3"
-      maxH="10rem"
+      minH="7rem"
       rounded="md"
       userSelect="none"
       onClick={() => onSelect(categoryId)}
       justifyContent="space-between"
+      _hover={{
+        bg: selectedCategoryId === categoryId ? 'primary.600' : 'gray.400',
+      }}
     >
       <Text fontWeight="semibold">{categoryName}</Text>
       <HStack justify="space-between">
         <Text fontSize="sm">{count} items</Text>
         {selectedCategoryId === categoryId && (
           <Icon fontWeight="bold">
-            <ChevronRightIcon />
+            <ChevronRight strokeWidth={3} />
           </Icon>
         )}
       </HStack>

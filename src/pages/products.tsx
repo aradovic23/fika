@@ -13,8 +13,9 @@ import Product from '../components/ui/Product';
 import InputSearch from '../components/ui/Search';
 import { STALE_TIME } from '../constants';
 import { api } from '../utils/api';
+import CategorySkeleton from '../components/ui/CategorySkeleton';
 
-export default function Infinite() {
+export default function Products() {
   const [search, setSearch] = useState<string | undefined>('');
   const [selectedCategory, setSelectedCategory] = useState(0);
 
@@ -35,9 +36,11 @@ export default function Infinite() {
     }
   );
 
-  const { data: categories } = api.categories.getCategoriesConcise.useQuery();
+  const { data: categories, isLoading: isCategoriesLoading } = api.categories.getCategoriesConcise.useQuery();
 
   const drinksCount = categories?.reduce((acc, current) => acc + current._count.drinks, 0);
+
+  const _products = products?.pages.flatMap(page => page.items);
 
   const { t } = useTranslation('common');
 
@@ -57,8 +60,6 @@ export default function Infinite() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [entry]);
 
-  const _products = products?.pages.flatMap(page => page.items);
-
   return (
     <>
       <Head>
@@ -73,7 +74,7 @@ export default function Infinite() {
             colSpan={{ base: 6, md: 2, lg: 2 }}
             borderRight="1px solid"
             borderRightColor="gray.300"
-            p="4"
+            p={['0', '0', '4']}
             as="aside"
           >
             <Heading fontWeight="semibold" mb="5" size="md">
@@ -82,35 +83,41 @@ export default function Infinite() {
             <SimpleGrid
               columns={[1, 2]}
               minChildWidth="7rem"
-              spacing="5"
+              spacing="2"
               autoFlow={['column', 'column', 'row', 'row']}
               overflowX="auto"
               scrollSnapType="x proximity"
               scrollSnapStop="always"
             >
-              <CategoryCard
-                categoryId={0}
-                categoryName="All products"
-                count={drinksCount ?? 0}
-                onSelect={id => {
-                  setSelectedCategory(id);
-                  setSearch(undefined);
-                }}
-                selectedCategoryId={selectedCategory}
-              />
-              {categories?.map(category => (
-                <CategoryCard
-                  key={category.id}
-                  categoryId={category.id}
-                  categoryName={category.categoryName}
-                  count={category._count.drinks ?? 0}
-                  onSelect={id => {
-                    setSelectedCategory(id);
-                    setSearch(undefined);
-                  }}
-                  selectedCategoryId={selectedCategory}
-                />
-              ))}
+              {isCategoriesLoading ? (
+                <CategorySkeleton />
+              ) : (
+                <>
+                  <CategoryCard
+                    categoryId={0}
+                    categoryName="All products"
+                    count={drinksCount ?? 0}
+                    onSelect={id => {
+                      setSelectedCategory(id);
+                      setSearch(undefined);
+                    }}
+                    selectedCategoryId={selectedCategory}
+                  />
+                  {categories?.map(category => (
+                    <CategoryCard
+                      key={category.id}
+                      categoryId={category.id}
+                      categoryName={category.categoryName}
+                      count={category._count.drinks ?? 0}
+                      onSelect={id => {
+                        setSelectedCategory(id);
+                        setSearch(undefined);
+                      }}
+                      selectedCategoryId={selectedCategory}
+                    />
+                  ))}
+                </>
+              )}
             </SimpleGrid>
           </GridItem>
 
