@@ -1,5 +1,5 @@
 import { Container, Grid, GridItem, Heading, SimpleGrid, Stack } from '@chakra-ui/react';
-import { useDebouncedValue, useIntersection } from '@mantine/hooks';
+import { useIntersection } from '@mantine/hooks';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import Head from 'next/head';
 import { useEffect, useRef, useState } from 'react';
@@ -10,14 +10,13 @@ import { NoResults } from '../components/NoResults';
 import Skeleton from '../components/Skeleton';
 import CategoryCard from '../components/sections/CategoryCard';
 import Product from '../components/ui/Product';
-import Search from '../components/ui/Search';
+import InputSearch from '../components/ui/Search';
 import { STALE_TIME } from '../constants';
 import { api } from '../utils/api';
 
 export default function Infinite() {
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState<string | undefined>('');
   const [selectedCategory, setSelectedCategory] = useState(0);
-  const [debouncedSearch] = useDebouncedValue(search, 1000);
 
   const {
     data: products,
@@ -28,7 +27,7 @@ export default function Infinite() {
     {
       limit: 10,
       id: selectedCategory,
-      searchTerm: debouncedSearch !== '' ? debouncedSearch : undefined,
+      searchTerm: search !== '' ? search : undefined,
     },
     {
       getNextPageParam: lastPage => lastPage.nextCursor,
@@ -59,14 +58,6 @@ export default function Infinite() {
   }, [entry]);
 
   const _products = products?.pages.flatMap(page => page.items);
-
-  const handleSearchChange = (term: string) => {
-    setSearch(term);
-  };
-
-  const clearSearch = () => {
-    setSearch('');
-  };
 
   return (
     <>
@@ -101,7 +92,10 @@ export default function Infinite() {
                 categoryId={0}
                 categoryName="All products"
                 count={drinksCount ?? 0}
-                onSelect={setSelectedCategory}
+                onSelect={id => {
+                  setSelectedCategory(id);
+                  setSearch(undefined);
+                }}
                 selectedCategoryId={selectedCategory}
               />
               {categories?.map(category => (
@@ -110,7 +104,10 @@ export default function Infinite() {
                   categoryId={category.id}
                   categoryName={category.categoryName}
                   count={category._count.drinks ?? 0}
-                  onSelect={setSelectedCategory}
+                  onSelect={id => {
+                    setSelectedCategory(id);
+                    setSearch(undefined);
+                  }}
                   selectedCategoryId={selectedCategory}
                 />
               ))}
@@ -118,7 +115,7 @@ export default function Infinite() {
           </GridItem>
 
           <GridItem colSpan={{ base: 6, md: 4, lg: 4 }} as="main" pos="relative">
-            <Search handleSearchChange={handleSearchChange} clearSearch={clearSearch} />
+            <InputSearch handleSearchChange={term => setSearch(term)} isLoading={isLoading} />
 
             <Stack spacing={4} my="5">
               {_products?.map((drink, i) => {

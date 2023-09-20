@@ -1,43 +1,66 @@
-import { Input, InputGroup, InputLeftElement, InputRightElement } from '@chakra-ui/react';
-import { MagnifyingGlassIcon, XCircleIcon } from '@heroicons/react/24/solid';
-import type { ChangeEvent } from 'react';
-import { useState } from 'react';
+import {
+  FormControl,
+  FormErrorMessage,
+  HStack,
+  IconButton,
+  Input,
+  InputGroup,
+  InputRightElement,
+} from '@chakra-ui/react';
+import { MagnifyingGlassIcon } from '@heroicons/react/24/outline';
+import { XCircleIcon } from '@heroicons/react/24/solid';
+import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
 interface Props {
-  handleSearchChange: (term: string) => void;
-  clearSearch: (term: string) => void;
+  handleSearchChange: (term: string | undefined) => void;
+  isLoading: boolean;
 }
 
-export default function Search({ handleSearchChange, clearSearch }: Props) {
+type FormValues = {
+  search: string;
+};
+
+export default function InputSearch({ handleSearchChange, isLoading }: Props) {
   const { t } = useTranslation('common');
-  const [searchTerm, setSearchTerm] = useState('');
 
-  const onSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const newSearchTerm = e.target.value;
-    setSearchTerm(newSearchTerm);
-    handleSearchChange(newSearchTerm);
-  };
-
-  const onClearInput = (term: string) => {
-    setSearchTerm(term);
-    clearSearch(term);
-  };
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm<FormValues>();
 
   return (
-    <InputGroup>
-      <InputLeftElement pointerEvents="none">
-        <MagnifyingGlassIcon className="h-5 w-5 text-martinique-600" />
-      </InputLeftElement>
-      <Input
-        id="search"
-        placeholder={t('search') ?? 'Type to search...'}
-        onChange={onSearchChange}
-        value={searchTerm}
+    <HStack as="form" onSubmit={handleSubmit(data => handleSearchChange(data.search))} align="flex-start">
+      <FormControl isInvalid={!!errors.search}>
+        <InputGroup>
+          <Input
+            id="search"
+            placeholder={t('search') ?? 'Type to search...'}
+            {...register('search', {
+              minLength: { value: 4, message: 'Minimum length should be 4' },
+            })}
+          />
+          <InputRightElement cursor="pointer">
+            <XCircleIcon
+              className="h-4 w-4 text-martinique-300"
+              onClick={() => {
+                handleSearchChange(undefined);
+                reset();
+              }}
+            />
+          </InputRightElement>
+        </InputGroup>
+        {errors.search && <FormErrorMessage>{errors.search?.message}</FormErrorMessage>}
+      </FormControl>
+      <IconButton
+        type="submit"
+        isLoading={isLoading}
+        aria-label="search"
+        icon={<MagnifyingGlassIcon className="h-5 w-5 text-martinique-100" />}
+        colorScheme="primary"
       />
-      <InputRightElement cursor="pointer">
-        <XCircleIcon className="h-4 w-4 text-martinique-300" onClick={() => onClearInput('')} />
-      </InputRightElement>
-    </InputGroup>
+    </HStack>
   );
 }
