@@ -34,8 +34,10 @@ import { iconSize } from '../../constants';
 const Product = forwardRef(function Product(
   {
     drink,
+    showAdminOptions,
   }: {
     drink: DrinkWithUnits;
+    showAdminOptions: boolean;
   },
   ref: LegacyRef<HTMLDivElement> | undefined
 ) {
@@ -61,7 +63,7 @@ const Product = forwardRef(function Product(
 
   const { mutate: deleteDrink, isLoading } = api.drinks.deleteDrink.useMutation({
     async onSuccess() {
-      await utils.drinks.getDrinks.invalidate();
+      await utils.drinks.getPaginatedDrinks.invalidate();
       onAlertClose();
       toast({
         title: `${drink.title ?? 'Product'} ${t('toast.delete_title')}!`,
@@ -75,7 +77,7 @@ const Product = forwardRef(function Product(
   const { mutate: recommendedProductMutation, isLoading: isRecommendedProductLoading } =
     api.recommendations.addProductToRecommended.useMutation({
       async onSuccess() {
-        await utils.drinks.getDrinks.invalidate();
+        await utils.drinks.getPaginatedDrinks.invalidate();
         onStarAlertClose();
         toast({
           title: `${drink.title ?? 'Product'} ${t('toast.star_title')}`,
@@ -97,7 +99,7 @@ const Product = forwardRef(function Product(
 
   const { mutate: hideProductMutation, isLoading: isHiddenProductLoading } = api.drinks.hideProduct.useMutation({
     async onSuccess() {
-      await utils.drinks.getDrinks.invalidate();
+      await utils.drinks.getPaginatedDrinks.invalidate();
       onHideAlertClose();
       toast({
         title: `${drink.title ?? 'Product'} ${t('toast.hide_title')}!`,
@@ -268,7 +270,7 @@ const Product = forwardRef(function Product(
             </HStack>
           </VStack>
         </Flex>
-        {isAdmin && (
+        {isAdmin && showAdminOptions && (
           <>
             <Divider borderColor="magenta.100" />
             <VStack spacing={2} w="full">

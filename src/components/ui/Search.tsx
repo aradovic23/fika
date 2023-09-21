@@ -31,7 +31,7 @@ export default function InputSearch({ handleSearchChange, isLoading }: Props) {
   } = useForm<FormValues>();
 
   return (
-    <HStack as="form" onSubmit={handleSubmit(data => handleSearchChange(data.search))} align="flex-start">
+    <HStack as="form" onSubmit={handleSubmit(data => handleSearchChange(data.search))} align="flex-start" w="full">
       <FormControl isInvalid={!!errors.search}>
         <InputGroup>
           <Input

@@ -1,7 +1,20 @@
-import { Container, Grid, GridItem, Heading, SimpleGrid, Stack } from '@chakra-ui/react';
+import {
+  Container,
+  FormControl,
+  FormLabel,
+  Grid,
+  GridItem,
+  Heading,
+  SimpleGrid,
+  Stack,
+  Switch,
+  Text,
+  VStack,
+} from '@chakra-ui/react';
 import { useIntersection } from '@mantine/hooks';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import Head from 'next/head';
+import { useRouter } from 'next/router';
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import nextI18nConfig from '../../next-i18next.config.mjs';
@@ -9,15 +22,16 @@ import type { DrinkWithUnits } from '../components/DrinkList';
 import { NoResults } from '../components/NoResults';
 import Skeleton from '../components/Skeleton';
 import CategoryCard from '../components/sections/CategoryCard';
+import CategorySkeleton from '../components/ui/CategorySkeleton';
 import Product from '../components/ui/Product';
 import InputSearch from '../components/ui/Search';
 import { STALE_TIME } from '../constants';
 import { api } from '../utils/api';
-import CategorySkeleton from '../components/ui/CategorySkeleton';
-import { useRouter } from 'next/router';
 
 export default function Products() {
   const [search, setSearch] = useState<string | undefined>('');
+  const [showHiddenProducts, setShowHiddenProducts] = useState(false);
+  const [showAdminOptions, setShowAdminOptions] = useState(true);
 
   const { push, query } = useRouter();
 
@@ -49,6 +63,8 @@ export default function Products() {
   const drinksCount = categories?.reduce((acc, current) => acc + current._count.drinks, 0);
 
   const _products = products?.pages.flatMap(page => page.items);
+
+  const filteredProducts = _products?.filter(prod => showHiddenProducts || !prod.isHidden);
 
   const { t } = useTranslation('common');
 
@@ -133,13 +149,52 @@ export default function Products() {
           </GridItem>
 
           <GridItem colSpan={{ base: 6, md: 4, lg: 4 }} as="main" pos="relative">
-            <InputSearch handleSearchChange={term => setSearch(term)} isLoading={isLoading} />
+            <VStack spacing={4} w="full">
+              <InputSearch handleSearchChange={term => setSearch(term)} isLoading={isLoading} />
+
+              {/* Admin filters */}
+              <VStack w="full" align="flex-start" p="4" border="1px solid" borderColor="magenta.100" rounded="md">
+                <Text fontWeight="bold" color="magenta.100" textAlign="left">
+                  Admin Filters
+                </Text>
+
+                <FormControl display="flex" alignItems="center">
+                  <FormLabel color="magenta.100" htmlFor="show-hidden" mb="0">
+                    {t('all_drinks.hidden_products')}
+                  </FormLabel>
+                  <Switch
+                    id="show-hidden"
+                    defaultChecked
+                    onChange={() => setShowHiddenProducts(!showHiddenProducts)}
+                    variant="admin"
+                  />
+                </FormControl>
+                <FormControl display="flex" alignItems="center">
+                  <FormLabel color="magenta.100" htmlFor="admin-options" mb="0">
+                    Toggle view admin options
+                  </FormLabel>
+                  <Switch
+                    id="admin-options"
+                    defaultChecked
+                    onChange={() => setShowAdminOptions(!showAdminOptions)}
+                    variant="admin"
+                  />
+                </FormControl>
+              </VStack>
+            </VStack>
 
             <Stack spacing={4} my="5">
-              {_products?.map((drink, i) => {
-                if (i === _products.length - 1)
-                  return <Product key={drink.id} drink={drink as DrinkWithUnits} ref={ref} />;
-                return <Product key={drink.id} drink={drink} />;
+              {filteredProducts?.map((drink, i) => {
+                if (i === filteredProducts.length - 1)
+                  return (
+                    <Product
+                      key={drink.id}
+                      drink={drink as DrinkWithUnits}
+                      ref={ref}
+                      showAdminOptions={showAdminOptions}
+                    />
+                  );
+                return <Product key={drink.id} drink={drink} showAdminOptions={showAdminOptions} />;
               })}
 
               {_products && _products?.length < 1 && <NoResults />}
