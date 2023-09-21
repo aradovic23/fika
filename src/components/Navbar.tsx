@@ -24,7 +24,7 @@ const Navbar: FC = () => {
   const { t } = useTranslation('common');
 
   const navigationLinks = [
-    { name: t('nav.links.all_drinks'), path: '/drinks', isAdmin: true },
+    { name: t('nav.links.all_drinks'), path: '/products', isAdmin: true },
     { name: t('nav.links.submit_product'), path: '/submit-drink', isAdmin: true },
     { name: t('nav.links.edit_category'), path: '/edit-category', isAdmin: true },
     { name: t('nav.links.settings'), path: '/settings', isAdmin: true },

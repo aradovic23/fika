@@ -163,11 +163,10 @@ export default function Products() {
 
                   <FormControl display="flex" alignItems="center">
                     <FormLabel color="magenta.100" htmlFor="show-hidden" mb="0">
-                      {t('all_drinks.hidden_products')}
+                      {t('products.toggle_hidden_products')}
                     </FormLabel>
                     <Switch
                       id="show-hidden"
-                      defaultChecked
                       onChange={() => setShowHiddenProducts(!showHiddenProducts)}
                       variant="admin"
                     />

@@ -11,6 +11,7 @@ export default authMiddleware({
     '/submit-drink',
     '/edit-category',
     '/api/(.*)',
+    '/products(.*)',
   ],
 });
 
