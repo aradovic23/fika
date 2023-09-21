@@ -107,5 +107,14 @@
       "settings": "Settings",
       "submit_product": "Create a product"
     }
+  },
+  "products": {
+    "page_title": "Products",
+    "categories_subtitle": "Categories",
+    "all_products_card": "All products",
+    "card_item": "item(s)",
+    "admin_filters_title": "Admin filters",
+    "toggle_hidden_products": "Toggle hidden products",
+    "toggle_view_admin_options": "Toggle view admin options"
   }
 }

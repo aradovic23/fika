@@ -27,6 +27,7 @@ import Product from '../components/ui/Product';
 import InputSearch from '../components/ui/Search';
 import { STALE_TIME } from '../constants';
 import { api } from '../utils/api';
+import { useIsAdmin } from '../hooks/useIsAdmin';
 
 export default function Products() {
   const [search, setSearch] = useState<string | undefined>('');
@@ -79,6 +80,8 @@ export default function Products() {
 
   const lastPostRef = useRef<HTMLElement>(null);
 
+  const isAdmin = useIsAdmin();
+
   const { ref, entry } = useIntersection({
     root: lastPostRef.current,
     threshold: 1,
@@ -100,7 +103,7 @@ export default function Products() {
         <meta name="description" content="List of all products" />
       </Head>
       <Container maxW="6xl" mt="10">
-        <Heading mb="10">New Products Page (Beta)</Heading>
+        <Heading mb="10">{t('products.page_title')}</Heading>
 
         <Grid h="100px" templateColumns="repeat(6, 1fr)" gap={4}>
           <GridItem
@@ -111,7 +114,7 @@ export default function Products() {
             as="aside"
           >
             <Heading fontWeight="semibold" mb="5" size="md">
-              Categories
+              {t('products.categories_subtitle')}
             </Heading>
             <SimpleGrid
               columns={[1, 2]}
@@ -128,7 +131,7 @@ export default function Products() {
                 <>
                   <CategoryCard
                     categoryId={0}
-                    categoryName="All products"
+                    categoryName={t('products.all_products_card')}
                     count={drinksCount ?? 0}
                     onSelect={onCategorySelect}
                     selectedCategoryId={selectedCategory}
@@ -152,35 +155,36 @@ export default function Products() {
             <VStack spacing={4} w="full">
               <InputSearch handleSearchChange={term => setSearch(term)} isLoading={isLoading} />
 
-              {/* Admin filters */}
-              <VStack w="full" align="flex-start" p="4" border="1px solid" borderColor="magenta.100" rounded="md">
-                <Text fontWeight="bold" color="magenta.100" textAlign="left">
-                  Admin Filters
-                </Text>
+              {isAdmin && (
+                <VStack w="full" align="flex-start" p="4" border="1px solid" borderColor="magenta.100" rounded="md">
+                  <Text fontWeight="bold" color="magenta.100" textAlign="left">
+                    {t('products.admin_filters_title')}
+                  </Text>
 
-                <FormControl display="flex" alignItems="center">
-                  <FormLabel color="magenta.100" htmlFor="show-hidden" mb="0">
-                    {t('all_drinks.hidden_products')}
-                  </FormLabel>
-                  <Switch
-                    id="show-hidden"
-                    defaultChecked
-                    onChange={() => setShowHiddenProducts(!showHiddenProducts)}
-                    variant="admin"
-                  />
-                </FormControl>
-                <FormControl display="flex" alignItems="center">
-                  <FormLabel color="magenta.100" htmlFor="admin-options" mb="0">
-                    Toggle view admin options
-                  </FormLabel>
-                  <Switch
-                    id="admin-options"
-                    defaultChecked
-                    onChange={() => setShowAdminOptions(!showAdminOptions)}
-                    variant="admin"
-                  />
-                </FormControl>
-              </VStack>
+                  <FormControl display="flex" alignItems="center">
+                    <FormLabel color="magenta.100" htmlFor="show-hidden" mb="0">
+                      {t('all_drinks.hidden_products')}
+                    </FormLabel>
+                    <Switch
+                      id="show-hidden"
+                      defaultChecked
+                      onChange={() => setShowHiddenProducts(!showHiddenProducts)}
+                      variant="admin"
+                    />
+                  </FormControl>
+                  <FormControl display="flex" alignItems="center">
+                    <FormLabel color="magenta.100" htmlFor="admin-options" mb="0">
+                      {t('products.toggle_view_admin_options')}
+                    </FormLabel>
+                    <Switch
+                      id="admin-options"
+                      defaultChecked
+                      onChange={() => setShowAdminOptions(!showAdminOptions)}
+                      variant="admin"
+                    />
+                  </FormControl>
+                </VStack>
+              )}
             </VStack>
 
             <Stack spacing={4} my="5">

@@ -1,5 +1,6 @@
 import { HStack, Icon, Stack, Text } from '@chakra-ui/react';
 import { ChevronRight } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 interface Props {
   selectedCategoryId: number;
@@ -10,6 +11,9 @@ interface Props {
 }
 
 function CategoryCard({ selectedCategoryId, onSelect, count, categoryName, categoryId }: Props) {
+
+  const { t } = useTranslation('common');
+
   return (
     <Stack
       direction={'column'}
@@ -28,7 +32,9 @@ function CategoryCard({ selectedCategoryId, onSelect, count, categoryName, categ
     >
       <Text fontWeight="semibold">{categoryName}</Text>
       <HStack justify="space-between">
-        <Text fontSize="sm">{count} items</Text>
+        <Text fontSize="sm">
+          {count} {t('products.card_item')}
+        </Text>
         {selectedCategoryId === categoryId && (
           <Icon fontWeight="bold">
             <ChevronRight strokeWidth={3} />
