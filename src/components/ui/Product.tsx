@@ -30,6 +30,7 @@ import Skeleton from '../Skeleton';
 import { AlertDialogModal } from '../ui/AlertDialog';
 import { SlideInModal } from '../ui/SlideInModal';
 import { iconSize } from '../../constants';
+import { AnimatePresence, motion } from 'framer-motion';
 
 const Product = forwardRef(function Product(
   {
@@ -270,10 +271,44 @@ const Product = forwardRef(function Product(
             </HStack>
           </VStack>
         </Flex>
-        {isAdmin && showAdminOptions && (
-          <>
-            <Divider borderColor="magenta.100" />
-            <VStack spacing={2} w="full">
+        <AnimatePresence>
+          {isAdmin && showAdminOptions && (
+            <VStack
+              spacing={2}
+              w="full"
+              as={motion.div}
+              initial={{
+                height: 0,
+                opacity: 0,
+              }}
+              animate={{
+                height: 'auto',
+                opacity: 1,
+                transition: {
+                  height: {
+                    duration: 0.4,
+                  },
+                  opacity: {
+                    duration: 0.25,
+                    delay: 0.15,
+                  },
+                },
+              }}
+              exit={{
+                height: 0,
+                opacity: 0,
+                transition: {
+                  height: {
+                    duration: 0.4,
+                  },
+                  opacity: {
+                    duration: 0.25,
+                  },
+                },
+              }}
+            >
+              <Divider borderColor="magenta.100" />
+
               <Text fontSize="sm" fontWeight="bold" color="magenta.100">
                 {t('all_drinks.admin_options')}
               </Text>
@@ -294,8 +329,8 @@ const Product = forwardRef(function Product(
                 ))}
               </HStack>
             </VStack>
-          </>
-        )}
+          )}
+        </AnimatePresence>
       </VStack>
       <Show above="md">
         {drink.description?.length !== 0 && (

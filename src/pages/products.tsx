@@ -31,7 +31,7 @@ import { useIsAdmin } from '../hooks/useIsAdmin';
 
 export default function Products() {
   const [search, setSearch] = useState<string | undefined>('');
-  const [showHiddenProducts, setShowHiddenProducts] = useState(false);
+  const [showHiddenProducts, setShowHiddenProducts] = useState(true);
   const [showAdminOptions, setShowAdminOptions] = useState(true);
 
   const { push, query } = useRouter();
@@ -166,6 +166,7 @@ export default function Products() {
                       {t('products.toggle_hidden_products')}
                     </FormLabel>
                     <Switch
+                      defaultChecked
                       id="show-hidden"
                       onChange={() => setShowHiddenProducts(!showHiddenProducts)}
                       variant="admin"
