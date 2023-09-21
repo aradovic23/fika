@@ -1,52 +1,61 @@
 import {
   Box,
   Button,
-  chakra,
   Divider,
   Flex,
-  Hide,
   HStack,
+  Hide,
   Show,
   Tag,
   TagLabel,
   TagLeftIcon,
   Text,
+  VStack,
+  chakra,
   useDisclosure,
   useToast,
-  VStack,
 } from '@chakra-ui/react';
-import type { Prisma } from '@prisma/client';
 import { usePalette } from 'color-thief-react';
+import { Edit, Eye, EyeOff, LayoutGrid, Milk, Star, StarOff, Tag as TagIcon, Trash2 } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
+import type { LegacyRef } from 'react';
+import { forwardRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useGetCategory } from '../hooks/useGetCategory';
-import { useIsAdmin } from '../hooks/useIsAdmin';
-import { api } from '../utils/api';
-import Dialog from './Dialog';
-import { AlertDialogModal } from './ui/AlertDialog';
-import { SlideInModal } from './ui/SlideInModal';
-import { iconSize } from '../constants';
-import { Edit, Eye, EyeOff, LayoutGrid, Milk, Star, StarOff, Tag as TagIcon, Trash2 } from 'lucide-react';
+import { useIsAdmin } from '../../hooks/useIsAdmin';
+import { api } from '../../utils/api';
+import Dialog from '../Dialog';
+import type { DrinkWithUnits } from '../DrinkList';
+import Skeleton from '../Skeleton';
+import { AlertDialogModal } from '../ui/AlertDialog';
+import { SlideInModal } from '../ui/SlideInModal';
+import { iconSize } from '../../constants';
+import { AnimatePresence, motion } from 'framer-motion';
 
-export type DrinkWithUnits = Prisma.DrinkGetPayload<{ include: { unit: true; category: true } }>;
-
-export const DrinkList = (drink: DrinkWithUnits) => {
+const Product = forwardRef(function Product(
+  {
+    drink,
+    showAdminOptions,
+  }: {
+    drink: DrinkWithUnits;
+    showAdminOptions: boolean;
+  },
+  ref: LegacyRef<HTMLDivElement> | undefined
+) {
   const toast = useToast();
   const utils = api.useContext();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { isOpen: isAlertOpen, onOpen: onAlertOpen, onClose: onAlertClose } = useDisclosure();
   const { isOpen: isStarAlertOpen, onOpen: onStarAlertOpen, onClose: onStarAlertClose } = useDisclosure();
   const { isOpen: isHideAlertOpen, onOpen: onHideAlertOpen, onClose: onHideAlertClose } = useDisclosure();
-  const { category } = useGetCategory(drink.categoryId ?? 1) ?? '';
   const isAdmin = useIsAdmin();
-  const hasDescription = category?.addDescription;
-  const hasTypes = category?.addTypes;
+  const hasDescription = drink.category?.addDescription;
+  const hasTypes = drink.category?.addTypes;
   const { t } = useTranslation('common');
 
   const bgImage = drink.image ? drink.image : drink.category?.url ?? '';
 
-  const { data: dominantColor } = usePalette(bgImage, 2, 'hex', {
+  const { data: dominantColor, loading } = usePalette(bgImage, 2, 'hex', {
     crossOrigin: 'Anonymous',
     quality: 100,
   });
@@ -55,7 +64,7 @@ export const DrinkList = (drink: DrinkWithUnits) => {
 
   const { mutate: deleteDrink, isLoading } = api.drinks.deleteDrink.useMutation({
     async onSuccess() {
-      await utils.drinks.getDrinks.invalidate();
+      await utils.drinks.getPaginatedDrinks.invalidate();
       onAlertClose();
       toast({
         title: `${drink.title ?? 'Product'} ${t('toast.delete_title')}!`,
@@ -69,7 +78,7 @@ export const DrinkList = (drink: DrinkWithUnits) => {
   const { mutate: recommendedProductMutation, isLoading: isRecommendedProductLoading } =
     api.recommendations.addProductToRecommended.useMutation({
       async onSuccess() {
-        await utils.drinks.getDrinks.invalidate();
+        await utils.drinks.getPaginatedDrinks.invalidate();
         onStarAlertClose();
         toast({
           title: `${drink.title ?? 'Product'} ${t('toast.star_title')}`,
@@ -91,7 +100,7 @@ export const DrinkList = (drink: DrinkWithUnits) => {
 
   const { mutate: hideProductMutation, isLoading: isHiddenProductLoading } = api.drinks.hideProduct.useMutation({
     async onSuccess() {
-      await utils.drinks.getDrinks.invalidate();
+      await utils.drinks.getPaginatedDrinks.invalidate();
       onHideAlertClose();
       toast({
         title: `${drink.title ?? 'Product'} ${t('toast.hide_title')}!`,
@@ -116,7 +125,7 @@ export const DrinkList = (drink: DrinkWithUnits) => {
   };
 
   const NextImage = chakra(Image, {
-    shouldForwardProp: prop => ['width', 'height', 'src', 'alt'].includes(prop),
+    shouldForwardProp: prop => ['width', 'height', 'src', 'alt', 'blurDataURL'].includes(prop),
   });
 
   const adminOnlyButtons = [
@@ -176,9 +185,15 @@ export const DrinkList = (drink: DrinkWithUnits) => {
     },
   ];
 
+  if (loading) {
+    return <Skeleton />;
+  }
+
   return (
     <>
       <VStack
+        w="full"
+        ref={ref}
         gap={3}
         shadow="sm"
         rounded="lg"
@@ -188,19 +203,31 @@ export const DrinkList = (drink: DrinkWithUnits) => {
       >
         <Flex w="full" gap="3">
           <Box boxSize="5rem" position="relative" minW="5rem">
-            <NextImage
-              height="200"
-              width="200"
-              onClick={onOpen}
-              boxSize="5rem"
-              rounded="md"
-              alt="product"
-              objectFit="cover"
-              src={((hasDescription && drink.image) || category?.url) ?? ''}
-              filter={showHiddenProduct ? 'grayscale(100%)' : undefined}
-            />
+            {drink.category?.url && (
+              <NextImage
+                height="100"
+                width="100"
+                onClick={onOpen}
+                boxSize="5rem"
+                rounded="md"
+                alt={drink.title ?? 'Product'}
+                objectFit="cover"
+                src={((hasDescription && drink.image) || drink.category?.url) ?? ''}
+                filter={showHiddenProduct ? 'grayscale(100%)' : undefined}
+                blurDataURL={drink.blurHash ? drink.blurHash : ''}
+              />
+            )}
             {showHiddenProduct && (
-              <Tag pos="absolute" inset={0} m="auto" colorScheme="red" w="50%" h="50%" variant="solid">
+              <Tag
+                pos="absolute"
+                inset={0}
+                m="auto"
+                colorScheme="offRed"
+                rounded="full"
+                w="50%"
+                h="50%"
+                variant="solid"
+              >
                 <EyeOff />
               </Tag>
             )}
@@ -233,7 +260,7 @@ export const DrinkList = (drink: DrinkWithUnits) => {
               )}
               <Tag variant="subtle">
                 <TagLeftIcon boxSize="12px" as={LayoutGrid} />
-                <TagLabel>{category?.categoryName}</TagLabel>
+                <TagLabel>{drink.category?.categoryName}</TagLabel>
               </Tag>
               {hasTypes && drink.type && (
                 <Tag variant="subtle">
@@ -244,10 +271,44 @@ export const DrinkList = (drink: DrinkWithUnits) => {
             </HStack>
           </VStack>
         </Flex>
-        {isAdmin && (
-          <>
-            <Divider borderColor="magenta.100" />
-            <VStack spacing={2} w="full">
+        <AnimatePresence>
+          {isAdmin && showAdminOptions && (
+            <VStack
+              spacing={2}
+              w="full"
+              as={motion.div}
+              initial={{
+                height: 0,
+                opacity: 0,
+              }}
+              animate={{
+                height: 'auto',
+                opacity: 1,
+                transition: {
+                  height: {
+                    duration: 0.4,
+                  },
+                  opacity: {
+                    duration: 0.25,
+                    delay: 0.15,
+                  },
+                },
+              }}
+              exit={{
+                height: 0,
+                opacity: 0,
+                transition: {
+                  height: {
+                    duration: 0.4,
+                  },
+                  opacity: {
+                    duration: 0.25,
+                  },
+                },
+              }}
+            >
+              <Divider borderColor="magenta.100" />
+
               <Text fontSize="sm" fontWeight="bold" color="magenta.100">
                 {t('all_drinks.admin_options')}
               </Text>
@@ -268,8 +329,8 @@ export const DrinkList = (drink: DrinkWithUnits) => {
                 ))}
               </HStack>
             </VStack>
-          </>
-        )}
+          )}
+        </AnimatePresence>
       </VStack>
       <Show above="md">
         {drink.description?.length !== 0 && (
@@ -287,4 +348,6 @@ export const DrinkList = (drink: DrinkWithUnits) => {
       ))}
     </>
   );
-};
+});
+
+export default Product;

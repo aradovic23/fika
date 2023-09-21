@@ -1,6 +1,7 @@
 import type { StyleFunctionProps } from '@chakra-ui/react';
 import { mode } from '@chakra-ui/theme-tools';
 import { dividerTheme } from './components/divider';
+import { switchTheme } from './components/switch';
 
 export const components = {
   Button: {
@@ -15,4 +16,5 @@ export const components = {
     },
   },
   Divider: dividerTheme,
+  Switch: switchTheme,
 };

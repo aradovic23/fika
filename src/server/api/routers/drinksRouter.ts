@@ -169,4 +169,54 @@ export const drinksRouter = createTRPCRouter({
       });
       return drink;
     }),
+
+  drinks: publicProcedure.query(async ({ ctx }) => {
+    return await ctx.prisma.drink.findMany({
+      include: { category: true, unit: true },
+      orderBy: {
+        id: 'asc',
+      },
+    });
+  }),
+
+  getPaginatedDrinks: publicProcedure
+    .input(
+      z.object({
+        limit: z.number().min(1).max(100).nullish(),
+        cursor: z.string().optional().nullable(),
+        id: z.number().optional(),
+        searchTerm: z.string().min(3).optional(),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const limit = input.limit ?? 50;
+
+      const { cursor } = input;
+
+      const items = await ctx.prisma.drink.findMany({
+        take: limit + 1,
+        include: { category: true, unit: true },
+        cursor: cursor ? { id: cursor } : undefined,
+        orderBy: {
+          updatedAt: 'desc',
+        },
+        where: {
+          categoryId: input.id ? input.id : undefined,
+          title: {
+            search: input.searchTerm ? `${input.searchTerm}*` : undefined,
+          },
+        },
+      });
+
+      let nextCursor: typeof cursor | undefined = undefined;
+      if (items.length > limit) {
+        const nextItem = items.pop();
+        nextCursor = nextItem?.id;
+      }
+
+      return {
+        items,
+        nextCursor,
+      };
+    }),
 });

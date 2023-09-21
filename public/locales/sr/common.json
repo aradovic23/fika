@@ -107,5 +107,14 @@
       "settings": "Подешавања",
       "submit_product": "Направи нови производ"
     }
+  },
+  "products": {
+    "page_title": "Производи",
+    "categories_subtitle": "Категорије",
+    "all_products_card": "Сви производи",
+    "card_item": "производ(а)",
+    "admin_filters_title": "Админ филтери за приказивање",
+    "toggle_hidden_products": "Сакривени производи",
+    "toggle_view_admin_options": "Админске контроле"
   }
 }

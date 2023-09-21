@@ -1,5 +1,5 @@
 import { Box, Button, Heading, Hide, HStack, IconButton, Show, VStack } from '@chakra-ui/react';
-import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/solid';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import Link from 'next/link';
 import { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -45,7 +45,7 @@ export function Row<T>({
               <IconButton
                 variant="ghost"
                 aria-label="scroll-left"
-                icon={<ChevronLeftIcon className="h-6 w-6" />}
+                icon={<ChevronLeft />}
                 onClick={() => {
                   contentWrapper.current && handleScrollButtonClick(contentWrapper.current, -10);
                 }}
@@ -53,7 +53,7 @@ export function Row<T>({
               <IconButton
                 variant="ghost"
                 aria-label="scroll-right"
-                icon={<ChevronRightIcon className="h-6 w-6" />}
+                icon={<ChevronRight />}
                 onClick={() => {
                   contentWrapper.current && handleScrollButtonClick(contentWrapper.current, 10);
                 }}
@@ -65,9 +65,9 @@ export function Row<T>({
           <Button
             colorScheme="primary"
             variant="link"
-            rightIcon={<ChevronRightIcon className="h-3 w-3" />}
+            rightIcon={<ChevronRight size={16} />}
             as={Link}
-            href="/drinks"
+            href="/products"
             size="sm"
           >
             {t('home.view_all_btn')}

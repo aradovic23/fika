@@ -7,11 +7,11 @@ interface Props {
   count?: number;
 }
 
-const SkeletonLoader = ({ height, rounded = 'lg', width, count = 6 }: Props) => {
+const SkeletonLoader = ({ height = 200, rounded = 'lg', width, count = 6 }: Props) => {
   return (
     <>
       {[...Array(count).keys()].map(i => (
-        <Skeleton height={height} rounded={rounded} key={i} width={width} />
+        <Skeleton bg="red.300" height={height} rounded={rounded} key={i} width={width} />
       ))}
     </>
   );
