@@ -1,9 +1,15 @@
 lockfileVersion: '6.0'
 
 dependencies:
+  '@chakra-ui/anatomy':
+    specifier: ^2.2.1
+    version: 2.2.1
   '@chakra-ui/react':
     specifier: ^2.8.1
     version: 2.8.1(@emotion/react@11.11.1)(@emotion/styled@11.11.0)(@types/react@18.2.23)(framer-motion@10.16.4)(react-dom@18.2.0)(react@18.2.0)
+  '@chakra-ui/theme-tools':
+    specifier: ^2.1.1
+    version: 2.1.1(@chakra-ui/styled-system@2.9.1)
   '@clerk/nextjs':
     specifier: ^4.24.1
     version: 4.24.1(next@13.5.3)(react-dom@18.2.0)(react@18.2.0)
@@ -153,6 +159,9 @@ devDependencies:
   tailwindcss:
     specifier: ^3.3.3
     version: 3.3.3
+  theme-tools:
+    specifier: link:@types/chakra-ui/theme-tools
+    version: link:@types/chakra-ui/theme-tools
   typescript:
     specifier: ^5.2.2
     version: 5.2.2

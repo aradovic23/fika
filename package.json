@@ -10,7 +10,9 @@
     "start": "next start"
   },
   "dependencies": {
+    "@chakra-ui/anatomy": "^2.2.1",
     "@chakra-ui/react": "^2.8.1",
+    "@chakra-ui/theme-tools": "^2.1.1",
     "@clerk/nextjs": "^4.24.1",
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
@@ -62,6 +64,7 @@
     "prettier-plugin-tailwindcss": "^0.5.4",
     "prisma": "^5.3.1",
     "tailwindcss": "^3.3.3",
+    "theme-tools": "link:@types/chakra-ui/theme-tools",
     "typescript": "^5.2.2"
   },
   "ct3aMetadata": {
