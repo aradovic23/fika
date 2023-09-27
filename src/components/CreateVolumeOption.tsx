@@ -1,9 +1,10 @@
 import { Box, HStack, IconButton, Input, Text, useToast } from '@chakra-ui/react';
-import { PlusIcon } from '@heroicons/react/24/solid';
+
 import type { Unit } from '@prisma/client';
 import type { FC } from 'react';
 import { useForm } from 'react-hook-form';
 import { api } from '../utils/api';
+import { Plus } from 'lucide-react';
 
 interface Props {
   handleNewUnit: (state: boolean) => void;
@@ -50,7 +51,7 @@ const CreateVolumeOption: FC<Props> = ({ handleNewUnit }) => {
           });
           reset();
         },
-      }
+      },
     );
   };
 
@@ -70,7 +71,7 @@ const CreateVolumeOption: FC<Props> = ({ handleNewUnit }) => {
         />
         <IconButton
           aria-label="volume-add"
-          icon={<PlusIcon className="h-6 w-6" />}
+          icon={<Plus />}
           onClick={handleSubmit(handleCreateVolumeOption)}
           isLoading={isSubmitting && !errors}
           colorScheme="primary"

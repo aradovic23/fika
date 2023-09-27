@@ -16,7 +16,6 @@
     "@clerk/nextjs": "^4.24.1",
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
-    "@heroicons/react": "^2.0.18",
     "@hookform/error-message": "^2.0.1",
     "@mantine/hooks": "^7.0.2",
     "@portabletext/react": "^3.0.7",

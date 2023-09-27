@@ -17,7 +17,6 @@ import {
   useToast,
   VStack,
 } from '@chakra-ui/react';
-import { PlusCircleIcon } from '@heroicons/react/24/outline';
 import type { Drink } from '@prisma/client';
 import { type NextPage } from 'next';
 import { useTranslation } from 'next-i18next';
@@ -34,6 +33,7 @@ import ImageSearch from '../components/ImageSearch';
 import { useGetCategory } from '../hooks/useGetCategory';
 import { useIsAdmin } from '../hooks/useIsAdmin';
 import { api } from '../utils/api';
+import { PlusCircle } from 'lucide-react';
 
 export const getServerSideProps = async ({ locale }: { locale: string }) => ({
   props: {
@@ -158,7 +158,7 @@ const SubmitDrink: NextPage = () => {
             </Box>
 
             <Button
-              rightIcon={<PlusCircleIcon className="h-6 w-6" />}
+              rightIcon={<PlusCircle size={16} />}
               onClick={() => setIsCreateNewCategoryChecked(!isCreateNewCategoryChecked)}
             >
               {t('elements.button.create_new')}
@@ -219,10 +219,7 @@ const SubmitDrink: NextPage = () => {
                       ))}
                     </Select>
                   </Box>
-                  <Button
-                    rightIcon={<PlusCircleIcon className="h-6 w-6" />}
-                    onClick={() => setCreateNewUnit(!createNewUnit)}
-                  >
+                  <Button rightIcon={<PlusCircle size={16} />} onClick={() => setCreateNewUnit(!createNewUnit)}>
                     Create new
                   </Button>
                 </HStack>

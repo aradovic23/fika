@@ -18,7 +18,6 @@ import {
   useToast,
   VStack,
 } from '@chakra-ui/react';
-import { CheckBadgeIcon, PencilIcon } from '@heroicons/react/24/solid';
 import type { Store } from '@prisma/client';
 import { UploadButton } from '@uploadthing/react';
 import Image from 'next/image';
@@ -29,6 +28,7 @@ import { useTranslation } from 'react-i18next';
 import type { OurFileRouter } from '../server/uploadthing';
 import { api } from '../utils/api';
 import { Form } from './Form';
+import { BadgeCheck, Edit2 } from 'lucide-react';
 
 interface File {
   fileKey: string;
@@ -136,7 +136,7 @@ const EditStoreForm: FC<Store> = store => {
           variant="solid"
           colorScheme="primary"
           onClick={onOpen}
-          leftIcon={<PencilIcon className="h-6 w-6" />}
+          leftIcon={<Edit2 />}
         >
           Edit
         </Button>
@@ -170,7 +170,7 @@ const EditStoreForm: FC<Store> = store => {
                   <Text color="green.900" fontWeight="bold">
                     {t('settings.image_ready')}
                   </Text>
-                  <CheckBadgeIcon className="text-green-900 h-6 w-6" />
+                  <BadgeCheck />
                 </HStack>
               </VStack>
             )}
