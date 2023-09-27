@@ -1,8 +1,8 @@
 import { Button, FormControl, FormErrorMessage, Icon, Stack, Text, useToast, VStack } from '@chakra-ui/react';
-import { PlusCircleIcon, MinusCircleIcon } from '@heroicons/react/24/outline';
 import { Select } from 'chakra-react-select';
 import { useState } from 'react';
 import { api } from '../../utils/api';
+import { MinusCircle, PlusCircle } from 'lucide-react';
 
 interface Option {
   label: string;
@@ -61,10 +61,10 @@ export function BulkUpdateRecomendations({ addToRecommended, title }: Props) {
   }
 
   return (
-    <Stack direction={['column', 'column', 'column', 'row']} w="full" spacing={5}>
-      <Icon as={addToRecommended ? PlusCircleIcon : MinusCircleIcon} boxSize={6} color="primary.300" />
+    <Stack direction={['column', 'column', 'column', 'row']} w="full" spacing={5} align="center">
+      <Icon as={addToRecommended ? PlusCircle : MinusCircle} boxSize={6} color="gray" />
       <VStack flex={1} alignItems="flex-start" spacing="1">
-        <Text>{title}</Text>
+        <Text textAlign="center">{title}</Text>
         <Text fontSize="sm" color="gray.500">
           {addToRecommended ? 'Products that are not recommended:' : 'Products in recommended section:'}{' '}
           <Text as="span" fontWeight="bold">

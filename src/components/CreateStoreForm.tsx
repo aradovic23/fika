@@ -1,5 +1,5 @@
 import { Button, Input, useToast, FormLabel, FormControl, Box, VStack, Image, Text, HStack } from '@chakra-ui/react';
-import { CheckBadgeIcon } from '@heroicons/react/24/solid';
+import { BadgeCheck } from 'lucide-react';
 import type { Store } from '@prisma/client';
 import { UploadButton } from '@uploadthing/react';
 import { useState } from 'react';
@@ -80,7 +80,7 @@ const CreateStoreForm = () => {
             <Text color="green.900" fontWeight="bold">
               {t('settings.image_ready')}
             </Text>
-            <CheckBadgeIcon className="text-green-900 h-6 w-6" />
+            <BadgeCheck color="green.900" />
           </HStack>
         </VStack>
       )}

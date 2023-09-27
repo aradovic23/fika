@@ -5,6 +5,7 @@ import {
   Grid,
   GridItem,
   HStack,
+  Icon,
   Input,
   InputGroup,
   InputLeftElement,
@@ -15,7 +16,6 @@ import {
   Stack,
   Text,
 } from '@chakra-ui/react';
-import { MagnifyingGlassIcon, XCircleIcon } from '@heroicons/react/24/solid';
 import type { Category, Drink, Unit } from '@prisma/client';
 import { type NextPage } from 'next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
@@ -32,6 +32,7 @@ import SkeletonLoader from '../components/SkeletonLoader';
 import { useGetCategory } from '../hooks/useGetCategory';
 import { useIsAdmin } from '../hooks/useIsAdmin';
 import { api } from '../utils/api';
+import { Search, XIcon } from 'lucide-react';
 
 export const getServerSideProps = async ({ locale }: { locale: string }) => ({
   props: {
@@ -127,7 +128,7 @@ const Drinks: NextPage = () => {
             </Text>
             <InputGroup>
               <InputLeftElement pointerEvents="none">
-                <MagnifyingGlassIcon className="h-5 w-5 text-martinique-600" />
+                <Search />
               </InputLeftElement>
               <Input
                 id="search"
@@ -137,7 +138,9 @@ const Drinks: NextPage = () => {
                 variant="flushed"
               />
               <InputRightElement cursor="pointer">
-                <XCircleIcon className="h-4 w-4 text-martinique-300" onClick={() => setSearch('')} />
+                <Icon onClick={() => setSearch('')}>
+                  <XIcon />
+                </Icon>
               </InputRightElement>
             </InputGroup>
 

@@ -3,8 +3,8 @@ import { env } from '../env/client.mjs';
 import type { Result, UnsplashImage } from '../../typings';
 import { useQuery } from '@tanstack/react-query';
 import { Box, Button, HStack, IconButton, Image, Input, SimpleGrid, Spinner, Text } from '@chakra-ui/react';
-import { CloudIcon, MagnifyingGlassIcon } from '@heroicons/react/24/solid';
 import { useTranslation } from 'react-i18next';
+import { Cloud, Search } from 'lucide-react';
 
 interface Props {
   handleSelectedImage: (image: string, blur: string) => void;
@@ -24,7 +24,7 @@ const ImageSearch = ({ handleSelectedImage }: Props) => {
 
   const { data, isLoading, isError, refetch } = useQuery<Result[], Error>(['images'], async () => {
     const response = await fetch(
-      `${BASE_URL}/search/photos?page=1&query=${searchTerm}&per_page=30&client_id=${ACCESS_KEY}`
+      `${BASE_URL}/search/photos?page=1&query=${searchTerm}&per_page=30&client_id=${ACCESS_KEY}`,
     );
     const data = (await response.json()) as UnsplashImage;
     return data.results;
@@ -58,7 +58,7 @@ const ImageSearch = ({ handleSelectedImage }: Props) => {
         />
         <IconButton
           aria-label="search"
-          icon={<MagnifyingGlassIcon className="h-6 w-6" />}
+          icon={<Search />}
           onClick={onSubmitHandler}
           colorScheme="primary"
           variant="outline"
@@ -80,7 +80,7 @@ const ImageSearch = ({ handleSelectedImage }: Props) => {
                   size="sm"
                   colorScheme="primary"
                   variant="solid"
-                  leftIcon={<CloudIcon className="h-5 w-5" />}
+                  leftIcon={<Cloud />}
                 >
                   {t('elements.button.select')}
                 </Button>
