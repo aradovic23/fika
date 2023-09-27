@@ -1,7 +1,7 @@
 {
   "Codegeex.EnableExtension": false,
   "typescript.tsdk": "node_modules/typescript/lib",
-  "cSpell.words": ["tanstack", "trpc"],
+  "cSpell.words": ["tanstack", "trpc", "uploadthing"],
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.formatOnType": false,
   "editor.formatOnSave": true,

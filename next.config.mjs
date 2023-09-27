@@ -12,7 +12,7 @@ const config = {
   swcMinify: true,
   i18n: configI18.i18n,
   images: {
-    domains: ['placeimg.com', 'images.unsplash.com', 'lh3.googleusercontent.com', 'uploadthing.com'],
+    domains: ['placeimg.com', 'images.unsplash.com', 'lh3.googleusercontent.com', 'uploadthing.com', 'utfs.io'],
   },
   experimental: {
     esmExternals: false,
