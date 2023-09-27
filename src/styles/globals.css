@@ -13,8 +13,3 @@
   }
 }
 
-/* @layer components {
-  .checkbox_form {
-    @apply flex-col items-center gap-2 rounded bg-base-300 p-4 text-center;
-  }
-} */
