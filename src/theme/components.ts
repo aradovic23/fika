@@ -1,5 +1,5 @@
-import type { StyleFunctionProps } from '@chakra-ui/react';
 import { mode } from '@chakra-ui/theme-tools';
+import type { StyleFunctionProps } from '@chakra-ui/react';
 import { dividerTheme } from './components/divider';
 import { switchTheme } from './components/switch';
 
