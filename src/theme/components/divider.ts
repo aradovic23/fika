@@ -1,4 +1,4 @@
-import { defineStyle, defineStyleConfig } from '@chakra-ui/react/';
+import { defineStyle, defineStyleConfig } from '@chakra-ui/react';
 
 const brandPrimary = defineStyle({
   borderWidth: '1px',
