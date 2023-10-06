@@ -1,5 +1,5 @@
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
   previewFeatures = ["fullTextSearch", "fullTextIndex"]
 }
 
@@ -69,11 +69,24 @@ model Drink {
   isHidden      Boolean   @default(false)
   blurHash      String?   @db.Text
   unitId        String?
+  pictureId     String?
   unit          Unit?     @relation(fields: [unitId], references: [id])
   category      Category? @relation(fields: [categoryId], references: [id], onDelete: Cascade)
   isRecommended Boolean   @default(false)
+  picture       Picture[]
 
   @@fulltext([title])
+}
+
+model Picture {
+  id        String   @id @default(cuid())
+  url       String
+  name      String
+  key       String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  Drink     Drink?   @relation(fields: [drinkId], references: [id])
+  drinkId   String?
 }
 
 model Unit {

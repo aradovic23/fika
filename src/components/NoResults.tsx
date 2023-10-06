@@ -1,5 +1,5 @@
 import { Heading, Stack, Text } from '@chakra-ui/react';
-import { AlertTriangle, Ghost } from 'lucide-react';
+import { Ghost } from 'lucide-react';
 
 export const NoResults = () => {
   return (
