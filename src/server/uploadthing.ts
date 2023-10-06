@@ -39,6 +39,15 @@ export const ourFileRouter = {
         },
       });
 
+      await prisma.drink.update({
+        where: {
+          id: metadata.productId,
+        },
+        data: {
+          image: createdFile.url,
+        },
+      });
+
       console.log('file url', createdFile.url);
     }),
 } satisfies FileRouter;

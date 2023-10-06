@@ -26,11 +26,11 @@ import { useIsAdmin } from '../../hooks/useIsAdmin';
 import { api } from '../../utils/api';
 import Dialog from '../Dialog';
 import type { DrinkWithUnits } from '../DrinkList';
-import Skeleton from '../Skeleton';
 import { AlertDialogModal } from '../ui/AlertDialog';
 import { SlideInModal } from '../ui/SlideInModal';
 import { iconSize } from '../../constants';
 import { AnimatePresence, motion } from 'framer-motion';
+import ProductsSkeleton from '../ProductsSkeleton';
 
 const Product = forwardRef(function Product(
   {
@@ -40,7 +40,7 @@ const Product = forwardRef(function Product(
     drink: DrinkWithUnits;
     showAdminOptions: boolean;
   },
-  ref: LegacyRef<HTMLDivElement> | undefined
+  ref: LegacyRef<HTMLDivElement> | undefined,
 ) {
   const toast = useToast();
   const utils = api.useContext();
@@ -49,7 +49,6 @@ const Product = forwardRef(function Product(
   const { isOpen: isStarAlertOpen, onOpen: onStarAlertOpen, onClose: onStarAlertClose } = useDisclosure();
   const { isOpen: isHideAlertOpen, onOpen: onHideAlertOpen, onClose: onHideAlertClose } = useDisclosure();
   const isAdmin = useIsAdmin();
-  const hasDescription = drink.category?.addDescription;
   const hasTypes = drink.category?.addTypes;
   const { t } = useTranslation('common');
 
@@ -186,7 +185,7 @@ const Product = forwardRef(function Product(
   ];
 
   if (loading) {
-    return <Skeleton />;
+    return <ProductsSkeleton />;
   }
 
   return (
@@ -212,7 +211,7 @@ const Product = forwardRef(function Product(
                 rounded="md"
                 alt={drink.title ?? 'Product'}
                 objectFit="cover"
-                src={((hasDescription && drink.image) || drink.category?.url) ?? ''}
+                src={((drink.image && drink.image) || drink.category?.url) ?? ''}
                 filter={showHiddenProduct ? 'grayscale(100%)' : undefined}
                 blurDataURL={drink.blurHash ? drink.blurHash : ''}
               />

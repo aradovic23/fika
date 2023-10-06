@@ -4,6 +4,7 @@ import {
   FormControl,
   FormLabel,
   GridItem,
+  HStack,
   Image,
   Input,
   Select,
@@ -156,12 +157,24 @@ const EditDrinkForm: FC<EditFormProps> = ({ drink, onSubmit, addDescription, add
       <SimpleGrid columns={2} spacing={5}>
         {drink.picture.map(img => (
           <GridItem key={img.id}>
-            <VStack bg="gray.300" h="full" p="2" rounded="md">
-              <Text noOfLines={2} fontWeight="medium">
-                {img.name}
-              </Text>
-              <Image height={120} w={120} alt="no" src={img.url} />
-            </VStack>
+            <HStack
+              align="center"
+              justify="center"
+              overflow="hidden"
+              bg="gray.200"
+              shadow="md"
+              h="full"
+              p="2"
+              rounded="md"
+              maxW="lg"
+            >
+              <Image height={100} w={100} alt="no" src={img.url} rounded="md" />
+              <Flex overflow="hidden" maxW="lg" align="flex-start" px={3} py={2}>
+                <Text isTruncated fontSize="sm" h="full">
+                  {img.name}
+                </Text>
+              </Flex>
+            </HStack>
           </GridItem>
         ))}
       </SimpleGrid>

@@ -20,7 +20,6 @@ import { useTranslation } from 'react-i18next';
 import nextI18nConfig from '../../next-i18next.config.mjs';
 import type { DrinkWithUnits } from '../components/DrinkList';
 import { NoResults } from '../components/NoResults';
-import Skeleton from '../components/Skeleton';
 import CategoryCard from '../components/sections/CategoryCard';
 import CategorySkeleton from '../components/ui/CategorySkeleton';
 import Product from '../components/ui/Product';
@@ -28,6 +27,7 @@ import InputSearch from '../components/ui/Search';
 import { STALE_TIME } from '../constants';
 import { api } from '../utils/api';
 import { useIsAdmin } from '../hooks/useIsAdmin';
+import ProductsSkeleton from '../components/ProductsSkeleton';
 
 export default function Products() {
   const [search, setSearch] = useState<string | undefined>('');
@@ -56,7 +56,7 @@ export default function Products() {
     {
       getNextPageParam: lastPage => lastPage.nextCursor,
       staleTime: STALE_TIME,
-    }
+    },
   );
 
   const { data: categories, isLoading: isCategoriesLoading } = api.categories.getCategoriesConcise.useQuery();
@@ -202,8 +202,8 @@ export default function Products() {
               })}
 
               {_products && _products?.length < 1 && <NoResults />}
-              {isLoading && <Skeleton />}
-              {isFetchingNextPage && <Skeleton />}
+              {isLoading && <ProductsSkeleton />}
+              {isFetchingNextPage && <ProductsSkeleton />}
             </Stack>
           </GridItem>
         </Grid>
