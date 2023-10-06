@@ -1,27 +1,31 @@
-import { useForm } from 'react-hook-form';
-import { Form } from './Form';
-import type { FC } from 'react';
-import { useState } from 'react';
 import {
   Button,
   Flex,
   FormControl,
   FormLabel,
+  GridItem,
   Image,
   Input,
   Select,
+  SimpleGrid,
   Switch,
+  Text,
   Textarea,
   useToast,
   VStack,
 } from '@chakra-ui/react';
-import type { Drink, Unit } from '@prisma/client';
+import type { Picture, Drink, Unit } from '@prisma/client';
+import type { FC } from 'react';
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import ImageSearch from './ImageSearch';
 import { api } from '../utils/api';
+import { Form } from './Form';
+import ImageSearch from './ImageSearch';
+import UploadImageButton from './UploadImageButton';
 
 interface EditFormProps {
-  drink: Drink;
+  drink: Drink & { picture: Picture[] };
   onSubmit: (data: Drink) => void;
   addDescription: boolean;
   addTypes: boolean;
@@ -80,7 +84,7 @@ const EditDrinkForm: FC<EditFormProps> = ({ drink, onSubmit, addDescription, add
             position: 'top',
           });
         },
-      }
+      },
     );
   };
 
@@ -146,6 +150,21 @@ const EditDrinkForm: FC<EditFormProps> = ({ drink, onSubmit, addDescription, add
           </Button>
         </VStack>
       )}
+
+      <UploadImageButton productId={drink.id} />
+
+      <SimpleGrid columns={2} spacing={5}>
+        {drink.picture.map(img => (
+          <GridItem key={img.id}>
+            <VStack bg="gray.300" h="full" p="2" rounded="md">
+              <Text noOfLines={2} fontWeight="medium">
+                {img.name}
+              </Text>
+              <Image height={120} w={120} alt="no" src={img.url} />
+            </VStack>
+          </GridItem>
+        ))}
+      </SimpleGrid>
 
       <Button colorScheme="primary" type="submit" mb="10" isLoading={isSubmitting}>
         {t('elements.button.save')}

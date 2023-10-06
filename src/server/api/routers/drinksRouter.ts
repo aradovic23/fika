@@ -18,7 +18,7 @@ export const drinksRouter = createTRPCRouter({
         image: z.string().nullish(),
         blurHash: z.string().nullish(),
         unitId: z.string().nullish(),
-      })
+      }),
     )
     .mutation(async ({ input, ctx }) => {
       const drink = await ctx.prisma.drink.create({
@@ -68,6 +68,7 @@ export const drinksRouter = createTRPCRouter({
       },
       include: {
         unit: true,
+        picture: true,
       },
     });
     if (singleDrink) return singleDrink;
@@ -106,7 +107,7 @@ export const drinksRouter = createTRPCRouter({
           unitId: z.string().nullish(),
           isRecommended: z.boolean(),
         }),
-      })
+      }),
     )
     .mutation(async ({ ctx, input }) => {
       const drink = await ctx.prisma.drink.update({
@@ -137,7 +138,7 @@ export const drinksRouter = createTRPCRouter({
         data: z.object({
           image: z.string().nullish(),
         }),
-      })
+      }),
     )
     .mutation(async ({ ctx, input }) => {
       const drink = await ctx.prisma.drink.update({
@@ -155,7 +156,7 @@ export const drinksRouter = createTRPCRouter({
     .input(
       z.object({
         id: z.string(),
-      })
+      }),
     )
     .mutation(async ({ ctx, input }) => {
       const drink = await ctx.prisma.drink.update({
@@ -170,6 +171,22 @@ export const drinksRouter = createTRPCRouter({
       return drink;
     }),
 
+  getFile: publicProcedure
+    .input(
+      z.object({
+        key: z.string(),
+        productId: z.string(),
+      }),
+    )
+    .mutation(async ({ input, ctx }) => {
+      const file = await ctx.prisma.picture.findFirst({
+        where: {
+          key: input.key,
+          drinkId: input.productId,
+        },
+      });
+      if (!file) throw new TRPCError({ code: 'NOT_IMPLEMENTED' });
+    }),
   drinks: publicProcedure.query(async ({ ctx }) => {
     return await ctx.prisma.drink.findMany({
       include: { category: true, unit: true },
@@ -186,7 +203,7 @@ export const drinksRouter = createTRPCRouter({
         cursor: z.string().optional().nullable(),
         id: z.number().optional(),
         searchTerm: z.string().min(3).optional(),
-      })
+      }),
     )
     .query(async ({ ctx, input }) => {
       const limit = input.limit ?? 50;
