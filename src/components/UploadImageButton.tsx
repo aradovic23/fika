@@ -1,4 +1,4 @@
-import { Box, Button, Progress, Text, VStack, useToast, Container, HStack, Flex } from '@chakra-ui/react';
+import { Box, Button, Container, Flex, HStack, Progress, Text, VStack, useToast } from '@chakra-ui/react';
 import { Check, Cloud, ImageIcon } from 'lucide-react';
 import { useState } from 'react';
 import Dropzone from 'react-dropzone';
@@ -73,8 +73,8 @@ function UploadDropzone({ productId, closeDrawer }: { productId: string; closeDr
         closeDrawer();
       }}
     >
-      {({ getRootProps, getInputProps, acceptedFiles }) => (
-        <Box {...getRootProps()} w="lg">
+      {({ getRootProps, getInputProps, acceptedFiles, open }) => (
+        <Box {...getRootProps()} w="lg" onClick={open}>
           <VStack h="full" w="full" justify="center" align="center">
             <label
               htmlFor="dropzone-file"
@@ -161,7 +161,7 @@ function UploadImageButton({ productId }: { productId: string }) {
       }}
     >
       <Drawer.Trigger asChild onClick={() => setIsOpen(true)}>
-        <Button>Upload Image</Button>
+        <Button variant="outline">Upload Image</Button>
       </Drawer.Trigger>
       <Drawer.Overlay className="fixed inset-0 bg-martinique-900/50 " />
       <Drawer.Portal>

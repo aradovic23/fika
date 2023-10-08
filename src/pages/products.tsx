@@ -28,6 +28,7 @@ import { STALE_TIME } from '../constants';
 import { api } from '../utils/api';
 import { useIsAdmin } from '../hooks/useIsAdmin';
 import ProductsSkeleton from '../components/ProductsSkeleton';
+import { convertText } from '../utils/languageConverter';
 
 export default function Products() {
   const [search, setSearch] = useState<string | undefined>('');
@@ -96,6 +97,11 @@ export default function Products() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [entry]);
 
+  const handleSearch = (search: string | undefined) => {
+    const term = convertText(search, 'cyr');
+    setSearch(term);
+  };
+
   return (
     <>
       <Head>
@@ -153,7 +159,7 @@ export default function Products() {
 
           <GridItem colSpan={{ base: 6, md: 4, lg: 4 }} as="main" pos="relative">
             <VStack spacing={4} w="full">
-              <InputSearch handleSearchChange={term => setSearch(term)} isLoading={isLoading} />
+              <InputSearch handleSearchChange={handleSearch} isLoading={isLoading} />
 
               {isAdmin && (
                 <VStack w="full" align="flex-start" p="4" border="1px solid" borderColor="magenta.100" rounded="md">

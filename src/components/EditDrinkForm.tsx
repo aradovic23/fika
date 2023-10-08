@@ -154,6 +154,8 @@ const EditDrinkForm: FC<EditFormProps> = ({ drink, onSubmit, addDescription, add
 
       <UploadImageButton productId={drink.id} />
 
+      <Text fontWeight="semibold">All images for this product</Text>
+
       <SimpleGrid columns={2} spacing={5}>
         {drink.picture.map(img => (
           <GridItem key={img.id}>
@@ -161,12 +163,13 @@ const EditDrinkForm: FC<EditFormProps> = ({ drink, onSubmit, addDescription, add
               align="center"
               justify="center"
               overflow="hidden"
-              bg="gray.200"
+              bg={img.id === drink.pictureId ? 'green.200' : 'gray.200'}
               shadow="md"
               h="full"
               p="2"
               rounded="md"
               maxW="lg"
+              fontWeight={img.id === drink.pictureId ? 'semibold' : undefined}
             >
               <Image height={100} w={100} alt="no" src={img.url} rounded="md" />
               <Flex overflow="hidden" maxW="lg" align="flex-start" px={3} py={2}>

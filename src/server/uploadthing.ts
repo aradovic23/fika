@@ -45,6 +45,7 @@ export const ourFileRouter = {
         },
         data: {
           image: createdFile.url,
+          pictureId: createdFile.id,
         },
       });
 
