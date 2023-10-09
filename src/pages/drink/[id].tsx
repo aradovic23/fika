@@ -16,110 +16,110 @@ import { useIsAdmin } from '../../hooks/useIsAdmin';
 import { api } from '../../utils/api';
 
 export const getServerSideProps = async ({ locale }: { locale: string }) => ({
-  props: {
-    ...(await serverSideTranslations(locale, ['common'], nextI18nConfig, ['en', 'sr'])),
-  },
+    props: {
+        ...(await serverSideTranslations(locale, ['common'], nextI18nConfig, ['en', 'sr'])),
+    },
 });
 
 const EditDrinkPage: NextPage = () => {
-  const { t } = useTranslation();
-  const toast = useToast();
+    const { t } = useTranslation();
+    const toast = useToast();
 
-  const router = useRouter();
-  const { id } = router.query as {
-    id: string;
-  };
-  const { data, isLoading } = api.drinks.getDrinkById.useQuery(
-    { id },
-    {
-      refetchOnWindowFocus: false,
+    const router = useRouter();
+    const { id } = router.query as {
+        id: string;
+    };
+    const { data, isLoading } = api.drinks.getDrinkById.useQuery(
+        { id },
+        {
+            refetchOnWindowFocus: false,
+        },
+    );
+
+    const utils = api.useContext();
+    const updateSingleDrink = api.drinks.updateDrink.useMutation();
+    const { category } = useGetCategory(data?.categoryId ?? 1);
+    const addDescription = category?.addDescription ?? false;
+    const addTypes = category?.addTypes ?? false;
+    const { data: units } = api.volume.getVolumeOptions.useQuery();
+    const isAdmin = useIsAdmin();
+    const setMomentLocale = (locale: string) => moment.locale(locale);
+    const currentLang: string = router.locale ?? 'en';
+    setMomentLocale(currentLang);
+    const updatedAt = moment(data?.updatedAt);
+    const relativeLastUpdatedAt = moment(updatedAt).fromNow();
+
+    const handleProductUpdate = async (data: Drink) => {
+        await updateSingleDrink.mutateAsync(
+            {
+                id,
+                data,
+            },
+            {
+                onSuccess: () => {
+                    void utils.drinks.getDrinkById.invalidate({ id });
+                    void router.back();
+                    toast({
+                        title: `Product updated!`,
+                        description: `${data.title ?? ''} was successfully updated!`,
+                        status: 'success',
+                        isClosable: true,
+                        position: 'top',
+                    });
+                },
+                onError: error => {
+                    toast({
+                        title: `An error occurred`,
+                        description: `${error.message}`,
+                        status: 'success',
+                        isClosable: true,
+                        position: 'top',
+                    });
+                },
+            },
+        );
+    };
+
+    if (isLoading) {
+        return <PageSpinner />;
     }
-  );
 
-  const utils = api.useContext();
-  const updateSingleDrink = api.drinks.updateDrink.useMutation();
-  const { category } = useGetCategory(data?.categoryId ?? 1);
-  const addDescription = category?.addDescription ?? false;
-  const addTypes = category?.addTypes ?? false;
-  const { data: units } = api.volume.getVolumeOptions.useQuery();
-  const isAdmin = useIsAdmin();
-  const setMomentLocale = (locale: string) => moment.locale(locale);
-  const currentLang: string = router.locale ?? 'en';
-  setMomentLocale(currentLang);
-  const updatedAt = moment(data?.updatedAt);
-  const relativeLastUpdatedAt = moment(updatedAt).fromNow();
+    if (!isAdmin) {
+        return <AccessDenied />;
+    }
 
-  const handleProductUpdate = async (data: Drink) => {
-    await updateSingleDrink.mutateAsync(
-      {
-        id,
-        data,
-      },
-      {
-        onSuccess: () => {
-          void utils.drinks.getDrinkById.invalidate({ id });
-          void router.back();
-          toast({
-            title: `Product updated!`,
-            description: `${data.title ?? ''} was successfully updated!`,
-            status: 'success',
-            isClosable: true,
-            position: 'top',
-          });
-        },
-        onError: error => {
-          toast({
-            title: `An error occurred`,
-            description: `${error.message}`,
-            status: 'success',
-            isClosable: true,
-            position: 'top',
-          });
-        },
-      }
-    );
-  };
+    if (data) {
+        return (
+            <>
+                <Head>
+                    <title>
+                        {t('edit_drink')} | {data.title}
+                    </title>
+                </Head>
+                <Container>
+                    <Stack gap="3" mt="5" mb="20">
+                        <Heading size="lg" textAlign="center">
+                            {t('edit_drink')} | {data.title}
+                        </Heading>
+                        <Text textAlign="center" opacity={0.5}>
+                            {t('elements.additional_field.last_edit')} {relativeLastUpdatedAt}
+                        </Text>
+                        <ScaleFade initialScale={0.9} in unmountOnExit>
+                            <EditDrinkForm
+                                drink={data}
+                                onSubmit={handleProductUpdate}
+                                addDescription={addDescription}
+                                addTypes={addTypes}
+                                units={units}
+                            />
+                        </ScaleFade>
+                    </Stack>
+                </Container>
+            </>
+        );
+    }
 
-  if (isLoading) {
-    return <PageSpinner />;
-  }
-
-  if (!isAdmin) {
-    return <AccessDenied />;
-  }
-
-  if (data) {
-    return (
-      <>
-        <Head>
-          <title>
-            {t('edit_drink')} | {data.title}
-          </title>
-        </Head>
-        <Container>
-          <Stack gap="3" mt="5" mb="20">
-            <Heading size="lg" textAlign="center">
-              {t('edit_drink')} | {data.title}
-            </Heading>
-            <Text textAlign="center" opacity={0.5}>
-              {t('elements.additional_field.last_edit')} {relativeLastUpdatedAt}
-            </Text>
-            <ScaleFade initialScale={0.9} in unmountOnExit>
-              <EditDrinkForm
-                drink={data}
-                onSubmit={handleProductUpdate}
-                addDescription={addDescription}
-                addTypes={addTypes}
-                units={units}
-              />
-            </ScaleFade>
-          </Stack>
-        </Container>
-      </>
-    );
-  }
-
-  return <p>Loading...</p>;
+    return <p>Loading...</p>;
 };
 
 export default EditDrinkPage;
