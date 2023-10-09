@@ -4,11 +4,13 @@ import {
     CardBody,
     CardFooter,
     CardHeader,
+    Divider,
     Flex,
     FormControl,
     FormLabel,
     GridItem,
     Heading,
+    HStack,
     Image,
     Input,
     Select,
@@ -19,7 +21,8 @@ import {
     useToast,
     VStack,
 } from '@chakra-ui/react';
-import type { Picture, Drink, Unit } from '@prisma/client';
+import type { Drink, Picture, Unit } from '@prisma/client';
+import moment from 'moment';
 import type { FC } from 'react';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -28,7 +31,6 @@ import { api } from '../utils/api';
 import { Form } from './Form';
 import ImageSearch from './ImageSearch';
 import UploadImageButton from './UploadImageButton';
-import moment from 'moment';
 
 interface EditFormProps {
     drink: Drink & { picture: Picture[] };
@@ -94,6 +96,13 @@ const EditDrinkForm: FC<EditFormProps> = ({ drink, onSubmit, addDescription, add
         );
     };
 
+    const { mutate: deleteFile, isLoading: isFileDeleting } = api.drinks.deleteFile.useMutation({
+        onSuccess: async id => {
+            console.log(id);
+            await utils.drinks.getDrinkById.invalidate();
+        },
+    });
+
     return (
         <Form onSubmit={handleSubmit(onSubmit)}>
             <FormControl>
@@ -146,6 +155,8 @@ const EditDrinkForm: FC<EditFormProps> = ({ drink, onSubmit, addDescription, add
                 {t('elements.button.save')}
             </Button>
 
+            <Divider />
+
             <Heading size="md">Image options</Heading>
 
             {(selectedImage || drink.image) && (
@@ -187,8 +198,21 @@ const EditDrinkForm: FC<EditFormProps> = ({ drink, onSubmit, addDescription, add
                                 <CardBody>
                                     <Image height={100} w={100} alt="no" src={img.url} rounded="md" objectFit="cover" />
                                 </CardBody>
-                                <CardFooter>
-                                    <Text fontSize="sm">Created: {moment(img.createdAt).calendar()}</Text>
+                                <CardFooter gap={3} flexDirection="column">
+                                    <Text fontSize="sm" textAlign="center">
+                                        Created: {moment(img.createdAt).calendar()}
+                                    </Text>
+                                    <HStack>
+                                        <Button>Make current</Button>
+                                        <Button
+                                            isLoading={isFileDeleting}
+                                            variant="ghost"
+                                            colorScheme="offRed"
+                                            onClick={() => deleteFile({ productId: drink.id, fileId: img.id })}
+                                        >
+                                            Delete
+                                        </Button>
+                                    </HStack>
                                 </CardFooter>
                             </Card>
                         </GridItem>
