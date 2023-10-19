@@ -170,7 +170,9 @@ function UploadImageButton({ productId }: { productId: string }) {
             }}
         >
             <Drawer.Trigger asChild onClick={() => setIsOpen(true)}>
-                <Button variant="outline">Upload Image</Button>
+                <Button variant="solid" colorScheme="primary">
+                    Upload Image
+                </Button>
             </Drawer.Trigger>
             <Drawer.Overlay className="fixed inset-0 bg-martinique-900/50 " />
             <Drawer.Portal>
