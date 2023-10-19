@@ -8,17 +8,19 @@ import '../styles/globals.css';
 import theme from '../theme/index';
 import { api } from '../utils/api';
 import { ClerkProvider } from '@clerk/nextjs';
+import { Analytics } from '@vercel/analytics/react';
 
 const MyApp: AppType = ({ Component, pageProps: { ...pageProps } }) => {
-  return (
-    <ClerkProvider {...pageProps}>
-      <ChakraProvider theme={theme}>
-        <Layout>
-          <Component {...pageProps} />
-        </Layout>
-      </ChakraProvider>
-    </ClerkProvider>
-  );
+    return (
+        <ClerkProvider {...pageProps}>
+            <ChakraProvider theme={theme}>
+                <Layout>
+                    <Component {...pageProps} />
+                    <Analytics />
+                </Layout>
+            </ChakraProvider>
+        </ClerkProvider>
+    );
 };
 
 const I18nApp = appWithTranslation(MyApp, nextI18nConfig);
