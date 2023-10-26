@@ -12,6 +12,7 @@ export default authMiddleware({
     '/edit-category',
     '/api/(.*)',
     '/products(.*)',
+    '/v2/(.*)',
   ],
 });
 

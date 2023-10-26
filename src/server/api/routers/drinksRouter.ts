@@ -137,6 +137,7 @@ export const drinksRouter = createTRPCRouter({
         id: z.string(),
         data: z.object({
           image: z.string().nullish(),
+          pictureId: z.string().nullish(),
         }),
       }),
     )
@@ -146,8 +147,8 @@ export const drinksRouter = createTRPCRouter({
           id: input.id,
         },
         data: {
-          updatedAt: new Date(),
           image: input.data.image,
+          pictureId: input.data.pictureId,
         },
       });
       return drink;
@@ -186,6 +187,24 @@ export const drinksRouter = createTRPCRouter({
         },
       });
       if (!file) throw new TRPCError({ code: 'NOT_IMPLEMENTED' });
+    }),
+
+  deleteFile: publicProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        key: z.string(),
+        productId: z.string(),
+      }),
+    )
+    .mutation(async ({ input, ctx }) => {
+      return await ctx.prisma.picture.delete({
+        where: {
+          id: input.id,
+          key: input.key,
+          drinkId: input.productId,
+        },
+      });
     }),
   drinks: publicProcedure.query(async ({ ctx }) => {
     return await ctx.prisma.drink.findMany({
