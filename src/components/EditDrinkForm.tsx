@@ -185,8 +185,8 @@ const EditDrinkForm: FC<EditFormProps> = ({ drink, onSubmit, addDescription, add
                 _hover={{ cursor: img.id !== drink.pictureId ? 'pointer' : undefined }}
               >
                 <CardHeader overflow="hidden">
-                  <Text fontSize="md" noOfLines={1}>
-                    Title: {img.name}
+                  <Text fontSize="md" noOfLines={1} fontWeight={600}>
+                    {img.name}
                   </Text>
                 </CardHeader>
                 <CardBody>
