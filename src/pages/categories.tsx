@@ -102,7 +102,7 @@ const EditCategory: NextPage = () => {
               position: 'top',
             });
           },
-        }
+        },
       );
       setImageFromSearch('');
     } catch (error) {
